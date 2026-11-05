@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { Link } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import Input from '../components/ui/Input'
 import Button from '../components/ui/Button'
@@ -30,10 +31,18 @@ export default function Login() {
           <Input label="Neno la Siri" type="password" value={p} onChange={e => setP(e.target.value)} />
           <Button type="submit" className="w-full">Ingia</Button>
         </form>
+
+        <div className="mt-6 text-center text-sm text-slate-600">
+          Huna akaunti?{' '}
+          <Link to="/register" className="text-brand-600 font-semibold hover:underline">
+            Sajili Hapa
+          </Link>
+        </div>
+
         <div className="mt-6 text-xs text-slate-500 bg-slate-50 rounded-lg p-3">
           <div className="font-semibold text-slate-700 mb-1">Demo accounts:</div>
           <div className="break-words">
-            admin/admin · seller/seller · warehouse/warehouse · owner/owner
+            admin/admin · seller1/seller1 · seller2/seller2 · warehouse1/warehouse1 · owner/owner
           </div>
         </div>
       </div>

@@ -1,116 +1,226 @@
-import { NavLink } from 'react-router-dom'
-import {
-  LayoutDashboard, Package, ShoppingCart, Users, Truck, Warehouse,
-  FileText, Receipt, Wallet, TrendingUp, Shield, BarChart3, Heart, LogOut, X
-} from 'lucide-react'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
-import { type  Role } from '../types'
-
-interface NavItem { to: string; label: string; icon: React.ReactNode; roles: Role[] }
-
-const NAV: NavItem[] = [
-  { to: '/dashboard', label: 'Dashboard', icon: <LayoutDashboard size={18} />, roles: ['admin'] },
-  { to: '/owner', label: 'Dashboard', icon: <LayoutDashboard size={18} />, roles: ['owner'] },
-  { to: '/pos', label: 'Mauzo (POS)', icon: <ShoppingCart size={18} />, roles: ['seller', 'admin'] },
-  { to: '/quotations', label: 'Nukuu za Bei', icon: <FileText size={18} />, roles: ['seller', 'admin'] },
-  { to: '/sales', label: 'Historia ya Mauzo', icon: <Receipt size={18} />, roles: ['seller', 'admin', 'owner'] },
-  { to: '/products', label: 'Bidhaa', icon: <Package size={18} />, roles: ['admin', 'warehouse', 'seller', 'owner'] },
-  { to: '/stock', label: 'Stoo', icon: <Warehouse size={18} />, roles: ['admin', 'warehouse'] },
-  { to: '/stock-take', label: 'Hesabu ya Ghala', icon: <BarChart3 size={18} />, roles: ['admin', 'warehouse'] },
-  { to: '/purchases', label: 'Ununuzi (LPO)', icon: <Truck size={18} />, roles: ['admin', 'warehouse'] },
-  { to: '/grn', label: 'Kupokea Mizigo', icon: <Package size={18} />, roles: ['admin', 'warehouse'] },
-  { to: '/suppliers', label: 'Wasambazaji', icon: <Truck size={18} />, roles: ['admin', 'warehouse'] },
-  { to: '/customers', label: 'Wateja', icon: <Users size={18} />, roles: ['admin', 'seller'] },
-  { to: '/expenses', label: 'Gharama (OPEX)', icon: <Wallet size={18} />, roles: ['admin', 'owner', 'seller'] },
-  { to: '/profit-loss', label: 'Faida/Hasara', icon: <TrendingUp size={18} />, roles: ['admin', 'owner'] },
-  { to: '/reports', label: 'Ripoti', icon: <BarChart3 size={18} />, roles: ['admin', 'owner'] },
-  { to: '/zakat', label: 'Zaka & Sadaka', icon: <Heart size={18} />, roles: ['admin', 'owner'] },
-  { to: '/users', label: 'Watumiaji', icon: <Shield size={18} />, roles: ['admin'] },
-  { to: '/audit', label: 'Audit Trail', icon: <FileText size={18} />, roles: ['admin'] },
-  { to: '/settings', label: 'Mipangilio', icon: <Shield size={18} />, roles: ['admin'] },
-]
+import { useData } from '../context/DataContext'
+import {
+  LogOut, LayoutDashboard, ShoppingCart, Receipt, Package, Warehouse,
+  Truck, ShoppingBag, Users, CreditCard, Heart, CalendarClock,
+  FileBarChart, TrendingUp, UserCog, ShieldCheck, Settings, FileText,
+  Boxes, ClipboardCheck, X, Store
+} from 'lucide-react'
+import type { Role } from '../types'
 
 interface SidebarProps {
   open: boolean
   onClose: () => void
 }
 
+type NavItem = {
+  to: string
+  label: string
+  icon: React.ComponentType<{ size?: number; className?: string }>
+}
+
+const navByRole: Record<Role, { features: NavItem[] }> = {
+  admin: {
+    features: [
+      { to: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
+      { to: '/branches', label: 'Maduka (Branches)', icon: Store },
+      { to: '/pos', label: 'POS', icon: ShoppingCart },
+      { to: '/sales', label: 'Mauzo', icon: Receipt },
+      { to: '/products', label: 'Bidhaa', icon: Package },
+      { to: '/stock', label: 'Stoo', icon: Warehouse },
+      { to: '/grn', label: 'GRN', icon: Truck },
+      { to: '/purchases', label: 'Ununuzi', icon: ShoppingBag },
+      { to: '/suppliers', label: 'Wasambazaji', icon: Truck },
+      { to: '/customers', label: 'Wateja', icon: Users },
+      { to: '/expenses', label: 'Gharama', icon: CreditCard },
+      { to: '/zakat', label: 'Zaka', icon: Heart },
+      { to: '/working-period', label: 'Muda wa Kazi', icon: CalendarClock },
+      { to: '/monthly-reports', label: 'Ripoti za Mwezi', icon: FileBarChart },
+      { to: '/reports', label: 'Ripoti', icon: FileText },
+      { to: '/profit-loss', label: 'Faida/Hasara', icon: TrendingUp },
+      { to: '/users', label: 'Watumiaji', icon: UserCog },
+      { to: '/audit', label: 'Audit', icon: ShieldCheck },
+      { to: '/settings', label: 'Mipangilio', icon: Settings },
+    ],
+  },
+  seller: {
+    features: [
+      { to: '/pos', label: 'POS', icon: ShoppingCart },
+      { to: '/quotations', label: 'Nukuu', icon: FileText },
+      { to: '/sales', label: 'Mauzo', icon: Receipt },
+      { to: '/products', label: 'Bidhaa', icon: Package },
+      { to: '/customers', label: 'Wateja', icon: Users },
+      { to: '/expenses', label: 'Gharama', icon: CreditCard },
+      { to: '/monthly-reports', label: 'Ripoti za Mwezi', icon: FileBarChart },
+    ],
+  },
+  warehouse: {
+    features: [
+      { to: '/stock', label: 'Stoo', icon: Warehouse },
+      { to: '/grn', label: 'GRN', icon: Truck },
+      { to: '/stock-take', label: 'Hesabu', icon: ClipboardCheck },
+      { to: '/purchases', label: 'Ununuzi', icon: ShoppingBag },
+      { to: '/suppliers', label: 'Wasambazaji', icon: Truck },
+      { to: '/products', label: 'Bidhaa', icon: Boxes },
+    ],
+  },
+  owner: {
+    features: [
+      { to: '/owner', label: 'Dashboard', icon: LayoutDashboard },
+      { to: '/sales', label: 'Mauzo', icon: Receipt },
+      { to: '/products', label: 'Bidhaa', icon: Package },
+      { to: '/expenses', label: 'Gharama', icon: CreditCard },
+      { to: '/zakat', label: 'Zaka', icon: Heart },
+      { to: '/monthly-reports', label: 'Ripoti za Mwezi', icon: FileBarChart },
+      { to: '/profit-loss', label: 'Faida/Hasara', icon: TrendingUp },
+      { to: '/reports', label: 'Ripoti', icon: FileText },
+    ],
+  },
+}
+
+const roleLabel = (role: Role) => ({
+  admin: 'Msimamizi',
+  seller: 'Muuzaji',
+  warehouse: 'Mhazini',
+  owner: 'Mmiliki',
+}[role])
+
 export default function Sidebar({ open, onClose }: SidebarProps) {
   const { user, logout } = useAuth()
-  const items = NAV.filter(n => user && n.roles.includes(user.role))
+  const { monthlyReports } = useData()
+  const location = useLocation()
+  const navigate = useNavigate()
+
+  if (!user) return null
+  const items = navByRole[user.role].features
+
+  const pendingEdits = monthlyReports.filter(r => r.editRequest?.status === 'pending')
+  const drafts = monthlyReports.filter(r => r.sellerId === user.id && r.status === 'draft')
+
+  const badgeFor = (to: string) => {
+    if (to === '/monthly-reports') {
+      if (user.role === 'seller' && drafts.length > 0) return drafts.length
+      if (user.role === 'admin' && pendingEdits.length > 0) return pendingEdits.length
+    }
+    return 0
+  }
+
+  const handleLogout = () => {
+    logout()
+    navigate('/login')
+  }
 
   return (
     <>
-      {/* Mobile backdrop */}
+      {/* Mobile overlay */}
       {open && (
         <div
-          className="fixed inset-0 bg-slate-900/60 z-40 lg:hidden"
+          className="fixed inset-0 bg-black/40 z-30 lg:hidden"
           onClick={onClose}
         />
       )}
 
-      {/* Sidebar */}
       <aside
         className={`
-          fixed lg:static top-0 left-0 h-screen w-64
-          bg-slate-900 text-slate-200 flex flex-col z-50
-          transform transition-transform duration-300 ease-in-out
+          fixed lg:static top-0 left-0 bottom-0 z-40 w-64
+          bg-[#1f2937] text-slate-300
+          flex flex-col transition-transform duration-200
           ${open ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
         `}
       >
-        <div className="px-5 py-5 border-b border-slate-800 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <div className="w-9 h-9 rounded-lg bg-brand-600 flex items-center justify-center font-bold">
-              SH
-            </div>
-            <div>
-              <div className="font-bold text-white text-sm">SMART HARDWARE</div>
-              <div className="text-xs text-slate-400">POS System</div>
-            </div>
+        {/* Header */}
+        <div className="bg-[#334155] px-4 py-4 flex items-center justify-between">
+          <div className="font-bold text-white text-lg tracking-wide">
+           SMART HARDWARE
           </div>
           <button
             onClick={onClose}
-            className="lg:hidden text-slate-400 hover:text-white p-1"
+            className="lg:hidden p-1.5 rounded hover:bg-white/10 text-white"
+            aria-label="Funga menyu"
           >
-            <X size={20} />
+            <X size={18} />
           </button>
         </div>
 
-        <nav className="flex-1 overflow-y-auto scrollbar-thin py-2">
-          {items.map(n => (
-            <NavLink
-              key={n.to}
-              to={n.to}
-              onClick={onClose}
-              className={({ isActive }) =>
-                `flex items-center gap-3 px-5 py-2.5 text-sm transition ${
-                  isActive
-                    ? 'bg-brand-600 text-white border-r-2 border-white'
-                    : 'text-slate-300 hover:bg-slate-800 hover:text-white'
-                }`
-              }
-            >
-              {n.icon}
-              <span>{n.label}</span>
-            </NavLink>
-          ))}
-        </nav>
-
-        <div className="border-t border-slate-800 p-4">
-          <div className="flex items-center gap-2 mb-3">
-            <div className="w-8 h-8 rounded-full bg-slate-700 flex items-center justify-center text-xs font-bold">
-              {user?.name.charAt(0)}
+        {/* Profile card */}
+        <div className="flex items-center gap-3 px-4 py-4 border-b border-slate-700">
+          <div className="w-11 h-11 rounded-full bg-emerald-300 flex items-center justify-center text-[#1f2937] font-bold text-lg flex-shrink-0">
+            {user.name.charAt(0).toUpperCase()}
+          </div>
+          <div className="min-w-0">
+            <div className="text-sm font-semibold text-white truncate uppercase">
+              {user.username}
             </div>
-            <div className="flex-1 min-w-0">
-              <div className="text-sm text-white truncate">{user?.name}</div>
-              <div className="text-xs text-slate-400 capitalize">{user?.role}</div>
+            <div className="text-xs text-slate-400 truncate">
+              {roleLabel(user.role)}
             </div>
           </div>
-          <button
-            onClick={logout}
-            className="w-full flex items-center justify-center gap-2 text-xs bg-slate-800 hover:bg-red-600 text-slate-300 hover:text-white py-2 rounded transition"
+        </div>
+
+        {/* Nav */}
+        <nav className="flex-1 overflow-y-auto py-3 scrollbar-thin">
+          <Link
+            to={
+              user.role === 'admin' ? '/dashboard'
+                : user.role === 'seller' ? '/pos'
+                : user.role === 'warehouse' ? '/stock'
+                : '/owner'
+            }
+            onClick={onClose}
+            className={`flex items-center gap-3 px-4 py-2.5 text-sm ${
+              location.pathname === '/dashboard' ||
+              location.pathname === '/pos' ||
+              location.pathname === '/stock' ||
+              location.pathname === '/owner'
+                ? 'bg-[#334155] text-white border-l-2 border-emerald-400'
+                : 'text-slate-300 hover:bg-slate-700/50 hover:text-white'
+            }`}
           >
-            <LogOut size={14} /> Ondoka
+            <LayoutDashboard size={18} />
+            <span>Dashboard</span>
+          </Link>
+
+          <div className="px-4 pt-5 pb-2 text-[11px] font-semibold tracking-widest text-slate-500 uppercase">
+            Features
+          </div>
+
+          {items.map(item => {
+            const Icon = item.icon
+            const active = location.pathname === item.to
+            const badge = badgeFor(item.to)
+            return (
+              <Link
+                key={item.to}
+                to={item.to}
+                onClick={onClose}
+                className={`flex items-center justify-between px-4 py-2.5 text-sm ${
+                  active
+                    ? 'bg-[#334155] text-white border-l-2 border-emerald-400'
+                    : 'text-slate-300 hover:bg-slate-700/50 hover:text-white'
+                }`}
+              >
+                <div className="flex items-center gap-3 min-w-0">
+                  <Icon size={18} />
+                  <span className="truncate">{item.label}</span>
+                </div>
+                {badge > 0 && (
+                  <span className="inline-flex items-center justify-center min-w-[18px] h-[18px] px-1 rounded-full bg-red-500 text-white text-[10px] font-semibold">
+                    {badge}
+                  </span>
+                )}
+              </Link>
+            )
+          })}
+        </nav>
+
+        {/* Footer */}
+        <div className="border-t border-slate-700 p-3">
+          <button
+            onClick={handleLogout}
+            className="flex items-center gap-2 text-sm text-red-400 hover:bg-red-500/10 w-full px-3 py-2 rounded"
+          >
+            <LogOut size={16} /> Toka
           </button>
         </div>
       </aside>

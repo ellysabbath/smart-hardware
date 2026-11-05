@@ -1,0 +1,3382 @@
+import { Routes, Route, Navigate } from 'react-router-dom'
+import { useAuth } from './context/AuthContext'
+import Login from './pages/Login'
+import AdminDashboard from './roles/admin/AdminDashboard'
+import UsersPage from './roles/admin/UsersPage'
+import AuditPage from './roles/admin/AuditPage'
+import SettingsPage from './roles/admin/SettingsPage'
+import SellerPOS from './roles/seller/SellerPOS'
+import QuotationsPage from './roles/seller/QuotationsPage'
+import SalesHistoryPage from './roles/seller/SalesHistoryPage'
+import StockPage from './roles/warehouse/StockPage'
+import GRNPage from './roles/warehouse/GRNPage'
+import StockTakePage from './roles/warehouse/StockTakePage'
+import OwnerDashboard from './roles/owner/OwnerDashboard'
+import ProfitLossPage from './roles/owner/ProfitLossPage'
+import ReportsPage from './roles/owner/ReportsPage'
+
+import PurchasesPage from './roles/shared/PurchasesPage'
+import CustomersPage from './roles/shared/CustomersPage'
+import SuppliersPage from './roles/shared/SuppliersPage'
+import ExpensesPage from './roles/shared/ExpensesPage'
+import ZakatPage from './roles/shared/ZakatPage'
+import  type { Role } from './types'
+import ProductsPage from './roles/shared/ProductsPage'
+
+function Protected({ children, roles }: { children: React.ReactNode; roles: Role[] }) {
+  const { user } = useAuth()
+  if (!user) return <Navigate to="/login" replace />
+  if (!roles.includes(user.role)) return <Navigate to={defaultHome(user.role)} replace />
+  return <>{children}</>
+}
+
+const defaultHome = (role: Role) =>
+  role === 'admin' ? '/dashboard'
+    : role === 'seller' ? '/pos'
+      : role === 'warehouse' ? '/stock'
+        : '/owner'
+
+export default function App() {
+  const { user } = useAuth()
+
+  return (
+    <Routes>
+      <Route path="/login" element={user ? <Navigate to={defaultHome(user.role)} replace /> : <Login />} />
+
+      {/* Admin */}
+      <Route path="/dashboard" element={<Protected roles={['admin']}><AdminDashboard /></Protected>} />
+      <Route path="/users" element={<Protected roles={['admin']}><UsersPage /></Protected>} />
+      <Route path="/audit" element={<Protected roles={['admin']}><AuditPage /></Protected>} />
+      <Route path="/settings" element={<Protected roles={['admin']}><SettingsPage /></Protected>} />
+
+      {/* Seller */}
+      <Route path="/pos" element={<Protected roles={['seller', 'admin']}><SellerPOS /></Protected>} />
+      <Route path="/quotations" element={<Protected roles={['seller', 'admin']}><QuotationsPage /></Protected>} />
+      <Route path="/sales" element={<Protected roles={['seller', 'admin', 'owner']}><SalesHistoryPage /></Protected>} />
+
+      {/* Warehouse */}
+      <Route path="/stock" element={<Protected roles={['warehouse', 'admin']}><StockPage /></Protected>} />
+      <Route path="/grn" element={<Protected roles={['warehouse', 'admin']}><GRNPage /></Protected>} />
+      <Route path="/stock-take" element={<Protected roles={['warehouse', 'admin']}><StockTakePage /></Protected>} />
+
+      {/* Owner */}
+      <Route path="/owner" element={<Protected roles={['owner', 'admin']}><OwnerDashboard /></Protected>} />
+      <Route path="/profit-loss" element={<Protected roles={['owner', 'admin']}><ProfitLossPage /></Protected>} />
+      <Route path="/reports" element={<Protected roles={['owner', 'admin']}><ReportsPage /></Protected>} />
+
+      {/* Shared */}
+      <Route path="/products" element={<Protected roles={['admin', 'seller', 'warehouse', 'owner']}><ProductsPage /></Protected>} />
+      <Route path="/purchases" element={<Protected roles={['admin', 'warehouse']}><PurchasesPage /></Protected>} />
+      <Route path="/customers" element={<Protected roles={['admin', 'seller']}><CustomersPage /></Protected>} />
+      <Route path="/suppliers" element={<Protected roles={['admin', 'warehouse']}><SuppliersPage /></Protected>} />
+      <Route path="/expenses" element={<Protected roles={['admin', 'owner', 'seller']}><ExpensesPage /></Protected>} />
+      <Route path="/zakat" element={<Protected roles={['admin', 'owner']}><ZakatPage /></Protected>} />
+
+      {/* Fallback */}
+      <Route path="*" element={<Navigate to={user ? defaultHome(user.role) : '/login'} replace />} />
+    </Routes>
+  )
+}
+
+
+export type Role = 'admin' | 'seller' | 'warehouse' | 'owner'
+
+export interface User {
+  id: string
+  name: string
+  username: string
+  password: string
+  role: Role
+  active: boolean
+}
+
+export type Unit = 'pcs' | 'kg' | 'm' | 'ft' | 'm3' | 'bag' | 'box'
+
+export interface Product {
+  id: string
+  sku: string
+  name: string
+  category: string
+  unit: Unit
+  alternateUnits?: { unit: Unit; factor: number }[]
+  buyPrice: number
+  sellPrice: number
+  stock: number
+  location: string
+  supplier: string
+  description?: string
+  imageUrl?: string
+  expiryDate?: string
+  reorderLevel: number
+  barcode: string
+  createdAt: string
+}
+
+export interface Supplier {
+  id: string
+  name: string
+  phone: string
+  email: string
+  balance: number
+  lastPrice?: number
+}
+
+export interface Customer {
+  id: string
+  name: string
+  phone: string
+  email?: string
+  type: 'fundi' | 'mjenzi' | 'kampuni' | 'mteja'
+  balance: number
+  createdAt: string
+}
+
+export interface SaleItem {
+  productId: string
+  productName: string
+  qty: number
+  unit: Unit
+  price: number
+  buyPrice: number
+}
+
+export interface PaymentSplit {
+  method: 'cash' | 'mpesa' | 'tigopesa' | 'bank' | 'credit'
+  amount: number
+}
+
+export interface Sale {
+  id: string
+  receiptNo: string
+  customerId?: string
+  customerName: string
+  items: SaleItem[]
+  subtotal: number
+  discount: number
+  total: number
+  payments: PaymentSplit[]
+  createdBy: string
+  createdAt: string
+  status: 'completed' | 'returned' | 'partial_return'
+}
+
+export interface Quotation {
+  id: string
+  quotationNo: string
+  customerId?: string
+  customerName: string
+  items: SaleItem[]
+  subtotal: number
+  discount: number
+  total: number
+  validUntil: string
+  createdAt: string
+  createdBy: string
+  converted: boolean
+}
+
+export interface PurchaseItem {
+  productId: string
+  productName: string
+  qty: number
+  price: number
+}
+
+export interface Purchase {
+  id: string
+  lpoNo: string
+  supplierId: string
+  supplierName: string
+  items: PurchaseItem[]
+  total: number
+  status: 'pending' | 'received' | 'partial'
+  createdAt: string
+  receivedAt?: string
+}
+
+export interface GRN {
+  id: string
+  grnNo: string
+  purchaseId: string
+  items: { productId: string; productName: string; ordered: number; received: number }[]
+  createdAt: string
+}
+
+export interface Expense {
+  id: string
+  category: 'fixed' | 'variable' | 'capital'
+  subCategory: string
+  description: string
+  amount: number
+  date: string
+  paidTo: string
+  paymentMethod: string
+  receiptNo?: string
+  receiptImage?: string
+  enteredBy: string
+  status: 'pending' | 'approved' | 'rejected'
+  recurring: boolean
+}
+
+export interface AuditLog {
+  id: string
+  userId: string
+  userName: string
+  action: string
+  details: string
+  timestamp: string
+}
+
+export interface ZakatRecord {
+  id: string
+  date: string
+  type: 'daily' | 'weekly' | 'monthly'
+  netProfit: number
+  zakat: number
+  sadaka: number
+  total: number
+  paid: boolean
+  paidDate?: string
+}
+
+export interface ReturnRecord {
+  id: string
+  saleId: string
+  items: { productId: string; qty: number; price: number }[]
+  refundAmount: number
+  createdAt: string
+}
+
+export interface StockMovement {
+  id: string
+  productId: string
+  productName: string
+  type: 'sale' | 'purchase' | 'return' | 'damage' | 'transfer' | 'adjust'
+  qty: number
+  fromLocation?: string
+  toLocation?: string
+  note?: string
+  createdAt: string
+  createdBy: string
+}
+import { useState } from 'react'
+import Layout from '../../components/Layout'
+import { useData } from '../../context/DataContext'
+import Button from '../../components/ui/Button'
+import Modal from '../../components/ui/Modal'
+import { Table, Td } from '../../components/ui/Table'
+import Badge from '../../components/ui/Badge'
+import { Card } from '../../components/ui/Card'
+import { fmtTsh } from '../../lib/utils'
+import { ClipboardCheck, AlertTriangle } from 'lucide-react'
+
+export default function StockTakePage() {
+  const { products, adjustStock } = useData()
+  const [counts, setCounts] = useState<Record<string, number>>({})
+  const [confirmOpen, setConfirmOpen] = useState(false)
+  const [submitted, setSubmitted] = useState(false)
+
+  const diffs = products.map(p => {
+    const counted = counts[p.id] ?? p.stock
+    return { p, counted, diff: counted - p.stock }
+  })
+  const withDiffs = diffs.filter(d => d.diff !== 0)
+  const totalShortage = withDiffs.filter(d => d.diff < 0).reduce((s, d) => s + Math.abs(d.diff) * d.p.buyPrice, 0)
+
+  const apply = () => {
+    withDiffs.forEach(d => {
+      adjustStock(d.p.id, d.diff, 'adjust', `Hesabu ya ghala: ${d.p.stock} → ${d.counted}`)
+    })
+    setSubmitted(true)
+    setConfirmOpen(false)
+    setCounts({})
+  }
+
+  return (
+    <Layout title="Hesabu ya Ghala (Stock Take)">
+      <div className="mb-5 bg-blue-50 border border-blue-200 rounded-lg p-3 text-sm text-blue-800">
+        Hesabu kimwili, kisha ingiza idadi halisi kwenye jedwali. System itaonyesha tofauti (wizi / upotevu).
+      </div>
+
+      {submitted && (
+        <div className="mb-4 bg-emerald-50 border border-emerald-200 rounded-lg p-3 text-sm text-emerald-700">
+          ✓ Hesabu imehifadhiwa. Stoo imesasishwa.
+        </div>
+      )}
+
+      <Card className="mb-5 p-4">
+        <div className="flex items-center gap-3">
+          <div className="flex-1">
+            <div className="text-xs text-slate-500">Bidhaa zenye tofauti</div>
+            <div className="text-2xl font-bold">{withDiffs.length}</div>
+          </div>
+          <div className="flex-1">
+            <div className="text-xs text-slate-500">Thamani ya upungufu</div>
+            <div className="text-2xl font-bold text-red-600">{fmtTsh(totalShortage)}</div>
+          </div>
+          <Button onClick={() => setConfirmOpen(true)} disabled={withDiffs.length === 0}>
+            <span className="flex items-center gap-2"><ClipboardCheck size={16} /> Hifadhi Hesabu</span>
+          </Button>
+        </div>
+      </Card>
+
+      <Card>
+        <Table head={['Bidhaa', 'SKU', 'Stoo ya System', 'Idadi Halisi', 'Tofauti', 'Thamani']}>
+          {diffs.map(d => (
+            <tr key={d.p.id} className={d.diff !== 0 ? 'bg-amber-50' : ''}>
+              <Td className="font-medium">{d.p.name}</Td>
+              <Td className="font-mono text-xs">{d.p.sku}</Td>
+              <Td>{d.p.stock} {d.p.unit}</Td>
+              <Td>
+                <input type="number" min={0} value={counts[d.p.id] ?? d.p.stock}
+                  onChange={e => setCounts({ ...counts, [d.p.id]: Number(e.target.value) || 0 })}
+                  className="w-24 border rounded px-2 py-1 text-sm" />
+              </Td>
+              <Td>
+                {d.diff === 0 ? <span className="text-slate-400">—</span>
+                  : d.diff < 0 ? <Badge color="red">Upungufu {d.diff}</Badge>
+                  : <Badge color="green">Ziada +{d.diff}</Badge>}
+              </Td>
+              <Td>{d.diff !== 0 ? fmtTsh(Math.abs(d.diff) * d.p.buyPrice) : '—'}</Td>
+            </tr>
+          ))}
+        </Table>
+      </Card>
+
+      <Modal open={confirmOpen} onClose={() => setConfirmOpen(false)} title="Thibitisha Hesabu" size="sm">
+        <div className="space-y-3">
+          <div className="flex items-start gap-2 bg-amber-50 border border-amber-200 rounded-lg p-3">
+            <AlertTriangle className="text-amber-600 flex-shrink-0" size={20} />
+            <div className="text-sm">
+              <p className="font-medium">Bidhaa {withDiffs.length} zina tofauti.</p>
+              <p className="text-slate-600 mt-1">Stoo itasasishwa kulingana na hesabu halisi. Kitendo hiki hakiwezi kurudishwa.</p>
+            </div>
+          </div>
+          <div className="flex justify-end gap-3">
+            <Button variant="outline" onClick={() => setConfirmOpen(false)}>Ghairi</Button>
+            <Button variant="success" onClick={apply}>Thibitisha</Button>
+          </div>
+        </div>
+      </Modal>
+    </Layout>
+  )
+}
+
+import { useState } from 'react'
+import Layout from '../../components/Layout'
+import { useData } from '../../context/DataContext'
+import Button from '../../components/ui/Button'
+import Input from '../../components/ui/Input'
+import Modal from '../../components/ui/Modal'
+import { Table, Td } from '../../components/ui/Table'
+import Badge from '../../components/ui/Badge'
+import { Card, StatCard } from '../../components/ui/Card'
+import { fmtTsh, daysBetween, today } from '../../lib/utils'
+import { AlertTriangle, Package, Warehouse, ArrowRightLeft, Trash2 } from 'lucide-react'
+
+export default function StockPage() {
+  const { products, stockMovements, adjustStock } = useData()
+  const [tab, setTab] = useState<'stock' | 'movements'>('stock')
+  const [transferOpen, setTransferOpen] = useState(false)
+  const [damageOpen, setDamageOpen] = useState(false)
+  const [productId, setProductId] = useState('')
+  const [qty, setQty] = useState(1)
+  const [fromLoc, setFromLoc] = useState('')
+  const [toLoc, setToLoc] = useState('')
+  const [reason, setReason] = useState('')
+
+  const lowStock = products.filter(p => p.stock <= p.reorderLevel)
+  const expiring = products.filter(p => p.expiryDate && daysBetween(today(), p.expiryDate) <= 30)
+
+  const submitTransfer = () => {
+    if (!productId || qty <= 0) return
+    adjustStock(productId, -qty, 'transfer', `Transfer: ${fromLoc} → ${toLoc}`, toLoc)
+    setTransferOpen(false)
+    setProductId(''); setQty(1); setFromLoc(''); setToLoc('')
+  }
+
+  const submitDamage = () => {
+    if (!productId || qty <= 0) return
+    adjustStock(productId, -qty, 'damage', reason || 'Uharibifu', undefined)
+    setDamageOpen(false)
+    setProductId(''); setQty(1); setReason('')
+  }
+
+  return (
+    <Layout title="Usimamizi wa Stoo">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-5">
+        <StatCard label="Jumla ya Bidhaa" value={String(products.length)} icon={<Package />} />
+        <StatCard label="Chini ya Kiwango" value={String(lowStock.length)} icon={<AlertTriangle />} color="amber" />
+        <StatCard label="Zinaisha (30d)" value={String(expiring.length)} icon={<AlertTriangle />} color="red" />
+        <StatCard label="Thamani Stoo" value={fmtTsh(products.reduce((s, p) => s + p.stock * p.buyPrice, 0))} icon={<Warehouse />} color="green" />
+      </div>
+
+      <div className="flex gap-2 mb-4">
+        <button onClick={() => setTab('stock')}
+          className={`px-4 py-2 text-sm rounded-lg ${tab === 'stock' ? 'bg-brand-600 text-white' : 'bg-white border border-slate-200 text-slate-700'}`}>
+          Stoo ya Sasa
+        </button>
+        <button onClick={() => setTab('movements')}
+          className={`px-4 py-2 text-sm rounded-lg ${tab === 'movements' ? 'bg-brand-600 text-white' : 'bg-white border border-slate-200 text-slate-700'}`}>
+          Historia ya Mwendo
+        </button>
+        <div className="flex-1" />
+        <Button variant="outline" onClick={() => { setProductId(''); setQty(1); setFromLoc(''); setToLoc(''); setTransferOpen(true) }}>
+          <span className="flex items-center gap-2"><ArrowRightLeft size={16} /> Hamisha</span>
+        </Button>
+        <Button variant="danger" onClick={() => { setProductId(''); setQty(1); setReason(''); setDamageOpen(true) }}>
+          <span className="flex items-center gap-2"><Trash2 size={16} /> Rekodi Uharibifu</span>
+        </Button>
+      </div>
+
+      {tab === 'stock' && (
+        <Card>
+          <Table head={['Bidhaa', 'SKU', 'Aina', 'Stoo', 'Mahali', 'Kiwango', 'Hali']}>
+            {products.map(p => (
+              <tr key={p.id} className="hover:bg-slate-50">
+                <Td className="font-medium">{p.name}</Td>
+                <Td className="font-mono text-xs">{p.sku}</Td>
+                <Td><Badge color="blue">{p.category}</Badge></Td>
+                <Td><b>{p.stock}</b> {p.unit}</Td>
+                <Td>{p.location || '—'}</Td>
+                <Td>{p.reorderLevel}</Td>
+                <Td>
+                  {p.stock === 0 ? <Badge color="red">Hakuna</Badge>
+                    : p.stock <= p.reorderLevel ? <Badge color="amber">Chini</Badge>
+                    : <Badge color="green">Sawa</Badge>}
+                </Td>
+              </tr>
+            ))}
+          </Table>
+        </Card>
+      )}
+
+      {tab === 'movements' && (
+        <Card>
+          <Table head={['Tarehe', 'Bidhaa', 'Aina', 'Qty', 'Kutoka', 'Kwenda', 'Maelezo', 'Aliyeingiza']}>
+            {stockMovements.slice(0, 100).map(m => (
+              <tr key={m.id} className="hover:bg-slate-50">
+                <Td className="text-xs">{m.createdAt.slice(0, 16).replace('T', ' ')}</Td>
+                <Td>{m.productName}</Td>
+                <Td><Badge color={
+                  m.type === 'sale' ? 'blue' : m.type === 'purchase' ? 'green'
+                    : m.type === 'damage' ? 'red' : m.type === 'transfer' ? 'purple' : 'slate'
+                }>{m.type}</Badge></Td>
+                <Td className={m.qty < 0 ? 'text-red-600' : 'text-emerald-600'}><b>{m.qty > 0 ? '+' : ''}{m.qty}</b></Td>
+                <Td>{m.fromLocation || '—'}</Td>
+                <Td>{m.toLocation || '—'}</Td>
+                <Td className="text-xs">{m.note || '—'}</Td>
+                <Td className="text-xs">{m.createdBy}</Td>
+              </tr>
+            ))}
+            {stockMovements.length === 0 && (
+              <tr><td colSpan={8} className="text-center py-10 text-slate-500">Hakuna historia</td></tr>
+            )}
+          </Table>
+        </Card>
+      )}
+
+      {/* TRANSFER MODAL */}
+      <Modal open={transferOpen} onClose={() => setTransferOpen(false)} title="Hamisha Stoki" size="md">
+        <div className="space-y-4">
+          <select value={productId} onChange={e => setProductId(e.target.value)}
+            className="w-full border rounded-lg px-3 py-2 text-sm">
+            <option value="">— Chagua bidhaa —</option>
+            {products.map(p => <option key={p.id} value={p.id}>{p.name} ({p.stock} {p.unit})</option>)}
+          </select>
+          <Input label="Idadi" type="number" value={qty} onChange={e => setQty(Number(e.target.value))} />
+          <Input label="Kutoka (Location)" value={fromLoc} onChange={e => setFromLoc(e.target.value)} placeholder="Mfano: Kwembe" />
+          <Input label="Kwenda (Location)" value={toLoc} onChange={e => setToLoc(e.target.value)} placeholder="Mfano: Pugu" />
+          <div className="flex justify-end gap-3">
+            <Button variant="outline" onClick={() => setTransferOpen(false)}>Ghairi</Button>
+            <Button onClick={submitTransfer}>Hamisha</Button>
+          </div>
+        </div>
+      </Modal>
+
+      {/* DAMAGE MODAL */}
+      <Modal open={damageOpen} onClose={() => setDamageOpen(false)} title="Rekodi Uharibifu / Upotevu" size="md">
+        <div className="space-y-4">
+          <select value={productId} onChange={e => setProductId(e.target.value)}
+            className="w-full border rounded-lg px-3 py-2 text-sm">
+            <option value="">— Chagua bidhaa —</option>
+            {products.map(p => <option key={p.id} value={p.id}>{p.name} ({p.stock} {p.unit})</option>)}
+          </select>
+          <Input label="Idadi iliyoharibika" type="number" value={qty} onChange={e => setQty(Number(e.target.value))} />
+          <Input label="Sababu / Maelezo" value={reason} onChange={e => setReason(e.target.value)}
+            placeholder="Mfano: Saruji imekauka, mbao ziliwa na mchwa" />
+          <div className="flex justify-end gap-3">
+            <Button variant="outline" onClick={() => setDamageOpen(false)}>Ghairi</Button>
+            <Button variant="danger" onClick={submitDamage}>Rekodi Hasara</Button>
+          </div>
+        </div>
+      </Modal>
+    </Layout>
+  )
+}
+import { useState } from 'react'
+import Layout from '../../components/Layout'
+import { useData } from '../../context/DataContext'
+import Button from '../../components/ui/Button'
+import Modal from '../../components/ui/Modal'
+import { Table, Td } from '../../components/ui/Table'
+import Badge from '../../components/ui/Badge'
+import { Card } from '../../components/ui/Card'
+import type { Purchase } from '../../types'
+import { fmtTsh } from '../../lib/utils'
+import { Package, AlertCircle } from 'lucide-react'
+
+export default function GRNPage() {
+  const { purchases, grns, receivePurchase } = useData()
+  const [open, setOpen] = useState(false)
+  const [selected, setSelected] = useState<Purchase | null>(null)
+  const [received, setReceived] = useState<Record<string, number>>({})
+
+  const pending = purchases.filter(p => p.status !== 'received')
+
+  const startReceiving = (p: Purchase) => {
+    setSelected(p)
+    setReceived(Object.fromEntries(p.items.map(i => [i.productId, i.qty])))
+    setOpen(true)
+  }
+
+  const submit = () => {
+    if (!selected) return
+    const items = Object.entries(received).map(([productId, qty]) => ({ productId, qty }))
+    receivePurchase(selected.id, items)
+    setOpen(false)
+    setSelected(null)
+  }
+
+  return (
+    <Layout title="Kupokea Mizigo (GRN)">
+      <div className="mb-5 text-sm text-slate-500">
+        Rekodi mizigo iliyopokelewa dhidi ya LPO. System itaonyesha upungufu.
+      </div>
+
+      <Card className="mb-5">
+        <div className="p-4 border-b border-slate-200 font-semibold">Oda Zinazosubiri Kupokelewa</div>
+        <Table head={['LPO', 'Msambazaji', 'Jumla', 'Hali', 'Tarehe', '']}>
+          {pending.map(p => (
+            <tr key={p.id} className="hover:bg-slate-50">
+              <Td className="font-mono text-xs">{p.lpoNo}</Td>
+              <Td>{p.supplierName}</Td>
+              <Td className="font-medium">{fmtTsh(p.total)}</Td>
+              <Td><Badge color={p.status === 'partial' ? 'amber' : 'blue'}>{p.status}</Badge></Td>
+              <Td className="text-xs">{p.createdAt.slice(0, 10)}</Td>
+              <Td>
+                <Button size="sm" onClick={() => startReceiving(p)}>
+                  <span className="flex items-center gap-1"><Package size={14} /> Pokea</span>
+                </Button>
+              </Td>
+            </tr>
+          ))}
+          {pending.length === 0 && (
+            <tr><td colSpan={6} className="text-center py-10 text-slate-500">Hakuna oda zinazosubiri</td></tr>
+          )}
+        </Table>
+      </Card>
+
+      <Card>
+        <div className="p-4 border-b border-slate-200 font-semibold">Historia ya GRN</div>
+        <Table head={['GRN', 'LPO', 'Tarehe', 'Bidhaa Zilizopokelewa', '']}>
+          {grns.map(g => {
+            const purch = purchases.find(p => p.id === g.purchaseId)
+            const shortages = g.items.filter(i => i.received < i.ordered)
+            return (
+              <tr key={g.id} className="hover:bg-slate-50">
+                <Td className="font-mono text-xs">{g.grnNo}</Td>
+                <Td className="font-mono text-xs">{purch?.lpoNo || '—'}</Td>
+                <Td className="text-xs">{g.createdAt.slice(0, 16).replace('T', ' ')}</Td>
+                <Td>{g.items.map(i => `${i.productName}: ${i.received}/${i.ordered}`).join(', ')}</Td>
+                <Td>
+                  {shortages.length > 0 && (
+                    <Badge color="red">
+                      <span className="flex items-center gap-1"><AlertCircle size={10} /> Upungufu</span>
+                    </Badge>
+                  )}
+                </Td>
+              </tr>
+            )
+          })}
+          {grns.length === 0 && (
+            <tr><td colSpan={5} className="text-center py-10 text-slate-500">Hakuna GRN bado</td></tr>
+          )}
+        </Table>
+      </Card>
+
+      <Modal open={open} onClose={() => setOpen(false)} title={`Pokea Mizigo - ${selected?.lpoNo || ''}`} size="md">
+        {selected && (
+          <div className="space-y-4">
+            <div className="text-sm text-slate-600">Ingiza idadi iliyopokelewa. System itaonyesha upungufu.</div>
+            <table className="w-full text-sm border">
+              <thead className="bg-slate-100">
+                <tr>
+                  <th className="text-left px-2 py-1">Bidhaa</th>
+                  <th className="text-right px-2 py-1">Iliyoagizwa</th>
+                  <th className="text-right px-2 py-1">Imepokelewa</th>
+                  <th className="text-right px-2 py-1">Upungufu</th>
+                </tr>
+              </thead>
+              <tbody>
+                {selected.items.map(i => {
+                  const rec = received[i.productId] || 0
+                  const diff = i.qty - rec
+                  return (
+                    <tr key={i.productId} className="border-b">
+                      <td className="px-2 py-1">{i.productName}</td>
+                      <td className="text-right px-2 py-1">{i.qty}</td>
+                      <td className="text-right px-2 py-1">
+                        <input type="number" min={0} value={rec}
+                          onChange={e => setReceived({ ...received, [i.productId]: Number(e.target.value) || 0 })}
+                          className="w-20 border rounded px-2 py-1 text-right" />
+                      </td>
+                      <td className={`text-right px-2 py-1 ${diff > 0 ? 'text-red-600 font-medium' : 'text-slate-400'}`}>
+                        {diff > 0 ? diff : '—'}
+                      </td>
+                    </tr>
+                  )
+                })}
+              </tbody>
+            </table>
+            <div className="flex justify-end gap-3">
+              <Button variant="outline" onClick={() => setOpen(false)}>Ghairi</Button>
+              <Button onClick={submit}>Kamilisha GRN</Button>
+            </div>
+          </div>
+        )}
+      </Modal>
+    </Layout>
+  )
+}
+
+
+import { useState } from 'react'
+import Layout from '../../components/Layout'
+import { useData } from '../../context/DataContext'
+import Button from '../../components/ui/Button'
+import Input from '../../components/ui/Input'
+import Select from '../../components/ui/Select'
+import Modal from '../../components/ui/Modal'
+import { Table, Td } from '../../components/ui/Table'
+import Badge from '../../components/ui/Badge'
+import { Card } from '../../components/ui/Card'
+import { type Customer } from '../../types'
+import { fmtTsh } from '../../lib/utils'
+import { Plus, User, Phone, MessageSquare } from 'lucide-react'
+
+const empty: Omit<Customer, 'id' | 'createdAt'> = {
+  name: '', phone: '', email: '', type: 'mteja', balance: 0,
+}
+
+export default function CustomersPage() {
+  const { customers, sales, addCustomer, updateCustomer } = useData()
+  const [open, setOpen] = useState(false)
+  const [edit, setEdit] = useState<Customer | null>(null)
+  const [form, setForm] = useState(empty)
+  const [viewCust, setViewCust] = useState<Customer | null>(null)
+
+  const openNew = () => { setEdit(null); setForm(empty); setOpen(true) }
+  const openEdit = (c: Customer) => {
+    setEdit(c)
+    const { id, createdAt, ...rest } = c
+    setForm(rest); setOpen(true)
+  }
+  const save = () => {
+    if (!form.name.trim() || !form.phone.trim()) return
+    if (edit) updateCustomer({ ...edit, ...form })
+    else addCustomer(form)
+    setOpen(false)
+  }
+
+  const debts = customers.filter(c => c.balance > 0)
+  const totalDebt = debts.reduce((s, c) => s + c.balance, 0)
+
+  const customerSales = (id: string) => sales.filter(s => s.customerId === id)
+
+  return (
+    <Layout title="Wateja (Customers)">
+      <div className="grid grid-cols-3 gap-3 mb-5">
+        <Card className="p-4"><div className="text-xs text-slate-500">Wateja Wote</div><div className="text-2xl font-bold">{customers.length}</div></Card>
+        <Card className="p-4"><div className="text-xs text-slate-500">Wenye Madeni</div><div className="text-2xl font-bold text-red-600">{debts.length}</div></Card>
+        <Card className="p-4"><div className="text-xs text-slate-500">Jumla ya Madeni</div><div className="text-2xl font-bold text-red-600">{fmtTsh(totalDebt)}</div></Card>
+      </div>
+
+      <div className="flex justify-end mb-4">
+        <Button onClick={openNew}><span className="flex items-center gap-2"><Plus size={16} /> Mteja Mpya</span></Button>
+      </div>
+
+      <Card>
+        <Table head={['Jina', 'Simu', 'Aina', 'Deni', 'Manunuzi', 'Vitendo']}>
+          {customers.map(c => (
+            <tr key={c.id} className="hover:bg-slate-50">
+              <Td>
+                <div className="flex items-center gap-2">
+                  <div className="w-8 h-8 rounded-full bg-brand-100 text-brand-700 flex items-center justify-center font-semibold text-xs">
+                    {c.name.charAt(0).toUpperCase()}
+                  </div>
+                  <span className="font-medium">{c.name}</span>
+                </div>
+              </Td>
+              <Td className="text-sm">{c.phone}</Td>
+              <Td><Badge color="blue">{c.type}</Badge></Td>
+              <Td className={c.balance > 0 ? 'text-red-600 font-semibold' : 'text-slate-400'}>
+                {c.balance > 0 ? fmtTsh(c.balance) : '—'}
+              </Td>
+              <Td>{customerSales(c.id).length}</Td>
+              <Td>
+                <div className="flex gap-2 text-xs">
+                  <button onClick={() => setViewCust(c)} className="text-brand-600 hover:underline">Ona</button>
+                  <button onClick={() => openEdit(c)} className="text-blue-600 hover:underline">Badilisha</button>
+                </div>
+              </Td>
+            </tr>
+          ))}
+        </Table>
+      </Card>
+
+      <Modal open={open} onClose={() => setOpen(false)} title={edit ? 'Badilisha Mteja' : 'Mteja Mpya'} size="md">
+        <div className="space-y-3">
+          <Input label="Jina *" value={form.name} onChange={e => setForm({ ...form, name: e.target.value })} />
+          <Input label="Simu *" value={form.phone} onChange={e => setForm({ ...form, phone: e.target.value })} placeholder="07xxxxxxxx" />
+          <Input label="Email" value={form.email || ''} onChange={e => setForm({ ...form, email: e.target.value })} />
+          <Select label="Aina" value={form.type} onChange={e => setForm({ ...form, type: e.target.value as any })}>
+            <option value="mteja">Mteja wa Kawaida</option>
+            <option value="fundi">Fundi</option>
+            <option value="mjenzi">Mjenzi</option>
+            <option value="kampuni">Kampuni</option>
+          </Select>
+          <div className="flex justify-end gap-3">
+            <Button variant="outline" onClick={() => setOpen(false)}>Ghairi</Button>
+            <Button onClick={save}>Hifadhi</Button>
+          </div>
+        </div>
+      </Modal>
+
+      <Modal open={!!viewCust} onClose={() => setViewCust(null)} title={viewCust?.name || ''} size="lg">
+        {viewCust && (
+          <div className="space-y-4">
+            <div className="grid grid-cols-2 gap-3 text-sm">
+              <div><User size={14} className="inline mr-1" /> {viewCust.name}</div>
+              <div><Phone size={14} className="inline mr-1" /> {viewCust.phone}</div>
+              <div className="col-span-2">
+                <b>Deni la Sasa:</b> <span className={viewCust.balance > 0 ? 'text-red-600 font-bold' : 'text-emerald-600'}>
+                  {fmtTsh(viewCust.balance)}
+                </span>
+              </div>
+            </div>
+            <div className="border-t pt-3">
+              <div className="font-semibold mb-2">Historia ya Manunuzi</div>
+              <Table head={['Risiti', 'Jumla', 'Tarehe', 'Hali']}>
+                {customerSales(viewCust.id).map(s => (
+                  <tr key={s.id}>
+                    <Td className="font-mono text-xs">{s.receiptNo}</Td>
+                    <Td>{fmtTsh(s.total)}</Td>
+                    <Td className="text-xs">{s.createdAt.slice(0, 10)}</Td>
+                    <Td><Badge color={s.status === 'completed' ? 'green' : 'amber'}>{s.status}</Badge></Td>
+                  </tr>
+                ))}
+                {customerSales(viewCust.id).length === 0 && (
+                  <tr><td colSpan={4} className="text-center py-4 text-slate-500">Hakuna manunuzi</td></tr>
+                )}
+              </Table>
+            </div>
+            {viewCust.balance > 0 && (
+              <div className="bg-amber-50 border border-amber-200 rounded p-3 text-xs text-amber-800 flex items-start gap-2">
+                <MessageSquare size={16} className="flex-shrink-0 mt-0.5" />
+                <div>
+                  <b>Ukumbusho wa Deni:</b> Ndugu {viewCust.name}, deni lako la {fmtTsh(viewCust.balance)} linahitaji kulipwa.
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+      </Modal>
+    </Layout>
+  )
+}
+
+import { useState } from 'react'
+import Layout from '../../components/Layout'
+import { useData } from '../../context/DataContext'
+import { useAuth } from '../../context/AuthContext'
+import Button from '../../components/ui/Button'
+import Input from '../../components/ui/Input'
+import Select from '../../components/ui/Select'
+import Modal from '../../components/ui/Modal'
+import { Table, Td } from '../../components/ui/Table'
+import Badge from '../../components/ui/Badge'
+import { Card } from '../../components/ui/Card'
+import type { Expense } from '../../types'
+import { fmtTsh, today } from '../../lib/utils'
+import { Plus, CheckCircle, XCircle, Wallet, AlertTriangle } from 'lucide-react'
+
+const FIXED = ['Kodi ya Duka', 'Mishahara', 'Ulinzi', 'Umeme wa Luku', 'Leseni ya Biashara', 'Bima']
+const VARIABLE = ['Mafuta ya Gari', 'Per Diem ya Dereva', 'Mizigo ya Kupakua', 'Mifuko ya Kufungashia', 'Vifaa vya Ofisi', 'Matengenezo']
+const CAPITAL = ['Meza Mpya', 'Gari', 'Jengo', 'Kompyuta', 'Furniture']
+
+const empty: Omit<Expense, 'id'> = {
+  category: 'variable', subCategory: 'Mafuta ya Gari', description: '', amount: 0,
+  date: today(), paidTo: '', paymentMethod: 'Cash', enteredBy: '', status: 'approved', recurring: false,
+}
+
+const APPROVAL_THRESHOLD = 100000
+
+export default function ExpensesPage() {
+  const { user } = useAuth()
+  const { expenses, addExpense, approveExpense } = useData()
+  const [open, setOpen] = useState(false)
+  const [form, setForm] = useState(empty)
+  const [filter, setFilter] = useState<'all' | 'fixed' | 'variable' | 'capital' | 'pending'>('all')
+
+  const subs = form.category === 'fixed' ? FIXED : form.category === 'variable' ? VARIABLE : CAPITAL
+
+  const save = () => {
+    if (!form.description.trim() || form.amount <= 0) return
+    const needsApproval = form.amount > APPROVAL_THRESHOLD && user?.role !== 'admin' && user?.role !== 'owner'
+    addExpense({
+      ...form,
+      enteredBy: user?.name || '',
+      status: needsApproval ? 'pending' : 'approved',
+    })
+    setOpen(false); setForm(empty)
+  }
+
+  const filtered = expenses.filter(e => {
+    if (filter === 'all') return true
+    if (filter === 'pending') return e.status === 'pending'
+    return e.category === filter
+  })
+
+  const totals = {
+    fixed: expenses.filter(e => e.category === 'fixed' && e.status === 'approved').reduce((s, e) => s + e.amount, 0),
+    variable: expenses.filter(e => e.category === 'variable' && e.status === 'approved').reduce((s, e) => s + e.amount, 0),
+    capital: expenses.filter(e => e.category === 'capital' && e.status === 'approved').reduce((s, e) => s + e.amount, 0),
+    pending: expenses.filter(e => e.status === 'pending').length,
+  }
+
+  return (
+    <Layout title="Gharama za Uendeshaji (OPEX)">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-5">
+        <Card className="p-4"><div className="text-xs text-slate-500">Kudumu</div><div className="text-xl font-bold">{fmtTsh(totals.fixed)}</div></Card>
+        <Card className="p-4"><div className="text-xs text-slate-500">Kubadilika</div><div className="text-xl font-bold">{fmtTsh(totals.variable)}</div></Card>
+        <Card className="p-4"><div className="text-xs text-slate-500">Mtaji</div><div className="text-xl font-bold">{fmtTsh(totals.capital)}</div></Card>
+        <Card className="p-4"><div className="text-xs text-slate-500">Zinasubiri Idhini</div><div className="text-xl font-bold text-amber-600">{totals.pending}</div></Card>
+      </div>
+
+      <div className="flex gap-2 mb-4 overflow-x-auto">
+        {(['all', 'fixed', 'variable', 'capital', 'pending'] as const).map(f => (
+          <button key={f} onClick={() => setFilter(f)}
+            className={`px-4 py-2 text-sm rounded-lg whitespace-nowrap ${filter === f ? 'bg-brand-600 text-white' : 'bg-white border border-slate-200 text-slate-700'}`}>
+            {f === 'all' ? 'Zote' : f === 'fixed' ? 'Kudumu' : f === 'variable' ? 'Kubadilika' : f === 'capital' ? 'Mtaji' : 'Zinasubiri'}
+          </button>
+        ))}
+        <div className="flex-1" />
+        <Button onClick={() => { setForm(empty); setOpen(true) }}>
+          <span className="flex items-center gap-2"><Plus size={16} /> Gharama Mpya</span>
+        </Button>
+      </div>
+
+      <Card>
+        <Table head={['Tarehe', 'Kundi', 'Maelezo', 'Kiasi', 'Malipo', 'Aliyelipwa', 'Hali', '']}>
+          {filtered.map(e => (
+            <tr key={e.id} className="hover:bg-slate-50">
+              <Td className="text-xs">{e.date}</Td>
+              <Td>
+                <Badge color={e.category === 'fixed' ? 'blue' : e.category === 'variable' ? 'amber' : 'purple'}>
+                  {e.category === 'fixed' ? 'Kudumu' : e.category === 'variable' ? 'Kubadilika' : 'Mtaji'}
+                </Badge>
+                <div className="text-xs text-slate-500 mt-1">{e.subCategory}</div>
+              </Td>
+              <Td>
+                <div className="font-medium">{e.description}</div>
+                {e.recurring && <span className="text-xs text-slate-500">↻ Kila mwezi</span>}
+              </Td>
+              <Td className="font-medium">{fmtTsh(e.amount)}</Td>
+              <Td className="text-xs">{e.paymentMethod}</Td>
+              <Td className="text-sm">{e.paidTo}</Td>
+              <Td>
+                <Badge color={e.status === 'approved' ? 'green' : e.status === 'pending' ? 'amber' : 'red'}>
+                  {e.status === 'approved' ? 'Imeidhinishwa' : e.status === 'pending' ? 'Inasubiri' : 'Imekataliwa'}
+                </Badge>
+              </Td>
+              <Td>
+                {e.status === 'pending' && (user?.role === 'admin' || user?.role === 'owner') && (
+                  <div className="flex gap-1">
+                    <button onClick={() => approveExpense(e.id, true)} className="text-emerald-600 hover:bg-emerald-50 p-1 rounded" title="Idhinisha">
+                      <CheckCircle size={16} />
+                    </button>
+                    <button onClick={() => approveExpense(e.id, false)} className="text-red-600 hover:bg-red-50 p-1 rounded" title="Kataa">
+                      <XCircle size={16} />
+                    </button>
+                  </div>
+                )}
+              </Td>
+            </tr>
+          ))}
+          {filtered.length === 0 && (
+            <tr><td colSpan={8} className="text-center py-10 text-slate-500">Hakuna gharama</td></tr>
+          )}
+        </Table>
+      </Card>
+
+      <Modal open={open} onClose={() => setOpen(false)} title="Ongeza Gharama" size="md">
+        <div className="space-y-3">
+          <Select label="Kundi la Gharama" value={form.category}
+            onChange={e => {
+              const c = e.target.value as any
+              const firstSub = c === 'fixed' ? FIXED[0] : c === 'variable' ? VARIABLE[0] : CAPITAL[0]
+              setForm({ ...form, category: c, subCategory: firstSub })
+            }}>
+            <option value="fixed">Kudumu (Fixed)</option>
+            <option value="variable">Kubadilika (Variable)</option>
+            <option value="capital">Mtaji (Capital)</option>
+          </Select>
+
+          <Select label="Aina" value={form.subCategory} onChange={e => setForm({ ...form, subCategory: e.target.value })}>
+            {subs.map(s => <option key={s} value={s}>{s}</option>)}
+          </Select>
+
+          <Input label="Maelezo *" value={form.description} onChange={e => setForm({ ...form, description: e.target.value })} />
+          <Input label="Kiasi (Tsh) *" type="number" value={form.amount}
+            onChange={e => setForm({ ...form, amount: Number(e.target.value) || 0 })} />
+          <Input label="Tarehe" type="date" value={form.date} onChange={e => setForm({ ...form, date: e.target.value })} />
+          <Input label="Aliyelipwa" value={form.paidTo} onChange={e => setForm({ ...form, paidTo: e.target.value })} />
+          <Select label="Njia ya Malipo" value={form.paymentMethod} onChange={e => setForm({ ...form, paymentMethod: e.target.value })}>
+            <option>Cash</option><option>M-Pesa</option><option>Tigo Pesa</option><option>Benki</option>
+          </Select>
+          <Input label="Namba ya Risiti" value={form.receiptNo || ''} onChange={e => setForm({ ...form, receiptNo: e.target.value })} />
+
+          <label className="flex items-center gap-2 text-sm">
+            <input type="checkbox" checked={form.recurring}
+              onChange={e => setForm({ ...form, recurring: e.target.checked })} />
+            Gharama ya kujirudia kila mwezi
+          </label>
+
+          {form.amount > APPROVAL_THRESHOLD && user?.role !== 'admin' && user?.role !== 'owner' && (
+            <div className="bg-amber-50 border border-amber-200 rounded p-3 text-xs text-amber-800 flex gap-2">
+              <AlertTriangle size={16} className="flex-shrink-0" />
+              Kiasi hiki kinazidi {fmtTsh(APPROVAL_THRESHOLD)}. Kitahitaji idhini ya Admin/Mmiliki.
+            </div>
+          )}
+
+          <div className="flex justify-end gap-3">
+            <Button variant="outline" onClick={() => setOpen(false)}>Ghairi</Button>
+            <Button onClick={save}>Hifadhi</Button>
+          </div>
+        </div>
+      </Modal>
+    </Layout>
+  )
+}
+import { useState, useMemo } from 'react'
+import Layout from '../../components/Layout'
+import { useData } from '../../context/DataContext'
+import { useAuth } from '../../context/AuthContext'
+import Button from '../../components/ui/Button'
+import Input from '../../components/ui/Input'
+import Select from '../../components/ui/Select'
+import Modal from '../../components/ui/Modal'
+import ConfirmModal from '../../components/ConfirmModal'
+import { Table, Td } from '../../components/ui/Table'
+import Badge from '../../components/ui/Badge'
+import { Card } from '../../components/ui/Card'
+import type { Product, Unit } from '../../types'
+import { fmtTsh, daysBetween, today } from '../../lib/utils'
+import { Plus, Pencil, Trash2, AlertTriangle, MapPin, Search, Package } from 'lucide-react'
+
+const CATEGORIES = ['Saruji', 'Nondo', 'Mabati', 'Mbao', 'Rangi', 'Bomba', 'Umeme', 'Zana']
+
+const UNITS: { value: Unit; label: string }[] = [
+  { value: 'pcs', label: 'Pieces (pcs)' },
+  { value: 'kg', label: 'Kilogram (kg)' },
+  { value: 'm', label: 'Mita (m)' },
+  { value: 'ft', label: 'Futi (ft)' },
+  { value: 'm3', label: 'Mita za Ujazo (m³)' },
+  { value: 'bag', label: 'Mfuko (bag)' },
+  { value: 'box', label: 'Box' },
+]
+
+const empty: Omit<Product, 'id' | 'createdAt'> = {
+  sku: '', name: '', category: 'Saruji', unit: 'bag',
+  buyPrice: 0, sellPrice: 0, stock: 0,
+  location: '', supplier: '', reorderLevel: 0,
+  barcode: '', description: '', imageUrl: '', expiryDate: '',
+  alternateUnits: [],
+}
+
+export default function ProductsPage() {
+  const { user } = useAuth()
+  const { products, addProduct, updateProduct, deleteProduct } = useData()
+
+  const [open, setOpen] = useState(false)
+  const [edit, setEdit] = useState<Product | null>(null)
+  const [form, setForm] = useState<Omit<Product, 'id' | 'createdAt'>>(empty)
+  const [delId, setDelId] = useState<string | null>(null)
+  const [search, setSearch] = useState('')
+  const [catFilter, setCatFilter] = useState('')
+  const [errors, setErrors] = useState<Record<string, string>>({})
+
+  const canEdit = user?.role === 'admin' || user?.role === 'warehouse'
+  const canSeeBuyPrice = user?.role !== 'seller'
+
+  // FR38 — fast search across name / SKU / barcode / category
+  const filtered = useMemo(() => {
+    const q = search.toLowerCase().trim()
+    return products.filter(p => {
+      const matchSearch = !q ||
+        p.name.toLowerCase().includes(q) ||
+        p.sku.toLowerCase().includes(q) ||
+        p.barcode.toLowerCase().includes(q) ||
+        p.category.toLowerCase().includes(q)
+      const matchCat = !catFilter || p.category === catFilter
+      return matchSearch && matchCat
+    })
+  }, [products, search, catFilter])
+
+  const openNew = () => {
+    setEdit(null)
+    setForm(empty)
+    setErrors({})
+    setOpen(true)
+  }
+
+  const openEdit = (p: Product) => {
+    setEdit(p)
+    const { id, createdAt, ...rest } = p
+    setForm(rest)
+    setErrors({})
+    setOpen(true)
+  }
+
+  const validate = () => {
+    const e: Record<string, string> = {}
+    if (!form.name.trim()) e.name = 'Jina la bidhaa linahitajika'
+    if (!form.sku.trim()) e.sku = 'SKU inahitajika'
+    if (!form.barcode.trim()) e.barcode = 'Barcode inahitajika'
+    if (form.sellPrice <= 0) e.sellPrice = 'Bei ya mauzo iwe zaidi ya 0'
+    if (form.buyPrice < 0) e.buyPrice = 'Bei ya ununuzi si sahihi'
+    if (form.stock < 0) e.stock = 'Stoo si sahihi'
+    setErrors(e)
+    return Object.keys(e).length === 0
+  }
+
+  const submit = () => {
+    if (!validate()) return
+    if (edit) {
+      updateProduct({ ...edit, ...form })
+    } else {
+      addProduct(form)
+    }
+    setOpen(false)
+  }
+
+  const confirmDelete = () => {
+    if (delId) {
+      deleteProduct(delId)
+      setDelId(null)
+    }
+  }
+
+  // FR5 — expiry badge
+  const expiryStatus = (p: Product) => {
+    if (!p.expiryDate) return null
+    const days = daysBetween(today(), p.expiryDate)
+    if (days < 0) return { label: 'Imeisha', color: 'red' as const }
+    if (days <= 30) return { label: `Siku ${days}`, color: 'amber' as const }
+    return null
+  }
+
+  // FR21 — reorder level badge
+  const stockStatus = (p: Product) => {
+    if (p.stock === 0) return { label: 'Hakuna', color: 'red' as const }
+    if (p.stock <= p.reorderLevel) return { label: 'Chini', color: 'amber' as const }
+    return { label: 'Sawa', color: 'green' as const }
+  }
+
+  const totalStockValue = products.reduce((s, p) => s + p.stock * p.buyPrice, 0)
+  const lowStockCount = products.filter(p => p.stock <= p.reorderLevel).length
+  const expiringCount = products.filter(p => p.expiryDate && daysBetween(today(), p.expiryDate) <= 30).length
+
+  return (
+    <Layout title="Bidhaa (Products)">
+      {/* Toolbar */}
+      <div className="flex flex-wrap gap-3 mb-5 items-center">
+        <div className="relative flex-1 min-w-[220px]">
+          <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+          <input
+            value={search}
+            onChange={e => setSearch(e.target.value)}
+            placeholder="Tafuta jina, SKU, barcode..."
+            className="w-full pl-9 pr-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-brand-500"
+          />
+        </div>
+        <select
+          value={catFilter}
+          onChange={e => setCatFilter(e.target.value)}
+          className="px-3 py-2 border border-slate-300 rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-brand-500"
+        >
+          <option value="">Makundi yote</option>
+          {CATEGORIES.map(c => <option key={c} value={c}>{c}</option>)}
+        </select>
+        {canEdit && (
+          <Button onClick={openNew}>
+            <span className="flex items-center gap-2"><Plus size={16} /> Ongeza Bidhaa</span>
+          </Button>
+        )}
+      </div>
+
+      {/* Summary strip */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-5">
+        <Card className="p-3">
+          <div className="text-xs text-slate-500">Jumla ya Bidhaa</div>
+          <div className="text-xl font-bold text-slate-800">{products.length}</div>
+        </Card>
+        <Card className="p-3">
+          <div className="text-xs text-slate-500">Zinazoisha Stoo</div>
+          <div className="text-xl font-bold text-amber-600">{lowStockCount}</div>
+        </Card>
+        <Card className="p-3">
+          <div className="text-xs text-slate-500">Zinaisha (Expiry)</div>
+          <div className="text-xl font-bold text-red-600">{expiringCount}</div>
+        </Card>
+        <Card className="p-3">
+          <div className="text-xs text-slate-500">Thamani ya Stoo</div>
+          <div className="text-lg font-bold text-emerald-600">{fmtTsh(totalStockValue)}</div>
+        </Card>
+      </div>
+
+      {/* Table */}
+      <Card>
+        {filtered.length === 0 ? (
+          <div className="py-16 text-center text-slate-500">
+            <Package size={48} className="mx-auto mb-3 text-slate-300" />
+            <p>Hakuna bidhaa zilizopatikana.</p>
+          </div>
+        ) : (
+          <Table
+            head={[
+              'Bidhaa', 'SKU / Barcode', 'Aina', 'Stoo',
+              canSeeBuyPrice ? 'Bei Kununua' : '',
+              'Bei Kuuza', 'Mahali', 'Hali', 'Vitendo',
+            ].filter(Boolean)}
+          >
+            {filtered.map(p => {
+              const stockS = stockStatus(p)
+              const expS = expiryStatus(p)
+              return (
+                <tr key={p.id} className="hover:bg-slate-50">
+                  <Td>
+                    <div className="flex items-center gap-2">
+                      {p.imageUrl ? (
+                        <img src={p.imageUrl} alt={p.name} className="w-9 h-9 rounded object-cover" />
+                      ) : (
+                        <div className="w-9 h-9 rounded bg-slate-100 flex items-center justify-center text-slate-400">
+                          <Package size={16} />
+                        </div>
+                      )}
+                      <div>
+                        <div className="font-medium text-slate-800">{p.name}</div>
+                        {p.supplier && <div className="text-xs text-slate-500">{p.supplier}</div>}
+                      </div>
+                    </div>
+                  </Td>
+                  <Td>
+                    <div className="text-xs font-mono text-slate-600">{p.sku}</div>
+                    <div className="text-xs text-slate-400">{p.barcode}</div>
+                  </Td>
+                  <Td><Badge color="blue">{p.category}</Badge></Td>
+                  <Td>
+                    <div className="font-medium">
+                      {p.stock} <span className="text-xs text-slate-500">{p.unit}</span>
+                    </div>
+                    {p.stock <= p.reorderLevel && (
+                      <div className="text-xs text-amber-600">Min: {p.reorderLevel}</div>
+                    )}
+                  </Td>
+                  {canSeeBuyPrice && <Td>{fmtTsh(p.buyPrice)}</Td>}
+                  <Td className="font-medium text-emerald-700">{fmtTsh(p.sellPrice)}</Td>
+                  <Td>
+                    <div className="flex items-center gap-1 text-xs text-slate-600">
+                      <MapPin size={12} /> {p.location || '—'}
+                    </div>
+                  </Td>
+                  <Td>
+                    <div className="flex flex-col gap-1">
+                      <Badge color={stockS.color}>{stockS.label}</Badge>
+                      {expS && (
+                        <Badge color={expS.color}>
+                          <span className="flex items-center gap-1">
+                            <AlertTriangle size={10} /> {expS.label}
+                          </span>
+                        </Badge>
+                      )}
+                    </div>
+                  </Td>
+                  <Td>
+                    {canEdit ? (
+                      <div className="flex gap-1">
+                        <button
+                          onClick={() => openEdit(p)}
+                          className="p-1.5 rounded hover:bg-blue-50 text-blue-600"
+                          title="Badilisha"
+                        >
+                          <Pencil size={16} />
+                        </button>
+                        <button
+                          onClick={() => setDelId(p.id)}
+                          className="p-1.5 rounded hover:bg-red-50 text-red-600"
+                          title="Futa"
+                        >
+                          <Trash2 size={16} />
+                        </button>
+                      </div>
+                    ) : (
+                      <span className="text-xs text-slate-400">—</span>
+                    )}
+                  </Td>
+                </tr>
+              )
+            })}
+          </Table>
+        )}
+      </Card>
+
+      {/* Add / Edit modal */}
+      <Modal
+        open={open}
+        onClose={() => setOpen(false)}
+        title={edit ? `Badilisha: ${edit.name}` : 'Ongeza Bidhaa Mpya'}
+        size="lg"
+      >
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <Input
+            label="Jina la Bidhaa *"
+            value={form.name}
+            onChange={e => setForm({ ...form, name: e.target.value })}
+            error={errors.name}
+            placeholder="Mfano: Saruji Dangote 50kg"
+          />
+
+          <Input
+            label="SKU Code *"
+            value={form.sku}
+            onChange={e => setForm({ ...form, sku: e.target.value })}
+            error={errors.sku}
+            placeholder="Mfano: SAR-DAN-50"
+          />
+
+          <Select
+            label="Aina (Category)"
+            value={form.category}
+            onChange={e => setForm({ ...form, category: e.target.value })}
+          >
+            {CATEGORIES.map(c => <option key={c} value={c}>{c}</option>)}
+          </Select>
+
+          <Select
+            label="Kipimo (Unit of Measure)"
+            value={form.unit}
+            onChange={e => setForm({ ...form, unit: e.target.value as Unit })}
+          >
+            {UNITS.map(u => <option key={u.value} value={u.value}>{u.label}</option>)}
+          </Select>
+
+          <Input
+            label="Bei ya Kununua (Tsh)"
+            type="number"
+            value={form.buyPrice}
+            onChange={e => setForm({ ...form, buyPrice: Number(e.target.value) })}
+            error={errors.buyPrice}
+          />
+
+          <Input
+            label="Bei ya Kuuza (Tsh) *"
+            type="number"
+            value={form.sellPrice}
+            onChange={e => setForm({ ...form, sellPrice: Number(e.target.value) })}
+            error={errors.sellPrice}
+          />
+
+          <Input
+            label="Stoo ya Sasa"
+            type="number"
+            value={form.stock}
+            onChange={e => setForm({ ...form, stock: Number(e.target.value) })}
+            error={errors.stock}
+          />
+
+          <Input
+            label="Kiwango cha Chini (Reorder Level)"
+            type="number"
+            value={form.reorderLevel}
+            onChange={e => setForm({ ...form, reorderLevel: Number(e.target.value) })}
+          />
+
+          <Input
+            label="Mahali ilipo (Location)"
+            value={form.location}
+            onChange={e => setForm({ ...form, location: e.target.value })}
+            placeholder="Mfano: Shed A, Raka 3"
+          />
+
+          <Input
+            label="Msambazaji (Supplier)"
+            value={form.supplier}
+            onChange={e => setForm({ ...form, supplier: e.target.value })}
+            placeholder="Mfano: Dangote Cement"
+          />
+
+          <Input
+            label="Barcode *"
+            value={form.barcode}
+            onChange={e => setForm({ ...form, barcode: e.target.value })}
+            error={errors.barcode}
+            placeholder="Mfano: SAR001"
+          />
+
+          <Input
+            label="Tarehe ya Kuisha (Expiry)"
+            type="date"
+            value={form.expiryDate || ''}
+            onChange={e => setForm({ ...form, expiryDate: e.target.value })}
+          />
+
+          <Input
+            label="URL ya Picha"
+            value={form.imageUrl || ''}
+            onChange={e => setForm({ ...form, imageUrl: e.target.value })}
+            placeholder="https://..."
+          />
+
+          <Input
+            label="Maelezo"
+            value={form.description || ''}
+            onChange={e => setForm({ ...form, description: e.target.value })}
+          />
+        </div>
+
+        <div className="flex justify-end gap-3 mt-6 pt-4 border-t border-slate-200">
+          <Button variant="outline" onClick={() => setOpen(false)}>Ghairi</Button>
+          <Button onClick={submit}>{edit ? 'Hifadhi Mabadiliko' : 'Ongeza Bidhaa'}</Button>
+        </div>
+      </Modal>
+
+      {/* Delete confirmation (modal, not window.confirm) */}
+      <ConfirmModal
+        open={!!delId}
+        title="Futa Bidhaa"
+        message={
+          <p>
+            Una uhakika unataka kufuta bidhaa hii? Kitendo hiki hakiwezi kurudishwa.
+          </p>
+        }
+        confirmText="Futa"
+        variant="danger"
+        onConfirm={confirmDelete}
+        onCancel={() => setDelId(null)}
+      />
+    </Layout>
+  )
+}
+
+import { useState } from 'react'
+import Layout from '../../components/Layout'
+import { useData } from '../../context/DataContext'
+import Button from '../../components/ui/Button'
+import Input from '../../components/ui/Input'
+import Select from '../../components/ui/Select'
+import Modal from '../../components/ui/Modal'
+import { Table, Td } from '../../components/ui/Table'
+import Badge from '../../components/ui/Badge'
+import { Card } from '../../components/ui/Card'
+import type { PurchaseItem } from '../../types'
+import { fmtTsh } from '../../lib/utils'
+import { Plus, Trash2, Truck } from 'lucide-react'
+
+interface Line { productId: string; qty: number; price: number }
+
+export default function PurchasesPage() {
+  const { products, suppliers, purchases, addPurchase } = useData()
+  const [open, setOpen] = useState(false)
+  const [supplierId, setSupplierId] = useState('')
+  const [lines, setLines] = useState<Line[]>([])
+  const [productToAdd, setProductToAdd] = useState('')
+
+  const linesDetailed = lines.map(l => {
+    const p = products.find(x => x.id === l.productId)!
+    return { ...l, product: p }
+  }).filter(l => l.product)
+  const total = linesDetailed.reduce((s, l) => s + l.price * l.qty, 0)
+
+  const addLine = () => {
+    if (!productToAdd) return
+    const p = products.find(x => x.id === productToAdd)!
+    if (lines.some(l => l.productId === productToAdd)) {
+      setLines(lines.map(l => l.productId === productToAdd ? { ...l, qty: l.qty + 1 } : l))
+    } else {
+      setLines([...lines, { productId: productToAdd, qty: 1, price: p.buyPrice }])
+    }
+    setProductToAdd('')
+  }
+
+  const save = () => {
+    const sup = suppliers.find(s => s.id === supplierId)
+    if (!sup || lines.length === 0) return
+    const items: PurchaseItem[] = linesDetailed.map(l => ({
+      productId: l.product.id, productName: l.product.name, qty: l.qty, price: l.price,
+    }))
+    addPurchase({ supplierId, supplierName: sup.name, items, total, status: 'pending' })
+    setOpen(false); setSupplierId(''); setLines([])
+  }
+
+  return (
+    <Layout title="Ununuzi (LPO)">
+      <div className="flex justify-end mb-5">
+        <Button onClick={() => { setSupplierId(''); setLines([]); setOpen(true) }}>
+          <span className="flex items-center gap-2"><Plus size={16} /> LPO Mpya</span>
+        </Button>
+      </div>
+
+      <Card>
+        <Table head={['LPO', 'Msambazaji', 'Bidhaa', 'Jumla', 'Hali', 'Tarehe', '']}>
+          {purchases.map(p => (
+            <tr key={p.id} className="hover:bg-slate-50">
+              <Td className="font-mono text-xs">{p.lpoNo}</Td>
+              <Td>{p.supplierName}</Td>
+              <Td>{p.items.length} bidhaa</Td>
+              <Td className="font-medium">{fmtTsh(p.total)}</Td>
+              <Td><Badge color={p.status === 'received' ? 'green' : p.status === 'partial' ? 'amber' : 'blue'}>{p.status}</Badge></Td>
+              <Td className="text-xs">{p.createdAt.slice(0, 10)}</Td>
+              <Td>
+                <button className="text-xs text-brand-600 hover:underline" title="Angalia">
+                  <Truck size={14} />
+                </button>
+              </Td>
+            </tr>
+          ))}
+          {purchases.length === 0 && (
+            <tr><td colSpan={7} className="text-center py-10 text-slate-500">Hakuna LPO bado</td></tr>
+          )}
+        </Table>
+      </Card>
+
+      <Modal open={open} onClose={() => setOpen(false)} title="Oda Mpya ya Ununuzi (LPO)" size="lg">
+        <div className="space-y-4">
+          <Select label="Msambazaji" value={supplierId} onChange={e => setSupplierId(e.target.value)}>
+            <option value="">— Chagua —</option>
+            {suppliers.map(s => <option key={s.id} value={s.id}>{s.name}</option>)}
+          </Select>
+
+          <div className="flex gap-2">
+            <div className="flex-1">
+              <Select value={productToAdd} onChange={e => setProductToAdd(e.target.value)}>
+                <option value="">— Ongeza bidhaa —</option>
+                {products.map(p => <option key={p.id} value={p.id}>{p.name}</option>)}
+              </Select>
+            </div>
+            <Button onClick={addLine} disabled={!productToAdd}>Ongeza</Button>
+          </div>
+
+          {linesDetailed.length > 0 && (
+            <table className="w-full text-sm border">
+              <thead className="bg-slate-100">
+                <tr>
+                  <th className="text-left px-2 py-1">Bidhaa</th>
+                  <th className="text-right px-2 py-1">Idadi</th>
+                  <th className="text-right px-2 py-1">Bei</th>
+                  <th className="text-right px-2 py-1">Jumla</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>
+                {linesDetailed.map(l => (
+                  <tr key={l.productId} className="border-b">
+                    <td className="px-2 py-1">{l.product.name}</td>
+                    <td className="text-right px-2 py-1">
+                      <input type="number" value={l.qty}
+                        onChange={e => setLines(lines.map(x => x.productId === l.productId ? { ...x, qty: Number(e.target.value) || 1 } : x))}
+                        className="w-16 border rounded px-2 py-1 text-right" />
+                    </td>
+                    <td className="text-right px-2 py-1">
+                      <input type="number" value={l.price}
+                        onChange={e => setLines(lines.map(x => x.productId === l.productId ? { ...x, price: Number(e.target.value) || 0 } : x))}
+                        className="w-24 border rounded px-2 py-1 text-right" />
+                    </td>
+                    <td className="text-right px-2 py-1 font-medium">{fmtTsh(l.price * l.qty)}</td>
+                    <td className="text-right px-2 py-1">
+                      <button onClick={() => setLines(lines.filter(x => x.productId !== l.productId))}
+                        className="text-red-600 p-1 hover:bg-red-50 rounded"><Trash2 size={14} /></button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
+
+          <div className="text-right text-lg font-bold">Jumla: <span className="text-brand-600">{fmtTsh(total)}</span></div>
+
+          <div className="flex justify-end gap-3">
+            <Button variant="outline" onClick={() => setOpen(false)}>Ghairi</Button>
+            <Button onClick={save} disabled={!supplierId || lines.length === 0}>Hifadhi LPO</Button>
+          </div>
+        </div>
+      </Modal>
+    </Layout>
+  )
+}
+
+import { useState } from 'react'
+import Layout from '../../components/Layout'
+import { useData } from '../../context/DataContext'
+import Button from '../../components/ui/Button'
+import Input from '../../components/ui/Input'
+import Modal from '../../components/ui/Modal'
+import { Table, Td } from '../../components/ui/Table'
+import { Card } from '../../components/ui/Card'
+import  type { Supplier } from '../../types'
+import { fmtTsh } from '../../lib/utils'
+import { Plus, Truck } from 'lucide-react'
+
+const empty: Omit<Supplier, 'id'> = { name: '', phone: '', email: '', balance: 0 }
+
+export default function SuppliersPage() {
+  const { suppliers, purchases, addSupplier } = useData()
+  const [open, setOpen] = useState(false)
+  const [form, setForm] = useState(empty)
+
+  const save = () => {
+    if (!form.name.trim()) return
+    addSupplier(form)
+    setOpen(false); setForm(empty)
+  }
+
+  const supplierPurchases = (name: string) => purchases.filter(p => p.supplierName === name)
+
+  return (
+    <Layout title="Wasambazaji (Suppliers)">
+      <div className="flex justify-end mb-5">
+        <Button onClick={() => { setForm(empty); setOpen(true) }}>
+          <span className="flex items-center gap-2"><Plus size={16} /> Msambazaji Mpya</span>
+        </Button>
+      </div>
+
+      <Card>
+        <Table head={['Jina', 'Simu', 'Email', 'Deni la Sisi', 'Manunuzi', 'Bei ya Mwisho']}>
+          {suppliers.map(s => {
+            const sp = supplierPurchases(s.name)
+            const lastP = sp[0]?.total || 0
+            return (
+              <tr key={s.id} className="hover:bg-slate-50">
+                <Td>
+                  <div className="flex items-center gap-2">
+                    <Truck size={16} className="text-slate-400" />
+                    <span className="font-medium">{s.name}</span>
+                  </div>
+                </Td>
+                <Td className="text-sm">{s.phone}</Td>
+                <Td className="text-sm text-slate-500">{s.email || '—'}</Td>
+                <Td className={s.balance > 0 ? 'text-red-600 font-semibold' : 'text-slate-400'}>
+                  {s.balance > 0 ? fmtTsh(s.balance) : '—'}
+                </Td>
+                <Td>{sp.length} LPO</Td>
+                <Td>{lastP > 0 ? fmtTsh(lastP) : '—'}</Td>
+              </tr>
+            )
+          })}
+        </Table>
+      </Card>
+
+      <Modal open={open} onClose={() => setOpen(false)} title="Msambazaji Mpya" size="md">
+        <div className="space-y-3">
+          <Input label="Jina *" value={form.name} onChange={e => setForm({ ...form, name: e.target.value })} />
+          <Input label="Simu" value={form.phone} onChange={e => setForm({ ...form, phone: e.target.value })} />
+          <Input label="Email" value={form.email} onChange={e => setForm({ ...form, email: e.target.value })} />
+          <Input label="Deni la Sisi (Tsh)" type="number" value={form.balance}
+            onChange={e => setForm({ ...form, balance: Number(e.target.value) || 0 })} />
+          <div className="flex justify-end gap-3">
+            <Button variant="outline" onClick={() => setOpen(false)}>Ghairi</Button>
+            <Button onClick={save}>Hifadhi</Button>
+          </div>
+        </div>
+      </Modal>
+    </Layout>
+  )
+}
+
+import { useState } from 'react'
+import Layout from '../../components/Layout'
+import { useData } from '../../context/DataContext'
+import Button from '../../components/ui/Button'
+import Modal from '../../components/ui/Modal'
+import { Table, Td } from '../../components/ui/Table'
+import Badge from '../../components/ui/Badge'
+import { Card } from '../../components/ui/Card'
+import { fmtTsh, today } from '../../lib/utils'
+import { Heart, CheckCircle2, Sparkles, TrendingUp } from 'lucide-react'
+
+export default function ZakatPage() {
+  const { sales, expenses, zakat, addZakatRecord, markZakatPaid } = useData()
+  const [open, setOpen] = useState(false)
+  const [period, setPeriod] = useState<'daily' | 'weekly' | 'monthly'>('daily')
+  const [viewId, setViewId] = useState<string | null>(null)
+
+  // compute profit for period
+  const computeProfit = (type: 'daily' | 'weekly' | 'monthly') => {
+    const now = new Date()
+    const cutoff = new Date()
+    if (type === 'daily') cutoff.setHours(0, 0, 0, 0)
+    else if (type === 'weekly') cutoff.setDate(now.getDate() - 7)
+    else cutoff.setDate(now.getDate() - 30)
+
+    const salesInPeriod = sales.filter(s => new Date(s.createdAt) >= cutoff)
+    const revenue = salesInPeriod.reduce((sum, s) => sum + s.total, 0)
+    const cogs = salesInPeriod.reduce((sum, s) =>
+      sum + s.items.reduce((x, i) => x + i.buyPrice * i.qty, 0), 0)
+    const opex = expenses.filter(e => e.status === 'approved' && new Date(e.date) >= cutoff)
+      .reduce((sum, e) => sum + e.amount, 0)
+    const netProfit = Math.max(0, revenue - cogs - opex)
+    return { revenue, cogs, opex, netProfit }
+  }
+
+  const preview = computeProfit(period)
+
+  const save = () => {
+    const z = preview.netProfit * 0.10
+    const s = preview.netProfit * 0.10
+    addZakatRecord({
+      date: today(),
+      type: period,
+      netProfit: preview.netProfit,
+      zakat: z,
+      sadaka: s,
+      total: z + s,
+      paid: false,
+    })
+    setOpen(false)
+  }
+
+  const totalOwed = zakat.filter(z => !z.paid).reduce((s, z) => s + z.total, 0)
+  const totalPaid = zakat.filter(z => z.paid).reduce((s, z) => s + z.total, 0)
+
+  return (
+    <Layout title="Zaka & Sadaka">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+        <Card className="p-5 bg-gradient-to-br from-emerald-500 to-emerald-700 text-white">
+          <div className="flex items-center gap-2 text-emerald-100 text-xs mb-1"><Heart size={14} /> Kwa Bwana - Haijalipwa</div>
+          <div className="text-2xl font-bold">{fmtTsh(totalOwed)}</div>
+        </Card>
+        <Card className="p-5">
+          <div className="flex items-center gap-2 text-slate-500 text-xs mb-1"><CheckCircle2 size={14} /> Zilizolipwa</div>
+          <div className="text-2xl font-bold text-emerald-600">{fmtTsh(totalPaid)}</div>
+        </Card>
+        <Card className="p-5">
+          <div className="flex items-center gap-2 text-slate-500 text-xs mb-1"><Sparkles size={14} /> Kanuni</div>
+          <div className="text-sm text-slate-700">Zaka 10% + Sadaka 10% = 20% ya Faida Halisi</div>
+        </Card>
+      </div>
+
+      <div className="flex justify-between items-center mb-4">
+        <div className="text-sm text-slate-500">Hesabu ya Zaka na Sadaka kwa kila kipindi</div>
+        <Button onClick={() => setOpen(true)}>
+          <span className="flex items-center gap-2"><TrendingUp size={16} /> Hesabu Mpya</span>
+        </Button>
+      </div>
+
+      <Card>
+        <Table head={['Tarehe', 'Kipindi', 'Faida Halisi', 'Zaka 10%', 'Sadaka 10%', 'Jumla', 'Hali', '']}>
+          {zakat.map(z => (
+            <tr key={z.id} className="hover:bg-slate-50">
+              <Td className="text-xs">{z.date}</Td>
+              <Td><Badge color="blue">{z.type === 'daily' ? 'Siku' : z.type === 'weekly' ? 'Wiki' : 'Mwezi'}</Badge></Td>
+              <Td>{fmtTsh(z.netProfit)}</Td>
+              <Td className="text-emerald-700">{fmtTsh(z.zakat)}</Td>
+              <Td className="text-emerald-700">{fmtTsh(z.sadaka)}</Td>
+              <Td className="font-bold">{fmtTsh(z.total)}</Td>
+              <Td><Badge color={z.paid ? 'green' : 'amber'}>{z.paid ? 'Imelipwa' : 'Inadaiwa'}</Badge></Td>
+              <Td>
+                {!z.paid ? (
+                  <button onClick={() => markZakatPaid(z.id)} className="text-xs text-emerald-600 hover:underline">Nimelipa</button>
+                ) : (
+                  <span className="text-xs text-slate-400">{z.paidDate}</span>
+                )}
+              </Td>
+            </tr>
+          ))}
+          {zakat.length === 0 && (
+            <tr><td colSpan={8} className="text-center py-10 text-slate-500">Hakuna rekodi bado</td></tr>
+          )}
+        </Table>
+      </Card>
+
+      <Modal open={open} onClose={() => setOpen(false)} title="Hesabu Zaka & Sadaka" size="md">
+        <div className="space-y-4">
+          <select value={period} onChange={e => setPeriod(e.target.value as any)}
+            className="w-full border rounded-lg px-3 py-2 text-sm">
+            <option value="daily">Kipindi cha Siku</option>
+            <option value="weekly">Kipindi cha Wiki</option>
+            <option value="monthly">Kipindi cha Mwezi</option>
+          </select>
+
+          <div className="bg-slate-50 rounded-lg p-4 space-y-2 text-sm">
+            <div className="flex justify-between"><span>Mauzo:</span><span>{fmtTsh(preview.revenue)}</span></div>
+            <div className="flex justify-between"><span>Gharama ya Bidhaa (COGS):</span><span>{fmtTsh(preview.cogs)}</span></div>
+            <div className="flex justify-between"><span>Gharama za Uendeshaji:</span><span>{fmtTsh(preview.opex)}</span></div>
+            <div className="flex justify-between font-bold border-t pt-2">
+              <span>Faida Halisi:</span><span className="text-brand-600">{fmtTsh(preview.netProfit)}</span>
+            </div>
+          </div>
+
+          <div className="bg-emerald-50 border border-emerald-200 rounded-lg p-4 space-y-2">
+            <div className="flex justify-between text-sm"><span>Zaka (10%):</span><span className="font-semibold text-emerald-700">{fmtTsh(preview.netProfit * 0.1)}</span></div>
+            <div className="flex justify-between text-sm"><span>Sadaka ya Wiki (10%):</span><span className="font-semibold text-emerald-700">{fmtTsh(preview.netProfit * 0.1)}</span></div>
+            <div className="flex justify-between font-bold border-t border-emerald-300 pt-2 text-lg">
+              <span>Jumla ya Bwana:</span><span className="text-emerald-800">{fmtTsh(preview.netProfit * 0.2)}</span>
+            </div>
+            <div className="flex justify-between text-xs text-slate-600">
+              <span>Inayobaki kwako:</span><span>{fmtTsh(preview.netProfit * 0.8)}</span>
+            </div>
+          </div>
+
+          <div className="flex justify-end gap-3">
+            <Button variant="outline" onClick={() => setOpen(false)}>Ghairi</Button>
+            <Button variant="success" onClick={save}>Hifadhi Rekodi</Button>
+          </div>
+        </div>
+      </Modal>
+    </Layout>
+  )
+}
+
+import { useState } from 'react'
+import Layout from '../../components/Layout'
+import { useData } from '../../context/DataContext'
+import { useAuth } from '../../context/AuthContext'
+import Button from '../../components/ui/Button'
+import Input from '../../components/ui/Input'
+import Select from '../../components/ui/Select'
+import Modal from '../../components/ui/Modal'
+import { Table, Td } from '../../components/ui/Table'
+import Badge from '../../components/ui/Badge'
+import { Card } from '../../components/ui/Card'
+import type  { Quotation, SaleItem } from '../../types'
+import { fmtTsh, addDays, today } from '../../lib/utils'
+import { Plus, Trash2, FileText, ArrowRight } from 'lucide-react'
+
+interface Line { productId: string; qty: number }
+
+export default function QuotationsPage() {
+  const { user } = useAuth()
+  const { products, customers, quotations, addQuotation, convertQuotation } = useData()
+  const [open, setOpen] = useState(false)
+  const [viewQ, setViewQ] = useState<Quotation | null>(null)
+  const [customerId, setCustomerId] = useState('')
+  const [name, setName] = useState('')
+  const [lines, setLines] = useState<Line[]>([])
+  const [discount, setDiscount] = useState(0)
+  const [productToAdd, setProductToAdd] = useState('')
+
+  const linesDetailed = lines.map(l => {
+    const p = products.find(x => x.id === l.productId)!
+    return { ...l, product: p }
+  }).filter(l => l.product)
+  const subtotal = linesDetailed.reduce((s, l) => s + l.product.sellPrice * l.qty, 0)
+  const total = subtotal - discount
+
+  const reset = () => {
+    setCustomerId(''); setName(''); setLines([]); setDiscount(0); setProductToAdd('')
+  }
+
+  const addLine = () => {
+    if (!productToAdd) return
+    if (lines.some(l => l.productId === productToAdd)) {
+      setLines(lines.map(l => l.productId === productToAdd ? { ...l, qty: l.qty + 1 } : l))
+    } else {
+      setLines([...lines, { productId: productToAdd, qty: 1 }])
+    }
+    setProductToAdd('')
+  }
+
+  const save = () => {
+    if (lines.length === 0) return
+    const customer = customers.find(c => c.id === customerId)
+    const items: SaleItem[] = linesDetailed.map(l => ({
+      productId: l.product.id, productName: l.product.name, qty: l.qty,
+      unit: l.product.unit, price: l.product.sellPrice, buyPrice: l.product.buyPrice,
+    }))
+    addQuotation({
+      customerId: customerId || undefined,
+      customerName: customer?.name || name || 'Mteja',
+      items, subtotal, discount, total,
+      validUntil: addDays(today(), 7),
+      createdBy: user?.name || '',
+      converted: false,
+    })
+    reset(); setOpen(false)
+  }
+
+  const convert = (q: Quotation) => {
+    convertQuotation(q)
+    setViewQ(null)
+  }
+
+  return (
+    <Layout title="Nukuu za Bei (Quotations)">
+      <div className="flex justify-between items-center mb-5">
+        <div className="text-sm text-slate-500">Nukuu zote za bei zinazotolewa kwa wateja</div>
+        <Button onClick={() => { reset(); setOpen(true) }}>
+          <span className="flex items-center gap-2"><Plus size={16} /> Nukuu Mpya</span>
+        </Button>
+      </div>
+
+      <Card>
+        {quotations.length === 0 ? (
+          <div className="py-16 text-center text-slate-500">
+            <FileText size={48} className="mx-auto mb-3 text-slate-300" />
+            <p>Hakuna nukuu bado.</p>
+          </div>
+        ) : (
+          <Table head={['Namba', 'Mteja', 'Jumla', 'Halali Hadi', 'Hali', 'Vitendo']}>
+            {quotations.map(q => (
+              <tr key={q.id} className="hover:bg-slate-50">
+                <Td><span className="font-mono text-xs">{q.quotationNo}</span></Td>
+                <Td>{q.customerName}</Td>
+                <Td className="font-medium">{fmtTsh(q.total)}</Td>
+                <Td>{q.validUntil}</Td>
+                <Td>
+                  {q.converted
+                    ? <Badge color="green">Imeuzwa</Badge>
+                    : new Date(q.validUntil) < new Date()
+                      ? <Badge color="red">Imeisha</Badge>
+                      : <Badge color="amber">Hai</Badge>}
+                </Td>
+                <Td>
+                  <div className="flex gap-2">
+                    <button onClick={() => setViewQ(q)} className="text-xs text-brand-600 hover:underline">Ona</button>
+                    {!q.converted && (
+                      <button onClick={() => convert(q)} className="text-xs text-emerald-600 hover:underline flex items-center gap-1">
+                        <ArrowRight size={12} /> Badilisha kuwa Invoice
+                      </button>
+                    )}
+                  </div>
+                </Td>
+              </tr>
+            ))}
+          </Table>
+        )}
+      </Card>
+
+      {/* NEW QUOTATION */}
+      <Modal open={open} onClose={() => setOpen(false)} title="Nukuu Mpya ya Bei" size="lg">
+        <div className="space-y-4">
+          <div className="grid grid-cols-2 gap-3">
+            <Select label="Mteja" value={customerId} onChange={e => setCustomerId(e.target.value)}>
+              <option value="">— Chagua —</option>
+              {customers.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
+            </Select>
+            {!customerId && (
+              <Input label="Jina la Mteja" value={name} onChange={e => setName(e.target.value)} />
+            )}
+          </div>
+
+          <div className="flex gap-2">
+            <div className="flex-1">
+              <Select value={productToAdd} onChange={e => setProductToAdd(e.target.value)}>
+                <option value="">— Ongeza bidhaa —</option>
+                {products.map(p => <option key={p.id} value={p.id}>{p.name} — {fmtTsh(p.sellPrice)}</option>)}
+              </Select>
+            </div>
+            <Button onClick={addLine} disabled={!productToAdd}>Ongeza</Button>
+          </div>
+
+          {linesDetailed.length > 0 && (
+            <div className="border border-slate-200 rounded-lg overflow-hidden">
+              <Table head={['Bidhaa', 'Bei', 'Idadi', 'Jumla', '']}>
+                {linesDetailed.map(l => (
+                  <tr key={l.productId}>
+                    <Td>{l.product.name}</Td>
+                    <Td>{fmtTsh(l.product.sellPrice)}</Td>
+                    <Td>
+                      <input type="number" value={l.qty}
+                        onChange={e => setLines(lines.map(x => x.productId === l.productId ? { ...x, qty: Number(e.target.value) || 1 } : x))}
+                        className="w-16 border rounded px-2 py-1 text-sm" />
+                    </Td>
+                    <Td className="font-medium">{fmtTsh(l.product.sellPrice * l.qty)}</Td>
+                    <Td>
+                      <button onClick={() => setLines(lines.filter(x => x.productId !== l.productId))}
+                        className="text-red-600 hover:bg-red-50 p-1 rounded"><Trash2 size={14} /></button>
+                    </Td>
+                  </tr>
+                ))}
+              </Table>
+            </div>
+          )}
+
+          <div className="bg-slate-50 rounded-lg p-3 space-y-1 text-sm">
+            <div className="flex justify-between"><span>Subtotal:</span><span>{fmtTsh(subtotal)}</span></div>
+            <div className="flex justify-between items-center">
+              <span>Punguzo:</span>
+              <input type="number" value={discount} onChange={e => setDiscount(Number(e.target.value) || 0)}
+                className="w-28 text-right border rounded px-2 py-1" />
+            </div>
+            <div className="flex justify-between text-base font-bold border-t pt-2">
+              <span>Jumla:</span><span className="text-brand-600">{fmtTsh(total)}</span>
+            </div>
+            <div className="text-xs text-slate-500">Halali kwa siku 7 tangu leo</div>
+          </div>
+
+          <div className="flex justify-end gap-3">
+            <Button variant="outline" onClick={() => setOpen(false)}>Ghairi</Button>
+            <Button onClick={save} disabled={lines.length === 0}>Hifadhi Nukuu</Button>
+          </div>
+        </div>
+      </Modal>
+
+      {/* VIEW QUOTATION */}
+      <Modal open={!!viewQ} onClose={() => setViewQ(null)} title={viewQ?.quotationNo || ''} size="md">
+        {viewQ && (
+          <div className="space-y-3">
+            <div className="text-center border-b pb-3">
+              <div className="font-bold text-lg">SMART HARDWARE</div>
+              <div className="text-xs text-slate-500">Nukuu ya Bei</div>
+            </div>
+            <div className="text-sm space-y-1">
+              <div><b>Mteja:</b> {viewQ.customerName}</div>
+              <div><b>Tarehe:</b> {viewQ.createdAt.slice(0, 10)}</div>
+              <div><b>Halali hadi:</b> {viewQ.validUntil}</div>
+            </div>
+            <table className="w-full text-sm">
+              <thead className="bg-slate-100"><tr>
+                <th className="text-left px-2 py-1">Bidhaa</th>
+                <th className="text-right px-2 py-1">Idadi</th>
+                <th className="text-right px-2 py-1">Bei</th>
+                <th className="text-right px-2 py-1">Jumla</th>
+              </tr></thead>
+              <tbody>
+                {viewQ.items.map((i, k) => (
+                  <tr key={k} className="border-b">
+                    <td className="px-2 py-1">{i.productName}</td>
+                    <td className="text-right px-2 py-1">{i.qty} {i.unit}</td>
+                    <td className="text-right px-2 py-1">{fmtTsh(i.price)}</td>
+                    <td className="text-right px-2 py-1">{fmtTsh(i.price * i.qty)}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+            <div className="text-right text-sm space-y-1 border-t pt-2">
+              <div>Subtotal: {fmtTsh(viewQ.subtotal)}</div>
+              <div>Punguzo: {fmtTsh(viewQ.discount)}</div>
+              <div className="text-lg font-bold">Jumla: {fmtTsh(viewQ.total)}</div>
+            </div>
+            {!viewQ.converted && (
+              <Button onClick={() => convert(viewQ)} className="w-full">
+                Badilisha kuwa Invoice
+              </Button>
+            )}
+          </div>
+        )}
+      </Modal>
+    </Layout>
+  )
+}
+
+import { useState } from 'react'
+import Layout from '../../components/Layout'
+import { useData } from '../../context/DataContext'
+import Button from '../../components/ui/Button'
+import Input from '../../components/ui/Input'
+import Modal from '../../components/ui/Modal'
+import { Table, Td } from '../../components/ui/Table'
+import Badge from '../../components/ui/Badge'
+import { Card } from '../../components/ui/Card'
+import { type Sale } from '../../types'
+import { fmtTsh } from '../../lib/utils'
+import { Receipt, Undo2 } from 'lucide-react'
+
+export default function SalesHistoryPage() {
+  const { sales, returnSale } = useData()
+  const [view, setView] = useState<Sale | null>(null)
+  const [returnOpen, setReturnOpen] = useState(false)
+  const [returnQty, setReturnQty] = useState<Record<string, number>>({})
+  const [search, setSearch] = useState('')
+
+  const filtered = sales.filter(s =>
+    !search || s.receiptNo.toLowerCase().includes(search.toLowerCase()) ||
+    s.customerName.toLowerCase().includes(search.toLowerCase())
+  )
+
+  const openReturn = (s: Sale) => {
+    setReturnQty({})
+    setView(s)
+    setReturnOpen(true)
+  }
+
+  const doReturn = () => {
+    if (!view) return
+    const items = Object.entries(returnQty)
+      .filter(([, qty]) => qty > 0)
+      .map(([productId, qty]) => ({ productId, qty }))
+    if (items.length === 0) return
+    returnSale(view.id, items)
+    setReturnOpen(false)
+    setView(null)
+  }
+
+  return (
+    <Layout title="Historia ya Mauzo">
+      <div className="flex gap-3 mb-5">
+        <Input placeholder="Tafuta risiti au mteja..." value={search} onChange={e => setSearch(e.target.value)} className="max-w-sm" />
+      </div>
+
+      <Card>
+        <Table head={['Risiti', 'Mteja', 'Bidhaa', 'Jumla', 'Malipo', 'Hali', 'Tarehe', '']}>
+          {filtered.map(s => (
+            <tr key={s.id} className="hover:bg-slate-50">
+              <Td><span className="font-mono text-xs">{s.receiptNo}</span></Td>
+              <Td>{s.customerName}</Td>
+              <Td>{s.items.length} bidhaa</Td>
+              <Td className="font-medium">{fmtTsh(s.total)}</Td>
+              <Td>
+                <div className="flex flex-wrap gap-1">
+                  {s.payments.map((p, k) => (
+                    <Badge key={k} color={
+                      p.method === 'cash' ? 'green' : p.method === 'credit' ? 'red' : 'blue'
+                    }>{p.method}</Badge>
+                  ))}
+                </div>
+              </Td>
+              <Td>
+                <Badge color={
+                  s.status === 'completed' ? 'green' : s.status === 'returned' ? 'red' : 'amber'
+                }>{s.status === 'completed' ? 'Imekamilika' : s.status === 'returned' ? 'Imerudishwa' : 'Rudisha kidogo'}</Badge>
+              </Td>
+              <Td><span className="text-xs text-slate-500">{s.createdAt.slice(0, 16).replace('T', ' ')}</span></Td>
+              <Td>
+                <div className="flex gap-2">
+                  <button onClick={() => setView(s)} title="Ona risiti" className="text-brand-600 hover:bg-blue-50 p-1 rounded">
+                    <Receipt size={16} />
+                  </button>
+                  {s.status === 'completed' && (
+                    <button onClick={() => openReturn(s)} title="Rudisha bidhaa" className="text-red-600 hover:bg-red-50 p-1 rounded">
+                      <Undo2 size={16} />
+                    </button>
+                  )}
+                </div>
+              </Td>
+            </tr>
+          ))}
+          {filtered.length === 0 && (
+            <tr><td colSpan={8} className="text-center py-10 text-slate-500">Hakuna mauzo bado</td></tr>
+          )}
+        </Table>
+      </Card>
+
+      {/* VIEW RECEIPT */}
+      <Modal open={!!view && !returnOpen} onClose={() => setView(null)} title={`Risiti ${view?.receiptNo || ''}`} size="md">
+        {view && (
+          <div className="space-y-3">
+            <div className="text-center border-b pb-3">
+              <div className="font-bold text-lg">SMART HARDWARE</div>
+              <div className="text-xs text-slate-500">TIN: 123-456-789 | VRN: 98765432A</div>
+            </div>
+            <div className="text-xs space-y-1">
+              <div><b>Risiti:</b> {view.receiptNo}</div>
+              <div><b>Mteja:</b> {view.customerName}</div>
+              <div><b>Tarehe:</b> {view.createdAt.slice(0, 16).replace('T', ' ')}</div>
+              <div><b>Muuzaji:</b> {view.createdBy}</div>
+            </div>
+            <table className="w-full text-sm">
+              <thead className="bg-slate-100">
+                <tr>
+                  <th className="text-left px-2 py-1">Bidhaa</th>
+                  <th className="text-right px-2 py-1">Idadi</th>
+                  <th className="text-right px-2 py-1">Bei</th>
+                  <th className="text-right px-2 py-1">Jumla</th>
+                </tr>
+              </thead>
+              <tbody>
+                {view.items.map((i, k) => (
+                  <tr key={k} className="border-b">
+                    <td className="px-2 py-1">{i.productName}</td>
+                    <td className="text-right px-2 py-1">{i.qty} {i.unit}</td>
+                    <td className="text-right px-2 py-1">{fmtTsh(i.price)}</td>
+                    <td className="text-right px-2 py-1">{fmtTsh(i.price * i.qty)}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+            <div className="text-right text-sm space-y-1 border-t pt-2">
+              <div>Subtotal: {fmtTsh(view.subtotal)}</div>
+              <div>Punguzo: {fmtTsh(view.discount)}</div>
+              <div className="text-lg font-bold">Jumla: {fmtTsh(view.total)}</div>
+            </div>
+            <div className="text-xs space-y-1 border-t pt-2">
+              {view.payments.map((p, k) => (
+                <div key={k} className="flex justify-between"><span>{p.method}</span><span>{fmtTsh(p.amount)}</span></div>
+              ))}
+            </div>
+          </div>
+        )}
+      </Modal>
+
+      {/* RETURN */}
+      <Modal open={returnOpen} onClose={() => setReturnOpen(false)} title="Rudisha Bidhaa" size="md">
+        {view && (
+          <div className="space-y-4">
+            <p className="text-sm text-slate-600">Weka idadi ya kurudisha kwa kila bidhaa:</p>
+            <table className="w-full text-sm border">
+              <thead className="bg-slate-100">
+                <tr>
+                  <th className="text-left px-2 py-1">Bidhaa</th>
+                  <th className="text-right px-2 py-1">Iliuzwa</th>
+                  <th className="text-right px-2 py-1">Rudisha</th>
+                </tr>
+              </thead>
+              <tbody>
+                {view.items.map(i => (
+                  <tr key={i.productId} className="border-b">
+                    <td className="px-2 py-1">{i.productName}</td>
+                    <td className="text-right px-2 py-1">{i.qty}</td>
+                    <td className="text-right px-2 py-1">
+                      <input type="number" min={0} max={i.qty}
+                        value={returnQty[i.productId] || 0}
+                        onChange={e => setReturnQty({ ...returnQty, [i.productId]: Math.min(i.qty, Math.max(0, Number(e.target.value) || 0)) })}
+                        className="w-20 border rounded px-2 py-1 text-right" />
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+            <div className="flex justify-end gap-3">
+              <Button variant="outline" onClick={() => setReturnOpen(false)}>Ghairi</Button>
+              <Button variant="danger" onClick={doReturn}>Rudisha & Rejesha Pesa</Button>
+            </div>
+          </div>
+        )}
+      </Modal>
+    </Layout>
+  )
+}
+
+import { useState, useMemo } from 'react'
+import Layout from '../../components/Layout'
+import { useData } from '../../context/DataContext'
+import { useAuth } from '../../context/AuthContext'
+import Button from '../../components/ui/Button'
+import Input from '../../components/ui/Input'
+import Select from '../../components/ui/Select'
+import Modal from '../../components/ui/Modal'
+import { Table, Td } from '../../components/ui/Table'
+import Badge from '../../components/ui/Badge'
+import { Card } from '../../components/ui/Card'
+import type  { Product, SaleItem, PaymentSplit } from '../../types'
+import { fmtTsh } from '../../lib/utils'
+import { Search, Trash2, Plus, Minus, ShoppingCart, CheckCircle2, X } from 'lucide-react'
+
+interface CartLine { productId: string; qty: number; unit: string }
+
+export default function SellerPOS() {
+  const { user } = useAuth()
+  const { products, customers, addSale, adjustStock } = useData()
+
+  const [search, setSearch] = useState('')
+  const [cart, setCart] = useState<CartLine[]>([])
+  const [discount, setDiscount] = useState(0)
+  const [customerId, setCustomerId] = useState('')
+  const [walkInName, setWalkInName] = useState('')
+  const [checkoutOpen, setCheckoutOpen] = useState(false)
+  const [receipt, setReceipt] = useState<{ no: string; total: number; paid: number } | null>(null)
+
+  // payments
+  const [payCash, setPayCash] = useState(0)
+  const [payMpesa, setPayMpesa] = useState(0)
+  const [payTigo, setPayTigo] = useState(0)
+  const [payBank, setPayBank] = useState(0)
+  const [payCredit, setPayCredit] = useState(0)
+
+  const filtered = useMemo(() => {
+    const q = search.toLowerCase().trim()
+    if (!q) return products.filter(p => p.stock > 0).slice(0, 24)
+    return products.filter(p =>
+      p.stock > 0 && (
+        p.name.toLowerCase().includes(q) ||
+        p.sku.toLowerCase().includes(q) ||
+        p.barcode.toLowerCase().includes(q)
+      )
+    ).slice(0, 40)
+  }, [products, search])
+
+  const cartDetailed = cart.map(c => {
+    const p = products.find(x => x.id === c.productId)!
+    return { ...c, product: p }
+  }).filter(c => c.product)
+
+  const subtotal = cartDetailed.reduce((s, c) => s + c.product.sellPrice * c.qty, 0)
+  const total = Math.max(0, subtotal - discount)
+  const paid = payCash + payMpesa + payTigo + payBank + payCredit
+  const change = paid - total
+
+  const addToCart = (p: Product) => {
+    setCart(prev => {
+      const idx = prev.findIndex(c => c.productId === p.id)
+      if (idx >= 0) {
+        const next = [...prev]
+        next[idx] = { ...next[idx], qty: next[idx].qty + 1 }
+        return next
+      }
+      return [...prev, { productId: p.id, qty: 1, unit: p.unit }]
+    })
+  }
+
+  const setQty = (productId: string, qty: number) => {
+    if (qty <= 0) {
+      setCart(cart.filter(c => c.productId !== productId))
+    } else {
+      setCart(cart.map(c => c.productId === productId ? { ...c, qty } : c))
+    }
+  }
+
+  const clearCart = () => {
+    setCart([])
+    setDiscount(0)
+    setCustomerId('')
+    setWalkInName('')
+    setPayCash(0); setPayMpesa(0); setPayTigo(0); setPayBank(0); setPayCredit(0)
+  }
+
+  const openCheckout = () => {
+    if (cart.length === 0) return
+    setPayCash(total)
+    setPayMpesa(0); setPayTigo(0); setPayBank(0); setPayCredit(0)
+    setCheckoutOpen(true)
+  }
+
+  const finalize = () => {
+    if (paid < total) return
+    const customer = customers.find(c => c.id === customerId)
+    const customerName = customer?.name || walkInName || 'Mteja wa Kawaida'
+
+    const items: SaleItem[] = cartDetailed.map(c => ({
+      productId: c.product.id,
+      productName: c.product.name,
+      qty: c.qty,
+      unit: c.product.unit,
+      price: c.product.sellPrice,
+      buyPrice: c.product.buyPrice,
+    }))
+
+    const payments: PaymentSplit[] = []
+    if (payCash > 0) payments.push({ method: 'cash', amount: payCash })
+    if (payMpesa > 0) payments.push({ method: 'mpesa', amount: payMpesa })
+    if (payTigo > 0) payments.push({ method: 'tigopesa', amount: payTigo })
+    if (payBank > 0) payments.push({ method: 'bank', amount: payBank })
+    if (payCredit > 0) payments.push({ method: 'credit', amount: payCredit })
+
+    const sale = addSale({
+      customerId: customerId || undefined,
+      customerName,
+      items,
+      subtotal,
+      discount,
+      total,
+      payments,
+      createdBy: user?.name || '',
+      status: 'completed',
+    })
+
+    setReceipt({ no: sale.receiptNo, total, paid })
+    setCheckoutOpen(false)
+    clearCart()
+  }
+
+  return (
+    <Layout title="Mauzo - POS">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
+        {/* LEFT: product search */}
+        <div className="lg:col-span-2">
+          <Card className="p-4 mb-4">
+            <div className="relative">
+              <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+              <input
+                value={search}
+                onChange={e => setSearch(e.target.value)}
+                placeholder="Scan barcode au tafuta bidhaa..."
+                className="w-full pl-9 pr-3 py-2.5 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-brand-500"
+                autoFocus
+              />
+            </div>
+          </Card>
+
+          <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-3">
+            {filtered.map(p => (
+              <button
+                key={p.id}
+                onClick={() => addToCart(p)}
+                className="text-left bg-white border border-slate-200 rounded-lg p-3 hover:border-brand-500 hover:shadow-md transition"
+              >
+                <div className="text-xs text-slate-500 mb-1 truncate">{p.category}</div>
+                <div className="font-medium text-sm text-slate-800 line-clamp-2 mb-1">{p.name}</div>
+                <div className="text-brand-600 font-semibold text-sm">{fmtTsh(p.sellPrice)}</div>
+                <div className="text-xs text-slate-500 mt-1">Stoo: {p.stock} {p.unit}</div>
+              </button>
+            ))}
+            {filtered.length === 0 && (
+              <div className="col-span-full py-12 text-center text-slate-500">
+                Hakuna bidhaa zilizopatikana
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* RIGHT: cart */}
+        <div className="lg:col-span-1">
+          <Card className="sticky top-4 flex flex-col" style={{ maxHeight: 'calc(100vh - 120px)' }}>
+            <div className="p-4 border-b border-slate-200 flex items-center justify-between">
+              <div className="font-semibold flex items-center gap-2">
+                <ShoppingCart size={18} /> Kikapu ({cart.length})
+              </div>
+              {cart.length > 0 && (
+                <button onClick={clearCart} className="text-xs text-red-600 hover:underline">Futa</button>
+              )}
+            </div>
+
+            <div className="flex-1 overflow-y-auto scrollbar-thin p-3 space-y-2">
+              {cartDetailed.length === 0 && (
+                <div className="text-center py-10 text-slate-400 text-sm">
+                  Bonyeza bidhaa kuongeza kwenye kikapu
+                </div>
+              )}
+              {cartDetailed.map(c => (
+                <div key={c.productId} className="bg-slate-50 rounded-lg p-2">
+                  <div className="flex items-start justify-between gap-2 mb-2">
+                    <div className="flex-1 min-w-0">
+                      <div className="text-sm font-medium truncate">{c.product.name}</div>
+                      <div className="text-xs text-slate-500">{fmtTsh(c.product.sellPrice)} / {c.product.unit}</div>
+                    </div>
+                    <button onClick={() => setQty(c.productId, 0)} className="text-red-500 hover:bg-red-50 p-1 rounded">
+                      <Trash2 size={14} />
+                    </button>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-1">
+                      <button onClick={() => setQty(c.productId, c.qty - 1)}
+                        className="w-7 h-7 rounded bg-white border border-slate-300 flex items-center justify-center hover:bg-slate-100">
+                        <Minus size={12} />
+                      </button>
+                      <input
+                        type="number"
+                        value={c.qty}
+                        onChange={e => setQty(c.productId, Number(e.target.value) || 0)}
+                        className="w-14 text-center border border-slate-300 rounded py-1 text-sm"
+                      />
+                      <button onClick={() => setQty(c.productId, c.qty + 1)}
+                        className="w-7 h-7 rounded bg-white border border-slate-300 flex items-center justify-center hover:bg-slate-100">
+                        <Plus size={12} />
+                      </button>
+                    </div>
+                    <div className="text-sm font-semibold text-slate-800">
+                      {fmtTsh(c.product.sellPrice * c.qty)}
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <div className="border-t border-slate-200 p-4 space-y-2">
+              <div className="flex justify-between text-sm">
+                <span className="text-slate-600">Subtotal</span>
+                <span className="font-medium">{fmtTsh(subtotal)}</span>
+              </div>
+              <div className="flex justify-between text-sm items-center">
+                <span className="text-slate-600">Punguzo</span>
+                <input
+                  type="number"
+                  value={discount}
+                  onChange={e => setDiscount(Math.max(0, Number(e.target.value)))}
+                  className="w-28 text-right border border-slate-300 rounded px-2 py-1 text-sm"
+                />
+              </div>
+              <div className="flex justify-between text-base font-bold pt-2 border-t border-slate-200">
+                <span>JUMLA</span>
+                <span className="text-brand-600">{fmtTsh(total)}</span>
+              </div>
+              <Button onClick={openCheckout} disabled={cart.length === 0} className="w-full mt-2">
+                Lipa / Checkout
+              </Button>
+            </div>
+          </Card>
+        </div>
+      </div>
+
+      {/* CHECKOUT MODAL */}
+      <Modal open={checkoutOpen} onClose={() => setCheckoutOpen(false)} title="Malipo (Checkout)" size="md">
+        <div className="space-y-4">
+          <div className="grid grid-cols-2 gap-3">
+            <Select label="Mteja" value={customerId} onChange={e => setCustomerId(e.target.value)}>
+              <option value="">— Mteja wa Kawaida —</option>
+              {customers.map(c => <option key={c.id} value={c.id}>{c.name} ({c.phone})</option>)}
+            </Select>
+            {!customerId && (
+              <Input label="Jina la Mteja (walk-in)" value={walkInName}
+                onChange={e => setWalkInName(e.target.value)} placeholder="Hiari" />
+            )}
+          </div>
+
+          <div className="bg-slate-50 rounded-lg p-3">
+            <div className="flex justify-between text-lg font-bold mb-1">
+              <span>Jumla ya Kulipa</span>
+              <span className="text-brand-600">{fmtTsh(total)}</span>
+            </div>
+            <div className="text-xs text-slate-500">Subtotal {fmtTsh(subtotal)} − Punguzo {fmtTsh(discount)}</div>
+          </div>
+
+          <div>
+            <div className="text-sm font-semibold mb-2">Mgawanyo wa Malipo (Split Payment)</div>
+            <div className="grid grid-cols-2 gap-3">
+              <Input label="Cash (Tsh)" type="number" value={payCash} onChange={e => setPayCash(Number(e.target.value) || 0)} />
+              <Input label="M-Pesa (Tsh)" type="number" value={payMpesa} onChange={e => setPayMpesa(Number(e.target.value) || 0)} />
+              <Input label="Tigo Pesa (Tsh)" type="number" value={payTigo} onChange={e => setPayTigo(Number(e.target.value) || 0)} />
+              <Input label="Benki (Tsh)" type="number" value={payBank} onChange={e => setPayBank(Number(e.target.value) || 0)} />
+              <Input label="Deni / Credit (Tsh)" type="number" value={payCredit} onChange={e => setPayCredit(Number(e.target.value) || 0)} />
+            </div>
+          </div>
+
+          <div className="flex justify-between text-sm border-t pt-3">
+            <span>Jumla Iliyolipwa</span>
+            <span className="font-medium">{fmtTsh(paid)}</span>
+          </div>
+          <div className={`flex justify-between text-sm font-semibold ${change < 0 ? 'text-red-600' : 'text-emerald-600'}`}>
+            <span>{change < 0 ? 'Inapungua' : 'Chenji'}</span>
+            <span>{fmtTsh(Math.abs(change))}</span>
+          </div>
+
+          <div className="flex justify-end gap-3 pt-2">
+            <Button variant="outline" onClick={() => setCheckoutOpen(false)}>Ghairi</Button>
+            <Button onClick={finalize} disabled={paid < total || cart.length === 0}>
+              <span className="flex items-center gap-2"><CheckCircle2 size={16} /> Kamilisha Mauzo</span>
+            </Button>
+          </div>
+        </div>
+      </Modal>
+
+      {/* RECEIPT MODAL */}
+      <Modal open={!!receipt} onClose={() => setReceipt(null)} title="Risiti" size="sm">
+        {receipt && (
+          <div className="text-center space-y-3">
+            <CheckCircle2 size={48} className="mx-auto text-emerald-500" />
+            <div className="text-lg font-bold">Mauzo Yamekamilika!</div>
+            <div className="bg-slate-50 rounded-lg p-4 text-left text-sm space-y-1">
+              <div className="flex justify-between"><span>Risiti:</span><span className="font-mono">{receipt.no}</span></div>
+              <div className="flex justify-between"><span>Jumla:</span><span className="font-bold">{fmtTsh(receipt.total)}</span></div>
+              <div className="flex justify-between"><span>Ilipwa:</span><span>{fmtTsh(receipt.paid)}</span></div>
+              <div className="flex justify-between text-emerald-600 font-semibold">
+                <span>Chenji:</span><span>{fmtTsh(receipt.paid - receipt.total)}</span>
+              </div>
+            </div>
+            <Button onClick={() => setReceipt(null)} className="w-full">Sawa</Button>
+          </div>
+        )}
+      </Modal>
+    </Layout>
+  )
+}
+
+
+import Layout from '../../components/Layout'
+import { useData } from '../../context/DataContext'
+import { Card, StatCard } from '../../components/ui/Card'
+import { fmtTsh, today, daysBetween } from '../../lib/utils'
+import { TrendingUp, TrendingDown, DollarSign, Users, Heart, AlertTriangle } from 'lucide-react'
+
+export default function OwnerDashboard() {
+  const { sales, expenses, customers, products, zakat } = useData()
+
+  const todaySales = sales.filter(s => s.createdAt.slice(0, 10) === today())
+  const revenue = todaySales.reduce((s, x) => s + x.total, 0)
+  const cogs = todaySales.reduce((s, x) => s + x.items.reduce((y, i) => y + i.buyPrice * i.qty, 0), 0)
+  const opex = expenses.filter(e => e.date === today() && e.status === 'approved').reduce((s, e) => s + e.amount, 0)
+  const netProfit = revenue - cogs - opex
+  const zakatOwed = netProfit * 0.2
+  const debts = customers.reduce((s, c) => s + c.balance, 0)
+  const expiring = products.filter(p => p.expiryDate && daysBetween(today(), p.expiryDate) <= 30).length
+  const unpaidZakat = zakat.filter(z => !z.paid).reduce((s, z) => s + z.total, 0)
+
+  return (
+    <Layout title="Dashboard - Mmiliki">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+        <StatCard label="Mauzo ya Leo" value={fmtTsh(revenue)} icon={<DollarSign />} />
+        <StatCard label="Faida Halisi (Leo)" value={fmtTsh(netProfit)}
+          icon={netProfit >= 0 ? <TrendingUp /> : <TrendingDown />}
+          color={netProfit >= 0 ? 'green' : 'red'} />
+        <StatCard label="Madeni ya Wateja" value={fmtTsh(debts)} icon={<Users />} color="red" />
+        <StatCard label="Zaka Inadaiwa" value={fmtTsh(unpaidZakat)} icon={<Heart />} color="purple" />
+      </div>
+
+      <div className="grid md:grid-cols-3 gap-4 mb-6">
+        <Card className="p-5">
+          <div className="text-xs text-slate-500 mb-1">Faida Ghafi (Leo)</div>
+          <div className="text-xl font-bold">{fmtTsh(revenue - cogs)}</div>
+        </Card>
+        <Card className="p-5">
+          <div className="text-xs text-slate-500 mb-1">Gharama za Uendeshaji (Leo)</div>
+          <div className="text-xl font-bold text-amber-600">{fmtTsh(opex)}</div>
+        </Card>
+        <Card className="p-5">
+          <div className="text-xs text-slate-500 mb-1">Bidhaa Zinaisha</div>
+          <div className="text-xl font-bold text-red-600">{expiring}</div>
+        </Card>
+      </div>
+
+      <Card className="p-6 bg-gradient-to-br from-emerald-50 to-emerald-100 border-emerald-200">
+        <div className="flex items-start gap-3">
+          <Heart className="text-emerald-600" size={28} />
+          <div className="flex-1">
+            <div className="text-xs text-emerald-700 uppercase tracking-wide font-semibold mb-1">Kwa Bwana Leo</div>
+            <div className="text-2xl font-bold text-emerald-800">
+              Zaka {fmtTsh(netProfit * 0.1)} + Sadaka {fmtTsh(netProfit * 0.1)} = {fmtTsh(zakatOwed)}
+            </div>
+            <div className="text-xs text-emerald-700 mt-2">
+              Faida baada ya Mungu (kwako): <b>{fmtTsh(netProfit - zakatOwed)}</b>
+            </div>
+          </div>
+        </div>
+      </Card>
+    </Layout>
+  )
+}
+
+import { useState } from 'react'
+import Layout from '../../components/Layout'
+import { useData } from '../../context/DataContext'
+import { Card } from '../../components/ui/Card'
+import { fmtTsh, today, addDays } from '../../lib/utils'
+import { TrendingUp, TrendingDown } from 'lucide-react'
+
+export default function ProfitLossPage() {
+  const { sales, expenses, products } = useData()
+  const [from, setFrom] = useState(addDays(today(), -30))
+  const [to, setTo] = useState(today())
+
+  const salesRange = sales.filter(s => s.createdAt.slice(0, 10) >= from && s.createdAt.slice(0, 10) <= to)
+  const revenue = salesRange.reduce((s, x) => s + x.total, 0)
+  const cogs = salesRange.reduce((s, x) => s + x.items.reduce((y, i) => y + i.buyPrice * i.qty, 0), 0)
+  const grossProfit = revenue - cogs
+  const opex = expenses.filter(e => e.status === 'approved' && e.date >= from && e.date <= to)
+    .reduce((s, e) => s + e.amount, 0)
+  const netProfit = grossProfit - opex
+  const zakat = netProfit * 0.1
+  const sadaka = netProfit * 0.1
+  const yourShare = netProfit - zakat - sadaka
+
+  // product breakdown
+  const productSales: Record<string, { name: string; qty: number; revenue: number; profit: number }> = {}
+  salesRange.forEach(s => s.items.forEach(i => {
+    if (!productSales[i.productId]) productSales[i.productId] = { name: i.productName, qty: 0, revenue: 0, profit: 0 }
+    productSales[i.productId].qty += i.qty
+    productSales[i.productId].revenue += i.price * i.qty
+    productSales[i.productId].profit += (i.price - i.buyPrice) * i.qty
+  }))
+
+  return (
+    <Layout title="Faida au Hasara (Profit & Loss)">
+      <div className="flex gap-3 mb-5">
+        <div>
+          <label className="block text-xs text-slate-500 mb-1">Kuanzia</label>
+          <input type="date" value={from} onChange={e => setFrom(e.target.value)}
+            className="border rounded px-3 py-2 text-sm" />
+        </div>
+        <div>
+          <label className="block text-xs text-slate-500 mb-1">Hadi</label>
+          <input type="date" value={to} onChange={e => setTo(e.target.value)}
+            className="border rounded px-3 py-2 text-sm" />
+        </div>
+      </div>
+
+      <div className="grid md:grid-cols-2 gap-4 mb-6">
+        <Card className="p-5">
+          <div className="text-xs text-slate-500 uppercase tracking-wide mb-3">Mchanganuo</div>
+          <div className="space-y-2 text-sm">
+            <div className="flex justify-between"><span>Mauzo:</span><span className="font-medium">{fmtTsh(revenue)}</span></div>
+            <div className="flex justify-between"><span>Gharama ya Bidhaa (COGS):</span><span className="text-slate-600">−{fmtTsh(cogs)}</span></div>
+            <div className="flex justify-between border-t pt-2 font-semibold"><span>Faida Ghafi:</span><span>{fmtTsh(grossProfit)}</span></div>
+            <div className="flex justify-between"><span>Gharama za Uendeshaji:</span><span className="text-red-600">−{fmtTsh(opex)}</span></div>
+            <div className={`flex justify-between border-t pt-2 text-lg font-bold ${netProfit >= 0 ? 'text-emerald-600' : 'text-red-600'}`}>
+              <span>Faida Halisi:</span><span>{fmtTsh(netProfit)}</span>
+            </div>
+          </div>
+        </Card>
+
+        <Card className="p-5 bg-gradient-to-br from-emerald-50 to-white">
+          <div className="text-xs text-emerald-700 uppercase tracking-wide mb-3">Mgawanyo wa Kiroho</div>
+          <div className="space-y-2 text-sm">
+            <div className="flex justify-between"><span>Zaka 10%:</span><span className="font-medium">{fmtTsh(zakat)}</span></div>
+            <div className="flex justify-between"><span>Sadaka 10%:</span><span className="font-medium">{fmtTsh(sadaka)}</span></div>
+            <div className="flex justify-between border-t pt-2 font-semibold text-emerald-700">
+              <span>Jumla ya Bwana:</span><span>{fmtTsh(zakat + sadaka)}</span>
+            </div>
+            <div className="flex justify-between text-xs text-slate-600">
+              <span>Inayobaki kwako:</span><span className="font-bold">{fmtTsh(yourShare)}</span>
+            </div>
+          </div>
+          {netProfit < 0 && (
+            <div className="mt-3 text-xs text-red-600 bg-red-50 rounded p-2 flex items-center gap-1">
+              <TrendingDown size={12} /> Biashara inapata hasara kipindi hiki
+            </div>
+          )}
+        </Card>
+      </div>
+
+      <Card>
+        <div className="px-4 py-3 border-b font-semibold">Faida kwa Kila Bidhaa</div>
+        <div className="overflow-x-auto">
+          <table className="w-full text-sm">
+            <thead className="bg-slate-50">
+              <tr>
+                <th className="text-left px-4 py-2">Bidhaa</th>
+                <th className="text-right px-4 py-2">Idadi</th>
+                <th className="text-right px-4 py-2">Mauzo</th>
+                <th className="text-right px-4 py-2">Faida</th>
+                <th className="text-right px-4 py-2">Margin</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y">
+              {Object.entries(productSales).sort((a, b) => b[1].profit - a[1].profit).map(([id, p]) => (
+                <tr key={id} className="hover:bg-slate-50">
+                  <td className="px-4 py-2">{p.name}</td>
+                  <td className="text-right px-4 py-2">{p.qty}</td>
+                  <td className="text-right px-4 py-2">{fmtTsh(p.revenue)}</td>
+                  <td className="text-right px-4 py-2 font-medium text-emerald-600">{fmtTsh(p.profit)}</td>
+                  <td className="text-right px-4 py-2">{p.revenue > 0 ? ((p.profit / p.revenue) * 100).toFixed(1) + '%' : '—'}</td>
+                </tr>
+              ))}
+              {Object.keys(productSales).length === 0 && (
+                <tr><td colSpan={5} className="text-center py-8 text-slate-500">Hakuna mauzo kipindi hiki</td></tr>
+              )}
+            </tbody>
+          </table>
+        </div>
+      </Card>
+    </Layout>
+  )
+}
+
+
+import { useState } from 'react'
+import Layout from '../../components/Layout'
+import { useData } from '../../context/DataContext'
+import { Card } from '../../components/ui/Card'
+import { fmtTsh, today, daysBetween } from '../../lib/utils'
+import Badge from '../../components/ui/Badge'
+import { BarChart3, TrendingUp, Clock, AlertCircle } from 'lucide-react'
+
+export default function ReportsPage() {
+  const { sales, customers, products, purchases } = useData()
+  const [tab, setTab] = useState<'sales' | 'stock' | 'debts'>('sales')
+
+  // Fast / slow moving
+  const productMoves: Record<string, { name: string; qty30: number; revenue: number }> = {}
+  products.forEach(p => { productMoves[p.id] = { name: p.name, qty30: 0, revenue: 0 } })
+  sales.filter(s => daysBetween(s.createdAt.slice(0, 10), today()) <= 30)
+    .forEach(s => s.items.forEach(i => {
+      if (productMoves[i.productId]) {
+        productMoves[i.productId].qty30 += i.qty
+        productMoves[i.productId].revenue += i.price * i.qty
+      }
+    }))
+  const sorted = Object.entries(productMoves).sort((a, b) => b[1].qty30 - a[1].qty30)
+  const fast = sorted.slice(0, 5).filter(([, v]) => v.qty30 > 0)
+  const slow = products.filter(p => productMoves[p.id]?.qty30 === 0 && p.stock > 0)
+
+  // debts
+  const debtors = customers.filter(c => c.balance > 0).sort((a, b) => b.balance - a.balance)
+
+  return (
+    <Layout title="Ripoti (Reports)">
+      <div className="flex gap-2 mb-5">
+        <button onClick={() => setTab('sales')}
+          className={`px-4 py-2 text-sm rounded-lg ${tab === 'sales' ? 'bg-brand-600 text-white' : 'bg-white border'}`}>
+          <span className="flex items-center gap-2"><BarChart3 size={16} /> Mauzo</span>
+        </button>
+        <button onClick={() => setTab('stock')}
+          className={`px-4 py-2 text-sm rounded-lg ${tab === 'stock' ? 'bg-brand-600 text-white' : 'bg-white border'}`}>
+          <span className="flex items-center gap-2"><TrendingUp size={16} /> Stoo</span>
+        </button>
+        <button onClick={() => setTab('debts')}
+          className={`px-4 py-2 text-sm rounded-lg ${tab === 'debts' ? 'bg-brand-600 text-white' : 'bg-white border'}`}>
+          <span className="flex items-center gap-2"><Clock size={16} /> Madeni</span>
+        </button>
+      </div>
+
+      {tab === 'sales' && (
+        <div className="grid md:grid-cols-2 gap-4">
+          <Card>
+            <div className="px-4 py-3 border-b font-semibold">Mauzo ya Siku 30</div>
+            <div className="p-4 space-y-1 text-sm">
+              {Array.from({ length: 30 }).map((_, i) => {
+                const d = new Date(); d.setDate(d.getDate() - i)
+                const dayStr = d.toISOString().slice(0, 10)
+                const ds = sales.filter(s => s.createdAt.slice(0, 10) === dayStr)
+                const tot = ds.reduce((s, x) => s + x.total, 0)
+                if (tot === 0) return null
+                return (
+                  <div key={i} className="flex justify-between">
+                    <span className="text-slate-600">{dayStr}</span>
+                    <span className="font-medium">{fmtTsh(tot)}</span>
+                  </div>
+                )
+              })}
+            </div>
+          </Card>
+
+          <Card>
+            <div className="px-4 py-3 border-b font-semibold">Mauzo kwa Muuzaji</div>
+            <div className="p-4 space-y-2 text-sm">
+              {Object.entries(sales.reduce((acc, s) => {
+                acc[s.createdBy] = (acc[s.createdBy] || 0) + s.total
+                return acc
+              }, {} as Record<string, number>)).map(([user, total]) => (
+                <div key={user} className="flex justify-between">
+                  <span>{user}</span>
+                  <span className="font-medium">{fmtTsh(total)}</span>
+                </div>
+              ))}
+            </div>
+          </Card>
+        </div>
+      )}
+
+      {tab === 'stock' && (
+        <div className="grid md:grid-cols-2 gap-4">
+          <Card>
+            <div className="px-4 py-3 border-b font-semibold flex items-center gap-2">
+              <TrendingUp className="text-emerald-600" size={16} /> Fast Moving (Siku 30)
+            </div>
+            <div className="divide-y">
+              {fast.map(([id, v]) => (
+                <div key={id} className="px-4 py-2.5 flex justify-between text-sm">
+                  <div>
+                    <div className="font-medium">{v.name}</div>
+                    <div className="text-xs text-slate-500">{v.qty30} zimeuzwa</div>
+                  </div>
+                  <div className="font-semibold text-emerald-600">{fmtTsh(v.revenue)}</div>
+                </div>
+              ))}
+              {fast.length === 0 && <div className="text-center py-8 text-slate-500 text-sm">Hakuna data</div>}
+            </div>
+          </Card>
+
+          <Card>
+            <div className="px-4 py-3 border-b font-semibold flex items-center gap-2">
+              <Clock className="text-amber-600" size={16} /> Slow Moving (Hakuna mauzo, siku 30)
+            </div>
+            <div className="divide-y max-h-96 overflow-y-auto">
+              {slow.map(p => (
+                <div key={p.id} className="px-4 py-2.5 flex justify-between text-sm">
+                  <div>
+                    <div className="font-medium">{p.name}</div>
+                    <div className="text-xs text-slate-500">Stoo: {p.stock} {p.unit}</div>
+                  </div>
+                  <Badge color="amber">Imelala</Badge>
+                </div>
+              ))}
+              {slow.length === 0 && <div className="text-center py-8 text-slate-500 text-sm">Hakuna bidhaa iliyolala</div>}
+            </div>
+          </Card>
+        </div>
+      )}
+
+      {tab === 'debts' && (
+        <Card>
+          <div className="px-4 py-3 border-b font-semibold flex items-center gap-2">
+            <AlertCircle className="text-red-600" size={16} /> Orodha ya Wadeni
+          </div>
+          <div className="divide-y">
+            {debtors.map(c => (
+              <div key={c.id} className="px-4 py-3 flex justify-between items-center text-sm">
+                <div>
+                  <div className="font-medium">{c.name}</div>
+                  <div className="text-xs text-slate-500">{c.phone} · {c.type}</div>
+                </div>
+                <div className="text-right">
+                  <div className="font-bold text-red-600">{fmtTsh(c.balance)}</div>
+                  <Badge color={c.balance > 1000000 ? 'red' : 'amber'}>
+                    {c.balance > 1000000 ? 'Sugu' : 'Kawaida'}
+                  </Badge>
+                </div>
+              </div>
+            ))}
+            {debtors.length === 0 && <div className="text-center py-8 text-slate-500 text-sm">Hakuna madeni</div>}
+          </div>
+        </Card>
+      )}
+    </Layout>
+  )
+}
+
+import { Link } from 'react-router-dom'
+import Layout from '../../components/Layout'
+import { useData } from '../../context/DataContext'
+import { Card, StatCard } from '../../components/ui/Card'
+import { fmtTsh, today, daysBetween } from '../../lib/utils'
+import { Package, Users, Receipt, TrendingUp, AlertTriangle, FileText, ArrowRight } from 'lucide-react'
+
+export default function AdminDashboard() {
+  const { products, sales, customers, expenses, purchases, audit } = useData()
+
+  const todaySales = sales.filter(s => s.createdAt.slice(0, 10) === today())
+  const todayTotal = todaySales.reduce((s, x) => s + x.total, 0)
+  const todayProfit = todaySales.reduce((s, x) => {
+    const cogs = x.items.reduce((y, i) => y + i.buyPrice * i.qty, 0)
+    return s + (x.total - cogs)
+  }, 0)
+  const totalDebts = customers.reduce((s, c) => s + c.balance, 0)
+  const lowStock = products.filter(p => p.stock <= p.reorderLevel).length
+  const expiring = products.filter(p => p.expiryDate && daysBetween(today(), p.expiryDate) <= 30).length
+  const pendingExpenses = expenses.filter(e => e.status === 'pending').length
+  const pendingPO = purchases.filter(p => p.status === 'pending').length
+
+  return (
+    <Layout title="Dashboard - Admin">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+        <StatCard label="Mauzo ya Leo" value={fmtTsh(todayTotal)} sub={`${todaySales.length} risiti`} icon={<Receipt />} />
+        <StatCard label="Faida Ghafi (Leo)" value={fmtTsh(todayProfit)} icon={<TrendingUp />} color="green" />
+        <StatCard label="Madeni ya Wateja" value={fmtTsh(totalDebts)} icon={<Users />} color="red" />
+        <StatCard label="Bidhaa Chini ya Kiwango" value={String(lowStock)} icon={<AlertTriangle />} color="amber" />
+      </div>
+
+      <div className="grid md:grid-cols-3 gap-4 mb-6">
+        <Card className="p-4">
+          <div className="text-xs text-slate-500 mb-1">Zinaisha (Expiry)</div>
+          <div className="text-2xl font-bold text-red-600 mb-2">{expiring}</div>
+          <Link to="/products" className="text-xs text-brand-600 hover:underline flex items-center gap-1">
+            Angalia bidhaa <ArrowRight size={12} />
+          </Link>
+        </Card>
+        <Card className="p-4">
+          <div className="text-xs text-slate-500 mb-1">Gharama Zinasubiri Idhini</div>
+          <div className="text-2xl font-bold text-amber-600 mb-2">{pendingExpenses}</div>
+          <Link to="/expenses" className="text-xs text-brand-600 hover:underline flex items-center gap-1">
+            Pitia gharama <ArrowRight size={12} />
+          </Link>
+        </Card>
+        <Card className="p-4">
+          <div className="text-xs text-slate-500 mb-1">LPO Zinasubiri Kupokelewa</div>
+          <div className="text-2xl font-bold text-blue-600 mb-2">{pendingPO}</div>
+          <Link to="/grn" className="text-xs text-brand-600 hover:underline flex items-center gap-1">
+            Pokea mizigo <ArrowRight size={12} />
+          </Link>
+        </Card>
+      </div>
+
+      <div className="grid md:grid-cols-2 gap-4">
+        <Card>
+          <div className="px-4 py-3 border-b flex justify-between items-center">
+            <div className="font-semibold">Mauzo ya Karibuni</div>
+            <Link to="/sales" className="text-xs text-brand-600 hover:underline">Ona zote</Link>
+          </div>
+          <div className="divide-y">
+            {sales.slice(0, 6).map(s => (
+              <div key={s.id} className="px-4 py-2.5 flex justify-between text-sm">
+                <div>
+                  <div className="font-medium">{s.customerName}</div>
+                  <div className="text-xs text-slate-500">{s.receiptNo} · {s.createdAt.slice(0, 16).replace('T', ' ')}</div>
+                </div>
+                <div className="font-semibold text-emerald-600">{fmtTsh(s.total)}</div>
+              </div>
+            ))}
+            {sales.length === 0 && (
+              <div className="px-4 py-8 text-center text-slate-500 text-sm">Hakuna mauzo bado</div>
+            )}
+          </div>
+        </Card>
+
+        <Card>
+          <div className="px-4 py-3 border-b flex justify-between items-center">
+            <div className="font-semibold">Shughuli za Karibuni (Audit)</div>
+            <Link to="/audit" className="text-xs text-brand-600 hover:underline">Ona zote</Link>
+          </div>
+          <div className="divide-y max-h-80 overflow-y-auto scrollbar-thin">
+            {audit.slice(0, 8).map(a => (
+              <div key={a.id} className="px-4 py-2 text-xs">
+                <div className="flex justify-between">
+                  <span className="font-medium text-slate-700">{a.userName}</span>
+                  <span className="text-slate-400">{a.timestamp.slice(11, 16)}</span>
+                </div>
+                <div className="text-slate-600">{a.action}: {a.details}</div>
+              </div>
+            ))}
+            {audit.length === 0 && (
+              <div className="px-4 py-8 text-center text-slate-500 text-sm">Hakuna shughuli bado</div>
+            )}
+          </div>
+        </Card>
+      </div>
+    </Layout>
+  )
+}
+
+import { useState } from 'react'
+import Layout from '../../components/Layout'
+import { useData } from '../../context/DataContext'
+import Input from '../../components/ui/Input'
+import Select from '../../components/ui/Select'
+import { Table, Td } from '../../components/ui/Table'
+import Badge from '../../components/ui/Badge'
+import { Card } from '../../components/ui/Card'
+import { Shield, Search } from 'lucide-react'
+
+export default function AuditPage() {
+  const { audit } = useData()
+  const [search, setSearch] = useState('')
+  const [userFilter, setUserFilter] = useState('')
+
+  const users = Array.from(new Set(audit.map(a => a.userName)))
+  const filtered = audit.filter(a => {
+    const matchSearch = !search || a.action.toLowerCase().includes(search.toLowerCase()) ||
+      a.details.toLowerCase().includes(search.toLowerCase())
+    const matchUser = !userFilter || a.userName === userFilter
+    return matchSearch && matchUser
+  })
+
+  return (
+    <Layout title="Kumbukumbu ya Vitendo (Audit Trail)">
+      <div className="flex gap-3 mb-5">
+        <div className="relative flex-1 max-w-md">
+          <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+          <input value={search} onChange={e => setSearch(e.target.value)}
+            placeholder="Tafuta kitendo au maelezo..."
+            className="w-full pl-9 pr-3 py-2 border rounded-lg text-sm" />
+        </div>
+        <Select value={userFilter} onChange={e => setUserFilter(e.target.value)} className="max-w-xs">
+          <option value="">Watumiaji wote</option>
+          {users.map(u => <option key={u} value={u}>{u}</option>)}
+        </Select>
+      </div>
+
+      <Card>
+        <div className="px-4 py-3 border-b flex items-center gap-2 text-sm text-slate-500">
+          <Shield size={16} /> Jumla ya vitendo: {filtered.length}
+        </div>
+        <Table head={['Tarehe & Saa', 'Mtumiaji', 'Kitendo', 'Maelezo']}>
+          {filtered.slice(0, 200).map(a => (
+            <tr key={a.id} className="hover:bg-slate-50">
+              <Td className="text-xs whitespace-nowrap">{a.timestamp.slice(0, 19).replace('T', ' ')}</Td>
+              <Td><span className="font-medium">{a.userName}</span></Td>
+              <Td>
+                <Badge color={
+                  a.action.includes('DELETE') ? 'red'
+                    : a.action.includes('CREATE') ? 'green'
+                      : a.action === 'SALE' ? 'blue'
+                        : 'slate'
+                }>{a.action}</Badge>
+              </Td>
+              <Td className="text-sm text-slate-700">{a.details}</Td>
+            </tr>
+          ))}
+          {filtered.length === 0 && (
+            <tr><td colSpan={4} className="text-center py-10 text-slate-500">Hakuna vitendo</td></tr>
+          )}
+        </Table>
+      </Card>
+    </Layout>
+  )
+}
+
+import { useState } from 'react'
+import Layout from '../../components/Layout'
+import Button from '../../components/ui/Button'
+import Input from '../../components/ui/Input'
+import Modal from '../../components/ui/Modal'
+import { Card } from '../../components/ui/Card'
+import { KEYS, save } from '../../lib/storage'
+import { Download, Trash2, Database, AlertTriangle } from 'lucide-react'
+
+export default function SettingsPage() {
+  const [clearOpen, setClearOpen] = useState(false)
+
+  const exportData = () => {
+    const data: Record<string, any> = {}
+    Object.values(KEYS).forEach(k => {
+      const raw = localStorage.getItem(k)
+      if (raw) data[k] = JSON.parse(raw)
+    })
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' })
+    const url = URL.createObjectURL(blob)
+    const a = document.createElement('a')
+    a.href = url
+    a.download = `smart-hardware-backup-${new Date().toISOString().slice(0, 10)}.json`
+    a.click()
+    URL.revokeObjectURL(url)
+  }
+
+  const clearAll = () => {
+    Object.values(KEYS).forEach(k => localStorage.removeItem(k))
+    window.location.reload()
+  }
+
+  return (
+    <Layout title="Mipangilio ya System">
+      <div className="grid gap-4 max-w-2xl">
+        <Card className="p-5">
+          <div className="flex items-start gap-3">
+            <Download className="text-brand-600 flex-shrink-0" size={24} />
+            <div className="flex-1">
+              <div className="font-semibold mb-1">Backup ya Data</div>
+              <div className="text-sm text-slate-600 mb-3">
+                Pakua nakala ya data yote (bidhaa, mauzo, wateja, n.k.) kama faili la JSON.
+              </div>
+              <Button onClick={exportData}>Pakua Backup</Button>
+            </div>
+          </div>
+        </Card>
+
+        <Card className="p-5">
+          <div className="flex items-start gap-3">
+            <Database className="text-slate-600 flex-shrink-0" size={24} />
+            <div className="flex-1">
+              <div className="font-semibold mb-1">Hifadhi (Storage)</div>
+              <div className="text-sm text-slate-600 mb-2">
+                System hii inahifadhi data kwenye kivinjari (localStorage). Hakuna server.
+              </div>
+              <div className="text-xs text-slate-500 bg-slate-100 rounded p-2 font-mono">
+                Keys: {Object.values(KEYS).length} groups<br />
+                Size: ~{Math.round(Object.values(KEYS).reduce((s, k) => s + (localStorage.getItem(k)?.length || 0), 0) / 1024)} KB
+              </div>
+            </div>
+          </div>
+        </Card>
+
+        <Card className="p-5 border-red-200">
+          <div className="flex items-start gap-3">
+            <AlertTriangle className="text-red-600 flex-shrink-0" size={24} />
+            <div className="flex-1">
+              <div className="font-semibold mb-1 text-red-700">Eneo la Hatari</div>
+              <div className="text-sm text-slate-600 mb-3">
+                Futa data yote ya system. Hii haiwezi kurudishwa. Hakikisha umepakua backup kwanza.
+              </div>
+              <Button variant="danger" onClick={() => setClearOpen(true)}>
+                <span className="flex items-center gap-2"><Trash2 size={16} /> Futa Data Yote</span>
+              </Button>
+            </div>
+          </div>
+        </Card>
+      </div>
+
+      <Modal open={clearOpen} onClose={() => setClearOpen(false)} title="Futa Data Yote" size="sm">
+        <p className="text-slate-700 mb-4">
+          ⚠️ Una uhakika kabisa? Data yote ya system itafutwa na kurudishwa kwa mipangilio ya mwanzo.
+        </p>
+        <div className="flex justify-end gap-3">
+          <Button variant="outline" onClick={() => setClearOpen(false)}>Ghairi</Button>
+          <Button variant="danger" onClick={clearAll}>Futa Kila Kitu</Button>
+        </div>
+      </Modal>
+    </Layout>
+  )
+}
+
+import { useState } from 'react'
+import Layout from '../../components/Layout'
+import { useAuth } from '../../context/AuthContext'
+import Button from '../../components/ui/Button'
+import Input from '../../components/ui/Input'
+import Select from '../../components/ui/Select'
+import Modal from '../../components/ui/Modal'
+import ConfirmModal from '../../components/ConfirmModal'
+import { Table, Td } from '../../components/ui/Table'
+import Badge from '../../components/ui/Badge'
+import { Card } from '../../components/ui/Card'
+import type { User, Role } from '../../types'
+import { uid } from '../../lib/utils'
+import { Plus, Trash2, Shield, UserCheck, UserX } from 'lucide-react'
+
+const empty: Omit<User, 'id'> = { name: '', username: '', password: '', role: 'seller', active: true }
+
+export default function UsersPage() {
+  const { users, setUsers } = useAuth()
+  const [open, setOpen] = useState(false)
+  const [form, setForm] = useState(empty)
+  const [delId, setDelId] = useState<string | null>(null)
+
+  const save = () => {
+    if (!form.name.trim() || !form.username.trim() || !form.password.trim()) return
+    setUsers([...users, { ...form, id: uid() }])
+    setOpen(false); setForm(empty)
+  }
+
+  const toggle = (id: string) => {
+    setUsers(users.map(u => u.id === id ? { ...u, active: !u.active } : u))
+  }
+
+  const confirmDelete = () => {
+    if (delId) { setUsers(users.filter(u => u.id !== delId)); setDelId(null) }
+  }
+
+  return (
+    <Layout title="Usimamizi wa Watumiaji">
+      <div className="flex justify-end mb-5">
+        <Button onClick={() => { setForm(empty); setOpen(true) }}>
+          <span className="flex items-center gap-2"><Plus size={16} /> Mtumiaji Mpya</span>
+        </Button>
+      </div>
+
+      <Card>
+        <Table head={['Jina', 'Username', 'Wajibu', 'Hali', 'Vitendo']}>
+          {users.map(u => (
+            <tr key={u.id} className="hover:bg-slate-50">
+              <Td>
+                <div className="flex items-center gap-2">
+                  <div className="w-8 h-8 rounded-full bg-brand-100 text-brand-700 flex items-center justify-center font-bold text-xs">
+                    {u.name.charAt(0)}
+                  </div>
+                  <span className="font-medium">{u.name}</span>
+                </div>
+              </Td>
+              <Td className="font-mono text-xs">{u.username}</Td>
+              <Td>
+                <Badge color={
+                  u.role === 'admin' ? 'red' : u.role === 'owner' ? 'purple'
+                    : u.role === 'warehouse' ? 'amber' : 'blue'
+                }>{u.role}</Badge>
+              </Td>
+              <Td>
+                {u.active
+                  ? <Badge color="green"><span className="flex items-center gap-1"><UserCheck size={10} /> Active</span></Badge>
+                  : <Badge color="red"><span className="flex items-center gap-1"><UserX size={10} /> Disabled</span></Badge>}
+              </Td>
+              <Td>
+                <div className="flex gap-2">
+                  <button onClick={() => toggle(u.id)} className="text-xs text-brand-600 hover:underline">
+                    {u.active ? 'Zima' : 'Washa'}
+                  </button>
+                  <button onClick={() => setDelId(u.id)} className="text-red-600 hover:bg-red-50 p-1 rounded">
+                    <Trash2 size={14} />
+                  </button>
+                </div>
+              </Td>
+            </tr>
+          ))}
+        </Table>
+      </Card>
+
+      <Modal open={open} onClose={() => setOpen(false)} title="Mtumiaji Mpya" size="md">
+        <div className="space-y-3">
+          <Input label="Jina Kamili *" value={form.name} onChange={e => setForm({ ...form, name: e.target.value })} />
+          <Input label="Username *" value={form.username} onChange={e => setForm({ ...form, username: e.target.value })} />
+          <Input label="Password *" type="password" value={form.password} onChange={e => setForm({ ...form, password: e.target.value })} />
+          <Select label="Wajibu (Role)" value={form.role}
+            onChange={e => setForm({ ...form, role: e.target.value as Role })}>
+            <option value="admin">Admin — Anaona kila kitu</option>
+            <option value="seller">Muuzaji — POS tu</option>
+            <option value="warehouse">Mhazini — Stoo tu</option>
+            <option value="owner">Mmiliki — Ripoti tu</option>
+          </Select>
+          <div className="flex justify-end gap-3">
+            <Button variant="outline" onClick={() => setOpen(false)}>Ghairi</Button>
+            <Button onClick={save}>Hifadhi</Button>
+          </div>
+        </div>
+      </Modal>
+
+      <ConfirmModal
+        open={!!delId}
+        title="Futa Mtumiaji"
+        message="Una uhakika unataka kufuta mtumiaji huyu? Hataweza ku-access system tena."
+        confirmText="Futa"
+        onConfirm={confirmDelete}
+        onCancel={() => setDelId(null)}
+      />
+    </Layout>
+  )
+}
+
+import { useState } from 'react'
+import { useAuth } from '../context/AuthContext'
+import Input from '../components/ui/Input'
+import Button from '../components/ui/Button'
+import Modal from '../components/ui/Modal'
+
+export default function Login() {
+  const { login } = useAuth()
+  const [u, setU] = useState('')
+  const [p, setP] = useState('')
+  const [err, setErr] = useState(false)
+
+  const submit = (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!login(u, p)) setErr(true)
+  }
+
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-900 to-brand-900 p-4">
+      <div className="bg-white rounded-2xl shadow-2xl p-6 sm:p-8 w-full max-w-md">
+        <div className="text-center mb-6">
+          <div className="w-14 h-14 mx-auto rounded-xl bg-brand-600 flex items-center justify-center text-white font-bold text-xl mb-3">
+            SH
+          </div>
+          <h1 className="text-xl sm:text-2xl font-bold text-slate-800">SMART HARDWARE</h1>
+          <p className="text-sm text-slate-500">Ingia kwenye system</p>
+        </div>
+        <form onSubmit={submit} className="space-y-4">
+          <Input label="Jina la Mtumiaji" value={u} onChange={e => setU(e.target.value)} autoFocus />
+          <Input label="Neno la Siri" type="password" value={p} onChange={e => setP(e.target.value)} />
+          <Button type="submit" className="w-full">Ingia</Button>
+        </form>
+        <div className="mt-6 text-xs text-slate-500 bg-slate-50 rounded-lg p-3">
+          <div className="font-semibold text-slate-700 mb-1">Demo accounts:</div>
+          <div className="break-words">
+            admin/admin · seller/seller · warehouse/warehouse · owner/owner
+          </div>
+        </div>
+      </div>
+      <Modal open={err} onClose={() => setErr(false)} title="Hitilafu ya Kuingia" size="sm">
+        <p className="mb-4 text-slate-700">
+          Jina la mtumiaji au neno la siri si sahihi. Tafadhali jaribu tena.
+        </p>
+        <div className="flex justify-end">
+          <Button onClick={() => setErr(false)}>Sawa</Button>
+        </div>
+      </Modal>
+    </div>
+  )
+}
+
+import type { Product, Supplier, Customer, User, Expense, ZakatRecord } from '../types'
+import { today, uid, now } from './utils'
+
+export const seedUsers: User[] = [
+  { id: 'u1', name: 'Admin Mkuu', username: 'admin', password: 'admin', role: 'admin', active: true },
+  { id: 'u2', name: 'Juma Muuzaji', username: 'seller', password: 'seller', role: 'seller', active: true },
+  { id: 'u3', name: 'Ali Ghala', username: 'warehouse', password: 'warehouse', role: 'warehouse', active: true },
+  { id: 'u4', name: 'Mmiliki', username: 'owner', password: 'owner', role: 'owner', active: true },
+]
+
+export const seedSuppliers: Supplier[] = [
+  { id: 's1', name: 'Dangote Cement', phone: '0754000001', email: 'dangote@tz.com', balance: 0 },
+  { id: 's2', name: 'Steel Masters', phone: '0754000002', email: 'steel@tz.com', balance: 0 },
+  { id: 's3', name: 'Twiga Cement', phone: '0754000003', email: 'twiga@tz.com', balance: 0 },
+]
+
+export const seedCustomers: Customer[] = [
+  { id: 'c1', name: 'Juma Fundi', phone: '0712000001', type: 'fundi', balance: 0, createdAt: now() },
+  { id: 'c2', name: 'Mjenzi Build Co.', phone: '0712000002', type: 'kampuni', balance: 0, createdAt: now() },
+  { id: 'c3', name: 'Baba Ali', phone: '0712000003', type: 'mteja', balance: 0, createdAt: now() },
+]
+
+export const seedProducts: Product[] = [
+  {
+    id: 'p1', sku: 'SAR-DAN-50', name: 'Saruji Dangote 50kg', category: 'Saruji',
+    unit: 'bag', buyPrice: 16000, sellPrice: 18500, stock: 120, location: 'Shed A',
+    supplier: 'Dangote Cement', reorderLevel: 50, barcode: 'SAR001',
+    expiryDate: '2026-06-30', description: 'Saruji ya ujenzi 32.5N', createdAt: now(),
+  },
+  {
+    id: 'p2', sku: 'SAR-TWI-50', name: 'Saruji Twiga 50kg', category: 'Saruji',
+    unit: 'bag', buyPrice: 15500, sellPrice: 18000, stock: 80, location: 'Shed A',
+    supplier: 'Twiga Cement', reorderLevel: 40, barcode: 'SAR002',
+    expiryDate: '2026-04-15', description: 'Saruji Twiga 32.5R', createdAt: now(),
+  },
+  {
+    id: 'p3', sku: 'NON-D12', name: 'Nondo D12', category: 'Nondo',
+    unit: 'kg', alternateUnits: [{ unit: 'm', factor: 0.89 }, { unit: 'ft', factor: 0.27 }],
+    buyPrice: 2200, sellPrice: 2800, stock: 500, location: 'Raka 3',
+    supplier: 'Steel Masters', reorderLevel: 100, barcode: 'NON001',
+    description: 'Nondo ya ujenzi D12 - 12m', createdAt: now(),
+  },
+  {
+    id: 'p4', sku: 'MAB-G28', name: 'Mabati G28', category: 'Mabati',
+    unit: 'm', buyPrice: 8000, sellPrice: 10500, stock: 200, location: 'Shed B',
+    supplier: 'Steel Masters', reorderLevel: 50, barcode: 'MAB001',
+    description: 'Mabati ya kuezekea G28', createdAt: now(),
+  },
+  {
+    id: 'p5', sku: 'MBA-M2', name: 'Mbao Mita za Ujazo', category: 'Mbao',
+    unit: 'm3', buyPrice: 350000, sellPrice: 420000, stock: 30, location: 'Shed C',
+    supplier: 'Steel Masters', reorderLevel: 10, barcode: 'MBA001',
+    description: 'Mbao za ujenzi', createdAt: now(),
+  },
+  {
+    id: 'p6', sku: 'RAN-WH-20', name: 'Rangi Nyeupe 20L', category: 'Rangi',
+    unit: 'pcs', buyPrice: 45000, sellPrice: 58000, stock: 40, location: 'Duka',
+    supplier: 'Dangote Cement', reorderLevel: 15, barcode: 'RAN001',
+    expiryDate: '2026-08-01', description: 'Rangi ya kupaka ukutani', createdAt: now(),
+  },
+]
+
+export const seedExpenses: Expense[] = [
+  {
+    id: 'e1', category: 'fixed', subCategory: 'Kodi ya Duka', description: 'Kodi ya mwezi Nov 2026',
+    amount: 500000, date: today(), paidTo: 'Mwenye Nyumba', paymentMethod: 'Cash',
+    enteredBy: 'Admin Mkuu', status: 'approved', recurring: true,
+  },
+  {
+    id: 'e2', category: 'variable', subCategory: 'Mafuta ya Gari', description: 'Mafuta ya pikipiki',
+    amount: 80000, date: today(), paidTo: 'Shell Station', paymentMethod: 'M-Pesa',
+    enteredBy: 'Juma Muuzaji', status: 'pending', recurring: false,
+  },
+]
+
+export const seedZakat: ZakatRecord[] = []
+
+export const KEYS = {
+  users: 'sh_users',
+  products: 'sh_products',
+  suppliers: 'sh_suppliers',
+  customers: 'sh_customers',
+  sales: 'sh_sales',
+  quotations: 'sh_quotations',
+  purchases: 'sh_purchases',
+  grns: 'sh_grns',
+  expenses: 'sh_expenses',
+  audit: 'sh_audit',
+  zakat: 'sh_zakat',
+  returns: 'sh_returns',
+  stockMovements: 'sh_stock_movements',
+  currentUser: 'sh_current_user',
+} as const
+
+export function load<T>(key: string, fallback: T): T {
+  try {
+    const raw = localStorage.getItem(key)
+    if (raw === null) return fallback
+    return JSON.parse(raw) as T
+  } catch (err) {
+    console.error(`[storage] load failed for "${key}":`, err)
+    localStorage.removeItem(key) // remove corrupt entry so it can't break again
+    return fallback
+  }
+}
+
+export function save<T>(key: string, value: T) {
+  try {
+    localStorage.setItem(key, JSON.stringify(value))
+  } catch (err) {
+    console.error(`[storage] save failed for "${key}":`, err)
+  }
+}
+
+
+export const uid = () => Math.random().toString(36).slice(2, 10) + Date.now().toString(36).slice(-4)
+
+export const fmtTsh = (n: number) =>
+  'Tsh ' + Math.round(n).toLocaleString('en-US')
+
+export const today = () => new Date().toISOString().slice(0, 10)
+
+export const now = () => new Date().toISOString()
+
+export const daysBetween = (a: string, b: string) =>
+  Math.floor((new Date(b).getTime() - new Date(a).getTime()) / 86400000)
+
+export const addDays = (date: string, days: number) => {
+  const d = new Date(date)
+  d.setDate(d.getDate() + days)
+  return d.toISOString().slice(0, 10)
+}
+
+//To  this  system   add  time control   such  that,  an  admin  can   control working  month   for all Seller
+also  add reports per month  and if end ofmonth is reached report notification will appear in the system
+also if seller havent prepared it, the system will autosubmit, also the report can be edited by an admin if the seller requests in the system,
+also to the side of Gharama (OPEX), make  that, seller,owner can create it but hawezi ku idhinishwa, hivyo admin anaweza  ku Idhinisha
+hiyo expense ndipo iwe ime idhinishwa na kuingia kwe gharama  za duka.  fanya kitu kiwe vizuri zaidi. turudi kwe upande wa muda, admin anaweza ku control working year, month   ila  taarifa 
+kwa kila seller  au owner au hata admin tunaweza ku filter kwa muda wowote tunao taka kuangalia sisi wenyewe. I hope umenielewa ninacho maanisha

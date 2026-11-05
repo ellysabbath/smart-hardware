@@ -1,5 +1,14 @@
 export type Role = 'admin' | 'seller' | 'warehouse' | 'owner'
 
+export interface Branch {
+  id: string
+  name: string
+  location: string
+  phone: string
+  active: boolean
+  createdAt: string
+}
+
 export interface User {
   id: string
   name: string
@@ -7,12 +16,14 @@ export interface User {
   password: string
   role: Role
   active: boolean
+  branchId?: string // Seller na Warehouse ni lazima wawe na hii
 }
 
 export type Unit = 'pcs' | 'kg' | 'm' | 'ft' | 'm3' | 'bag' | 'box'
 
 export interface Product {
   id: string
+  branchId: string
   sku: string
   name: string
   category: string
@@ -42,6 +53,7 @@ export interface Supplier {
 
 export interface Customer {
   id: string
+  branchId: string
   name: string
   phone: string
   email?: string
@@ -66,6 +78,7 @@ export interface PaymentSplit {
 
 export interface Sale {
   id: string
+  branchId: string
   receiptNo: string
   customerId?: string
   customerName: string
@@ -81,6 +94,7 @@ export interface Sale {
 
 export interface Quotation {
   id: string
+  branchId: string
   quotationNo: string
   customerId?: string
   customerName: string
@@ -103,6 +117,7 @@ export interface PurchaseItem {
 
 export interface Purchase {
   id: string
+  branchId: string
   lpoNo: string
   supplierId: string
   supplierName: string
@@ -115,6 +130,7 @@ export interface Purchase {
 
 export interface GRN {
   id: string
+  branchId: string
   grnNo: string
   purchaseId: string
   items: { productId: string; productName: string; ordered: number; received: number }[]
@@ -123,6 +139,7 @@ export interface GRN {
 
 export interface Expense {
   id: string
+  branchId: string
   category: 'fixed' | 'variable' | 'capital'
   subCategory: string
   description: string
@@ -135,10 +152,15 @@ export interface Expense {
   enteredBy: string
   status: 'pending' | 'approved' | 'rejected'
   recurring: boolean
+  requestedBy: string
+  approvedBy?: string
+  approvedAt?: string
+  rejectionReason?: string
 }
 
 export interface AuditLog {
   id: string
+  branchId?: string
   userId: string
   userName: string
   action: string
@@ -148,6 +170,7 @@ export interface AuditLog {
 
 export interface ZakatRecord {
   id: string
+  branchId: string
   date: string
   type: 'daily' | 'weekly' | 'monthly'
   netProfit: number
@@ -160,6 +183,7 @@ export interface ZakatRecord {
 
 export interface ReturnRecord {
   id: string
+  branchId: string
   saleId: string
   items: { productId: string; qty: number; price: number }[]
   refundAmount: number
@@ -168,6 +192,7 @@ export interface ReturnRecord {
 
 export interface StockMovement {
   id: string
+  branchId: string
   productId: string
   productName: string
   type: 'sale' | 'purchase' | 'return' | 'damage' | 'transfer' | 'adjust'
@@ -177,4 +202,49 @@ export interface StockMovement {
   note?: string
   createdAt: string
   createdBy: string
+}
+
+export interface WorkingPeriod {
+  id: string
+  branchId: string
+  year: number
+  month: number
+  status: 'open' | 'closed' | 'locked'
+  openedAt: string
+  closedAt?: string
+  closedBy?: string
+  reportDeadline: string
+  createdBy: string
+}
+
+export interface MonthlyReportEditRequest {
+  reason: string
+  requestedAt: string
+  status: 'pending' | 'approved' | 'rejected'
+  decidedAt?: string
+  decidedBy?: string
+  adminNote?: string
+}
+
+export interface MonthlyReport {
+  id: string
+  branchId: string
+  periodId: string
+  year: number
+  month: number
+  sellerId: string
+  sellerName: string
+  salesCount: number
+  salesTotal: number
+  cogs: number
+  grossProfit: number
+  expensesTotal: number
+  netProfit: number
+  notes: string
+  status: 'draft' | 'submitted' | 'auto_submitted' | 'approved' | 'edit_requested' | 'edited'
+  submittedAt?: string
+  autoSubmittedAt?: string
+  approvedAt?: string
+  approvedBy?: string
+  editRequest?: MonthlyReportEditRequest
 }
