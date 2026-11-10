@@ -1,5 +1,5 @@
 import { NavLink, useNavigate } from 'react-router-dom'
-import { Home, Package, ShoppingCart, Users, Store, Wallet, TrendingUp, HandCoins, Receipt, FileText, X, ShoppingBag, TruckIcon, UserPlus, Bell, BarChart3, Truck, PackagePlus, LogOutIcon, ArrowBigLeft } from 'lucide-react'
+import { Home, Package, ShoppingCart, Users, Store, Wallet, TrendingUp, HandCoins, Receipt, FileText, X, ShoppingBag, TruckIcon, UserPlus, Bell, BarChart3, Truck, PackagePlus, LogOutIcon, ArrowBigLeft, BellCheckIcon, StopCircle, HouseCog, HouseCogIcon, PackageX, DollarSign, CircleDollarSign, Banknote } from 'lucide-react'
 
 const navByRole: Record<string, { to: string; label: string; icon: React.ElementType }[]> = {
   mteja: [
@@ -14,6 +14,9 @@ const navByRole: Record<string, { to: string; label: string; icon: React.Element
     { to: '/muuzaji/risiti', label: 'Risiti za Leo', icon: Receipt },
     { to: '/muuzaji/pokea', label: 'Pokea Bidhaa', icon: Truck },
     { to: '/muuzaji/wateja', label: 'Wateja', icon: UserPlus },
+    { to: '/muuzaji/store-manage', label: 'ripoti za stoo', icon: UserPlus },
+    { to: '/muuzaji/ripoti-bidhaa', label: 'hali ya bidhaa', icon: HouseCogIcon },
+    { to: '/muuzaji/mshahara', label: 'Mshahara Wangu', icon: CircleDollarSign },
     { to: '/muuzaji/carts', label: 'Carts Zinazosubiri', icon: Bell },
     { to: '/muuzaji/matumizi', label: 'Maombi ya Matumizi', icon: Wallet }, // MPYA
     { to: '/muuzaji/ripoti', label: 'Ripoti za Duka', icon: BarChart3 },
@@ -24,11 +27,15 @@ mmiliki: [
   { to: '/mmiliki/wafanyakazi', label: 'Wafanyakazi', icon: Users },
   { to: '/mmiliki/faida', label: 'Faida/Hasara', icon: TrendingUp },
   { to: '/mmiliki/mauzo', label: 'Mauzo na Faida', icon: TrendingUp }, 
+  { to: '/mmiliki/ripoti-bidhaa', label: 'Ripoti za Bidhaa', icon: PackageX },
+   { to: '/mmiliki/mishahara', label: 'Mishahara', icon: Banknote },
   { to: '/mmiliki/zaka', label: 'Zaka & Sadaka', icon: HandCoins },
    { to: '/mmiliki/uingiza', label: 'Ingiza Vifaa', icon: PackagePlus },
    { to: '/mmiliki/wateja', label: 'Wateja', icon: UserPlus },
     { to: '/mmiliki/orders', label: 'Order Zote', icon: ShoppingBag }, 
     { to: '/mmiliki/matumizi', label: 'Maombi ya Matumizi', icon: Wallet },
+      { to: '/mmiliki/store', label: 'store', icon: HouseCog },
+    { to: '/mmiliki/notifications', label: 'notifications', icon: BellCheckIcon },
      { to: '/', label: 'toka', icon: LogOutIcon }, 
    
 

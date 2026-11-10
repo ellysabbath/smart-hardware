@@ -6,13 +6,28 @@
 export type Role = 'mteja' | 'muuzaji' | 'mmiliki'
 
 // ---------- Notifications ----------
+export type AinaNotification = 'info' | 'warning' | 'success' | 'danger'
+
+export type KundiNotification =
+  | 'mauzo'
+  | 'stoki'
+  | 'deni'
+  | 'malipo'
+  | 'order'
+  | 'gharama'
+  | 'mtumiaji'
+  | 'mengine'
+
 export interface Notification {
   id: string
   title: string
   message: string
   time: string
-  type: 'info' | 'warning' | 'success' | 'danger'
+  type: AinaNotification
+  kundi: KundiNotification
   read: boolean
+  route?: string
+  maelezo?: string
 }
 
 // ---------- Malipo ----------
@@ -87,6 +102,13 @@ export interface Bidhaa {
   iconKey?: KundiBidhaa
 }
 
+export interface BidhaaKamili extends Bidhaa {
+  mtengenezaji?: string
+  uzito?: string
+  pichaUrl?: string
+  sikuZilizobaki?: number
+}
+
 // ---------- Duka ----------
 export interface Duka {
   id: string
@@ -107,6 +129,17 @@ export interface Mtumiaji {
   duka: string
   simu: string
   active: boolean
+}
+
+export interface MtumiajiKamili {
+  id: string
+  jina: string
+  simu: string
+  role: NafasiMtumiaji
+  dukaId?: string
+  dukaJina?: string
+  active: boolean
+  tareheSajili: string
 }
 
 // ---------- Mauzo ----------
@@ -162,6 +195,13 @@ export interface Mteja {
   jumlaManunuzi: number
   tareheSajili: string
   active: boolean
+}
+
+export interface MtejaKamili extends Mteja {
+  dukaId?: string
+  dukaJina?: string
+  jumlaOrders?: number
+  mwishoKununua?: string
 }
 
 // ---------- GRN ----------
@@ -261,7 +301,7 @@ export type AinaGharama =
   | 'maji'
   | 'nyingine'
 
-// ---------- Duka Kamili (Mmiliki) ----------
+// ---------- Duka Kamili ----------
 export type HaliDuka = 'hai' | 'imesimamishwa' | 'imefungwa'
 
 export interface DukaKamili {
@@ -277,17 +317,6 @@ export interface DukaKamili {
   faidaLeo: number
   wafanyakazi: number
   stokiJumla: number
-}
-
-export interface MtumiajiKamili {
-  id: string
-  jina: string
-  simu: string
-  role: NafasiMtumiaji
-  dukaId?: string
-  dukaJina?: string
-  active: boolean
-  tareheSajili: string
 }
 
 // ---------- Uingizaji wa Vifaa ----------
@@ -325,10 +354,6 @@ export interface UingizajiVifaa {
   maelezo?: string
 }
 
-// ============================================================
-// Ongeza kwenye types zilizopo
-// ============================================================
-
 // ---------- Mauzo ya Duka ----------
 export interface MauzoYaDuka {
   id: string
@@ -338,7 +363,7 @@ export interface MauzoYaDuka {
   muuzaji: string
   bidhaa: OrderItem[]
   jumlaMauzo: number
-  cogs: number // Gharama ya Bidhaa Zilizouzwa
+  cogs: number
   faidaGhafi: number
 }
 
@@ -382,7 +407,7 @@ export interface FaidaKamili {
   hasara: boolean
 }
 
-// ---------- Gharama Zote (kwa UI) ----------
+// ---------- Gharama Zote ----------
 export interface GharamaZote {
   mishahara: number
   kodi: number
@@ -399,10 +424,7 @@ export interface GharamaZote {
   jumla: number
 }
 
-// ============================================================
-// Ongeza kwenye types zilizopo
-// ============================================================
-
+// ---------- Zaka ----------
 export type AinaKipindi = 'siku' | 'wiki' | 'mwezi' | 'mwaka'
 
 export interface MalipoZaka {
@@ -423,52 +445,7 @@ export interface ZakaKipindi {
   salioLako: number
 }
 
-// ============================================================
-// Badilisha Notification kuwa hivi
-// ============================================================
-
-export type AinaNotification = 'info' | 'warning' | 'success' | 'danger'
-
-export type KundiNotification =
-  | 'mauzo'
-  | 'stoki'
-  | 'deni'
-  | 'malipo'
-  | 'order'
-  | 'gharama'
-  | 'mtumiaji'
-  | 'mengine'
-
-export interface Notification {
-  id: string
-  title: string
-  message: string
-  time: string
-  type: AinaNotification
-  kundi: KundiNotification
-  read: boolean
-  route?: string
-  maelezo?: string
-}
-
-
-export interface MtejaKamili {
-  id: string
-  jina: string
-  simu: string
-  aina: AinaMteja
-  mahali?: string
-  tin?: string
-  deni: number
-  jumlaManunuzi: number
-  tareheSajili: string
-  active: boolean
-  dukaId?: string
-  dukaJina?: string
-  jumlaOrders?: number
-  mwishoKununua?: string
-}
-
+// ---------- Order Admin ----------
 export type HaliOrderAdmin =
   | 'inasubiri_malipo'
   | 'imekamilika'
@@ -490,4 +467,191 @@ export interface OrderAdmin {
   tarehe: string
   muda: string
   maelezo?: string
+}
+
+// ---------- Ripoti ya Bidhaa ----------
+export type AinaRipotiBidhaa =
+  | 'uharibifu'
+  | 'expiry'
+  | 'upotevu'
+  | 'kurudisha_msambazaji'
+
+export type HaliRipoti = 'inasubiri' | 'imethibitishwa' | 'imekataliwa'
+
+export interface RipotiBidhaa {
+  id: string
+  bidhaaId: string
+  jina: string
+  sku: string
+  uom: string
+  kundi: KundiBidhaa
+  dukaId: string
+  dukaJina: string
+  aina: AinaRipotiBidhaa
+  wingi: number
+  beiUnunuzi: number
+  thamani: number
+  sababu: string
+  maelezo?: string
+  pichaUrl?: string
+  expiry?: string
+  mtengenezaji?: string
+  uzito?: string
+  aliyeingiza: string
+  tarehe: string
+  hali: HaliRipoti
+}
+
+// ---------- Marekebisho ya Stoki ----------
+export type AinaMarekebishoStoki =
+  | 'mauzo'
+  | 'uharibifu'
+  | 'expiry'
+  | 'upotevu'
+  | 'kurudisha_msambazaji'
+  | 'marekebisho'
+
+export type HaliMarekebisho = 'inasubiri' | 'imethibitishwa' | 'imekataliwa'
+
+export interface MarekebishoStoki {
+  id: string
+  bidhaaId: string
+  jina: string
+  sku: string
+  uom: string
+  kundi: KundiBidhaa
+  dukaId: string
+  dukaJina: string
+  aina: AinaMarekebishoStoki
+  wingi: number
+  beiUnunuzi: number
+  thamani: number
+  sababu: string
+  maelezo?: string
+  pichaUrl?: string
+  expiry?: string
+  mtengenezaji?: string
+  uzito?: string
+  aliyeingiza: string
+  tarehe: string
+  hali: HaliMarekebisho
+}
+
+// ---------- Document ----------
+export type AinaDocument =
+  | 'mauzo'
+  | 'stoki'
+  | 'wateja'
+  | 'madeni'
+  | 'gharama'
+  | 'jumla'
+
+export type HaliDocument = 'tayari' | 'inasindika' | 'imeshindwa'
+
+export interface Document {
+  id: string
+  jina: string
+  aina: AinaDocument
+  format: 'pdf' | 'csv' | 'excel'
+  dukaId: string
+  dukaJina: string
+  ukubwa: string
+  tarehe: string
+  muda: string
+  hali: HaliDocument
+  aliyezalisha: string
+  kipindi: string
+}
+
+// ============================================================
+// MISHAHARA (types zote hapa - mara moja tu)
+// ============================================================
+
+export type AinaAkaunti = 'bank' | 'mobile'
+
+export type NjiaMalipoMshahara =
+  | 'mpesa'
+  | 'tigopesa'
+  | 'airtel'
+  | 'halopesa'
+  | 'crdb'
+  | 'nmb'
+  | 'nbc'
+  | 'stanbic'
+  | 'other'
+
+export type HaliMshahara =
+  | 'inasubiri'
+  | 'imelipwa'
+  | 'imeshindwa'
+  | 'imekataliwa'
+
+// Akaunti ya kampuni (mmiliki anaiweka, sio mfanyakazi)
+export interface AkauntiKampuni {
+  id: string
+  aina: AinaAkaunti
+  jina: string
+  namba: string
+  jinaMmiliki: string
+  ndiyoMsingi: boolean
+}
+
+// Akaunti ya mfanyakazi (kila mfanyakazi anaweka yake)
+export interface AkauntiMfanyakazi {
+  id: string
+  mtumiajiId: string
+  jinaMtumiaji: string
+  aina: AinaAkaunti
+  jina: string
+  namba: string
+  jinaMmiliki: string
+  ndiyoMsingi: boolean
+}
+
+export interface Mshahara {
+  id: string
+  mtumiajiId: string
+  jinaMtumiaji: string
+  nafasi: string
+  dukaId: string
+  dukaJina: string
+  mwezi: string
+  kipindi: string
+  mshaharaMsingi: number
+  posho: number
+  overtime: number
+  mafao: number
+  makato: number
+  jumla: number
+  hali: HaliMshahara
+  tareheMalipo?: string
+  njiaMalipo?: NjiaMalipoMshahara
+  akauntiMalipo?: string
+  kumbukumbu?: string
+  aliyeidhinisha?: string
+  tareheIdhini?: string
+  maelezo?: string
+}
+
+export interface MalipoMshahara {
+  id: string
+  mshaharaId: string
+  mtumiajiId: string
+  jinaMtumiaji: string
+  kiasi: number
+  njia: NjiaMalipoMshahara
+  akaunti: string
+  kumbukumbu: string
+  tarehe: string
+  muda: string
+  hali: HaliMshahara
+  maelezo?: string
+}
+
+export interface BulkPaymentResult {
+  jumla: number
+  zilizofanikiwa: number
+  zilizoshindwa: number
+  malipo: MalipoMshahara[]
+  waliokosaAkaunti: string[]
 }

@@ -14,6 +14,10 @@ import { MauzoProvider } from './context/MauzoContext'
 import { ZakaProvider } from './context/ZakaContext'
 import { NotificationProvider } from './context/NotificationContext'
 import { OrderAdminProvider } from './context/OrderAdminContext'
+import { RipotiBidhaaProvider } from './context/RipotiBidhaaContext'
+import { StokiProvider } from './context/StokiContext'
+import { DocumentProvider } from './context/DocumentContext'
+import { MshaharaProvider } from './context/MshaharaContext'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
@@ -29,7 +33,15 @@ createRoot(document.getElementById('root')!).render(
                        <ZakaProvider>
                         <NotificationProvider>
                           <OrderAdminProvider>
-                            <App />
+                              <RipotiBidhaaProvider>
+                                <StokiProvider>
+                                       <DocumentProvider>
+                                           <MshaharaProvider>
+                                               <App />
+                                             </MshaharaProvider>
+                                        </DocumentProvider>
+                                </StokiProvider>
+                              </RipotiBidhaaProvider>
                           </OrderAdminProvider>
                         </NotificationProvider>
                       </ZakaProvider>

@@ -4,14 +4,20 @@
 
 import type {
   Bidhaa,
+  BidhaaKamili,
+  Mshahara,
+  RipotiBidhaa,
   MauzoYaDuka,
   GharamaOpex,
+  NjiaMalipoMshahara,
   AinaGharamaOpex,
+  AkauntiMfanyakazi,
   MtejaKamili,
   OrderAdmin,
   Duka,
   Mtumiaji,
   OmbiMatumizi,
+  AinaAkaunti,
   MtumiajiKamili,
   DukaKamili,
   AinaGharama,
@@ -30,7 +36,7 @@ import type {
 } from '../types'
 
 // ============================================================
-// BIDHAA
+// BIDHAA (LAZIMA IWE KWANZA)
 // ============================================================
 export const bidhaa: Bidhaa[] = [
   { id: '1', sku: 'SAR-DAN-50', jina: 'Saruji Dangote 50kg', kundi: 'Saruji', beiMauzo: 18500, beiUnunuzi: 16000, uom: 'Mfuko', stoki: 120, duka: 'Kwembe', location: 'Shed A', expiry: '2027-02-15', iconKey: 'Saruji' },
@@ -41,6 +47,127 @@ export const bidhaa: Bidhaa[] = [
   { id: '6', sku: 'MBA-2X4', jina: 'Mbao 2x4', kundi: 'Mbao', beiMauzo: 8500, beiUnunuzi: 7000, uom: 'Mita', stoki: 350, duka: 'Pugu', location: 'Shed C', iconKey: 'Mbao' },
   { id: '7', sku: 'RAN-WH-20', jina: 'Rangi Nyeupe 20L', kundi: 'Rangi', beiMauzo: 95000, beiUnunuzi: 82000, uom: 'Lita', stoki: 25, duka: 'Kwembe', location: 'Raka 2', expiry: '2026-12-01', iconKey: 'Rangi' },
   { id: '8', sku: 'BOM-PVC-1', jina: 'Bomba PVC 1"', kundi: 'Bomba', beiMauzo: 12000, beiUnunuzi: 9500, uom: 'Mita', stoki: 180, duka: 'Pugu', location: 'Raka 4', iconKey: 'Bomba' },
+]
+
+// ============================================================
+// BIDHAA KAMILI (na maelezo ya FR4)
+// ============================================================
+export const bidhaaKamili: BidhaaKamili[] = [
+  { ...bidhaa[0], mtengenezaji: 'Dangote', uzito: '50kg', pichaUrl: 'https://example.com/saruji-dangote.jpg' },
+  { ...bidhaa[1], mtengenezaji: 'Twiga', uzito: '50kg', pichaUrl: 'https://example.com/saruji-twiga.jpg' },
+  { ...bidhaa[2], mtengenezaji: 'Steel Masters', uzito: '12mm', pichaUrl: 'https://example.com/nondo-d12.jpg' },
+  { ...bidhaa[3], mtengenezaji: 'Steel Masters', uzito: '10mm', pichaUrl: 'https://example.com/nondo-d10.jpg' },
+  { ...bidhaa[4], mtengenezaji: 'Mabati Ya Simba', uzito: 'G30', pichaUrl: 'https://example.com/mabati-g30.jpg' },
+  { ...bidhaa[5], mtengenezaji: 'Mbao Ltd', uzito: '2x4', pichaUrl: 'https://example.com/mbao-2x4.jpg' },
+  { ...bidhaa[6], mtengenezaji: 'Crown Paints', uzito: '20L', pichaUrl: 'https://example.com/rangi-20l.jpg' },
+  { ...bidhaa[7], mtengenezaji: 'PVC Co.', uzito: '1 inch', pichaUrl: 'https://example.com/bomba-pvc.jpg' },
+]
+
+// ============================================================
+// RIPOTI ZA BIDHAA
+// ============================================================
+export const ripotiBidhaa: RipotiBidhaa[] = [
+  {
+    id: 'RIP-2026-001',
+    bidhaaId: '2',
+    jina: 'Saruji Twiga 50kg',
+    sku: 'SAR-TWI-50',
+    uom: 'Mfuko',
+    kundi: 'Saruji',
+    dukaId: 'd1',
+    dukaJina: 'Smart Hardware - Kwembe',
+    aina: 'uharibifu',
+    wingi: 5,
+    beiUnunuzi: 15500,
+    thamani: 77500,
+    sababu: 'Saruji imekauka',
+    maelezo: 'Saruji 5 zimekauka kwa sababu ya unyevu',
+    pichaUrl: 'https://example.com/saruji-kauka.jpg',
+    expiry: '2027-01-20',
+    mtengenezaji: 'Twiga',
+    uzito: '50kg',
+    aliyeingiza: 'Juma Hassan',
+    tarehe: '2026-11-09',
+    hali: 'imethibitishwa',
+  },
+  {
+    id: 'RIP-2026-002',
+    bidhaaId: '7',
+    jina: 'Rangi Nyeupe 20L',
+    sku: 'RAN-WH-20',
+    uom: 'Lita',
+    kundi: 'Rangi',
+    dukaId: 'd1',
+    dukaJina: 'Smart Hardware - Kwembe',
+    aina: 'expiry',
+    wingi: 3,
+    beiUnunuzi: 82000,
+    thamani: 246000,
+    sababu: 'Rangi imeisha muda',
+    maelezo: 'Rangi imeganda na haifai kutumika',
+    expiry: '2026-12-01',
+    mtengenezaji: 'Crown Paints',
+    uzito: '20L',
+    aliyeingiza: 'Juma Hassan',
+    tarehe: '2026-11-10',
+    hali: 'inasubiri',
+  },
+  {
+    id: 'RIP-2026-003',
+    bidhaaId: '5',
+    jina: 'Mabati G30',
+    sku: 'MAB-G30',
+    uom: 'Mita',
+    kundi: 'Mabati',
+    dukaId: 'd1',
+    dukaJina: 'Smart Hardware - Kwembe',
+    aina: 'upotevu',
+    wingi: 10,
+    beiUnunuzi: 28000,
+    thamani: 280000,
+    sababu: 'Mabati yamepotea',
+    maelezo: 'Mabati 10 hayakuonekana wakati wa hesabu',
+    mtengenezaji: 'Mabati Ya Simba',
+    uzito: 'G30',
+    aliyeingiza: 'Asha Mwinyi',
+    tarehe: '2026-11-08',
+    hali: 'imekataliwa',
+  },
+  {
+    id: 'RIP-2026-004',
+    bidhaaId: '3',
+    jina: 'Nondo D12',
+    sku: 'NON-D12',
+    uom: 'Kg',
+    kundi: 'Nondo',
+    dukaId: 'd2',
+    dukaJina: 'Smart Hardware - Pugu',
+    aina: 'kurudisha_msambazaji',
+    wingi: 200,
+    beiUnunuzi: 2100,
+    thamani: 420000,
+    sababu: 'Nondo zilipinda',
+    maelezo: 'Zinarudishwa kwa Steel Masters',
+    mtengenezaji: 'Steel Masters',
+    uzito: '12mm',
+    aliyeingiza: 'Peter John',
+    tarehe: '2026-11-09',
+    hali: 'inasubiri',
+  },
+]
+
+// ============================================================
+// MTENGENEZAJI (kwa FR4)
+// ============================================================
+export const MTENGENEZAJI = [
+  'Dangote',
+  'Twiga',
+  'Simba',
+  'Steel Masters',
+  'Mabati Ya Simba',
+  'Crown Paints',
+  'Mbao Ltd',
+  'PVC Co.',
 ]
 
 // ============================================================
@@ -507,7 +634,7 @@ export const AINA_OPEX: { key: AinaGharamaOpex; label: string }[] = [
 ]
 
 // ============================================================
-// NOTIFICATIONS (MARA MOJA TU - imesahihishwa)
+// NOTIFICATIONS
 // ============================================================
 export const notifications: Notification[] = [
   {
@@ -519,8 +646,7 @@ export const notifications: Notification[] = [
     kundi: 'stoki',
     read: false,
     route: '/muuzaji/ripoti',
-    maelezo:
-      'Saruji Twiga 50kg imebaki mifuko 45 tu. Kiwango cha chini ni mifuko 50. Tafadhali agiza tena kutoka kwa msambazaji ili kuepusha uhaba.',
+    maelezo: 'Saruji Twiga 50kg imebaki mifuko 45 tu. Kiwango cha chini ni mifuko 50. Tafadhali agiza tena kutoka kwa msambazaji ili kuepusha uhaba.',
   },
   {
     id: 'n2',
@@ -531,8 +657,7 @@ export const notifications: Notification[] = [
     kundi: 'deni',
     read: false,
     route: '/mteja/deni',
-    maelezo:
-      'Kampuni ya Nyati Ltd ina deni la Tsh 5,200,000 ambalo lilipaswa kulipwa tarehe 10 Nov 2026. Limechelewa siku 2. Tafadhali wasiliana na mteja.',
+    maelezo: 'Kampuni ya Nyati Ltd ina deni la Tsh 5,200,000 ambalo lilipaswa kulipwa tarehe 10 Nov 2026. Limechelewa siku 2. Tafadhali wasiliana na mteja.',
   },
   {
     id: 'n3',
@@ -543,8 +668,7 @@ export const notifications: Notification[] = [
     kundi: 'mauzo',
     read: false,
     route: '/muuzaji/mauzo',
-    maelezo:
-      'Mauzo ya leo yamefikia Tsh 2,500,000 na faida ghafi ya Tsh 350,000. Endelea kufuatilia faida safi kwenye ukurasa wa mauzo.',
+    maelezo: 'Mauzo ya leo yamefikia Tsh 2,500,000 na faida ghafi ya Tsh 350,000. Endelea kufuatilia faida safi kwenye ukurasa wa mauzo.',
   },
   {
     id: 'n4',
@@ -555,8 +679,7 @@ export const notifications: Notification[] = [
     kundi: 'stoki',
     read: true,
     route: '/muuzaji/pokea',
-    maelezo:
-      'GRN-2026-046 imepokelewa. Ulipaswa kupokea tani 2 lakini umepokea tani 1.8. Upungufu wa tani 0.2 unatakiwa kuripotiwa kwa msambazaji.',
+    maelezo: 'GRN-2026-046 imepokelewa. Ulipaswa kupokea tani 2 lakini umepokea tani 1.8. Upungufu wa tani 0.2 unatakiwa kuripotiwa kwa msambazaji.',
   },
   {
     id: 'n5',
@@ -567,8 +690,7 @@ export const notifications: Notification[] = [
     kundi: 'malipo',
     read: true,
     route: '/mmiliki/zaka',
-    maelezo:
-      'Zaka ya wiki hii ni Tsh 305,000. Tafadhali lipa kabla ya Ijumaa na urekodi malipo kwenye system ili kufuatilia deni la zaka.',
+    maelezo: 'Zaka ya wiki hii ni Tsh 305,000. Tafadhali lipa kabla ya Ijumaa na urekodi malipo kwenye system ili kufuatilia deni la zaka.',
   },
   {
     id: 'n6',
@@ -579,8 +701,7 @@ export const notifications: Notification[] = [
     kundi: 'order',
     read: false,
     route: '/mteja/orders',
-    maelezo:
-      'Order ORD-123456 ya Mjenzi Mwakyusa imekamilika. Malipo ya Tsh 2,500,000 yamethibitishwa kwa M-Pesa (kumbukumbu: QGR7XK2P9L).',
+    maelezo: 'Order ORD-123456 ya Mjenzi Mwakyusa imekamilika. Malipo ya Tsh 2,500,000 yamethibitishwa kwa M-Pesa (kumbukumbu: QGR7XK2P9L).',
   },
   {
     id: 'n7',
@@ -591,13 +712,13 @@ export const notifications: Notification[] = [
     kundi: 'gharama',
     read: false,
     route: '/muuzaji/matumizi',
-    maelezo:
-      'Juma Hassan ameomba matumizi ya Tsh 45,000 kwa ajili ya chakula cha wafanyakazi. Ombi linasubiri idhini yako.',
+    maelezo: 'Juma Hassan ameomba matumizi ya Tsh 45,000 kwa ajili ya chakula cha wafanyakazi. Ombi linasubiri idhini yako.',
   },
 ]
 
-
-
+// ============================================================
+// ORDERS ZA ADMIN
+// ============================================================
 export const ordersAdmin: OrderAdmin[] = [
   {
     id: 'ORD-2026-001',
@@ -616,15 +737,7 @@ export const ordersAdmin: OrderAdmin[] = [
     tarehe: '2026-11-09',
     muda: '09:14',
     malipo: [
-      {
-        id: 'M-001',
-        njia: 'mpesa',
-        simu: '0754-111-222',
-        kumbukumbu: 'QGR7XK2P9L',
-        kiasi: 2498000,
-        tarehe: '2026-11-09',
-        hali: 'imethibitishwa',
-      },
+      { id: 'M-001', njia: 'mpesa', simu: '0754-111-222', kumbukumbu: 'QGR7XK2P9L', kiasi: 2498000, tarehe: '2026-11-09', hali: 'imethibitishwa' },
     ],
   },
   {
@@ -644,15 +757,7 @@ export const ordersAdmin: OrderAdmin[] = [
     tarehe: '2026-11-09',
     muda: '10:22',
     malipo: [
-      {
-        id: 'M-002',
-        njia: 'mpesa',
-        simu: '0754-333-444',
-        kumbukumbu: 'QGR7XK2P9M',
-        kiasi: 2000000,
-        tarehe: '2026-11-09',
-        hali: 'imethibitishwa',
-      },
+      { id: 'M-002', njia: 'mpesa', simu: '0754-333-444', kumbukumbu: 'QGR7XK2P9M', kiasi: 2000000, tarehe: '2026-11-09', hali: 'imethibitishwa' },
     ],
   },
   {
@@ -672,15 +777,7 @@ export const ordersAdmin: OrderAdmin[] = [
     tarehe: '2026-11-09',
     muda: '11:05',
     malipo: [
-      {
-        id: 'M-003',
-        njia: 'tigopesa',
-        simu: '0754-555-666',
-        kumbukumbu: 'TIG7XK2P9N',
-        kiasi: 400000,
-        tarehe: '2026-11-09',
-        hali: 'imethibitishwa',
-      },
+      { id: 'M-003', njia: 'tigopesa', simu: '0754-555-666', kumbukumbu: 'TIG7XK2P9N', kiasi: 400000, tarehe: '2026-11-09', hali: 'imethibitishwa' },
     ],
   },
   {
@@ -699,15 +796,7 @@ export const ordersAdmin: OrderAdmin[] = [
     tarehe: '2026-11-10',
     muda: '08:30',
     malipo: [
-      {
-        id: 'M-004',
-        njia: 'cash',
-        simu: 'Fundi Hassan',
-        kumbukumbu: 'CASH-001',
-        kiasi: 450000,
-        tarehe: '2026-11-10',
-        hali: 'imethibitishwa',
-      },
+      { id: 'M-004', njia: 'cash', simu: 'Fundi Hassan', kumbukumbu: 'CASH-001', kiasi: 450000, tarehe: '2026-11-10', hali: 'imethibitishwa' },
     ],
   },
   {
@@ -731,128 +820,334 @@ export const ordersAdmin: OrderAdmin[] = [
   },
 ]
 
-
+// ============================================================
+// WATEJA KAMILI
+// ============================================================
 export const watejaKamili: MtejaKamili[] = [
   {
-    id: 'c1',
-    jina: 'Mjenzi Mwakyusa',
-    simu: '0754-111-222',
-    aina: 'mjenzi',
-    mahali: 'Kwembe',
-    deni: 2500000,
-    jumlaManunuzi: 8450000,
-    tareheSajili: '2025-01-15',
-    active: true,
-    dukaId: 'd1',
-    dukaJina: 'Smart Hardware - Kwembe',
-    jumlaOrders: 12,
-    mwishoKununua: '2026-11-09',
+    id: 'c1', jina: 'Mjenzi Mwakyusa', simu: '0754-111-222', aina: 'mjenzi',
+    mahali: 'Kwembe', deni: 2500000, jumlaManunuzi: 8450000,
+    tareheSajili: '2025-01-15', active: true, dukaId: 'd1',
+    dukaJina: 'Smart Hardware - Kwembe', jumlaOrders: 12, mwishoKununua: '2026-11-09',
   },
   {
-    id: 'c2',
-    jina: 'Kampuni ya Nyati Ltd',
-    simu: '0754-333-444',
-    aina: 'kampuni',
-    mahali: 'Kariakoo',
-    tin: '123-456-789',
-    deni: 5200000,
-    jumlaManunuzi: 24500000,
-    tareheSajili: '2024-06-10',
-    active: true,
+    id: 'c2', jina: 'Kampuni ya Nyati Ltd', simu: '0754-333-444', aina: 'kampuni',
+    mahali: 'Kariakoo', tin: '123-456-789', deni: 5200000, jumlaManunuzi: 24500000,
+    tareheSajili: '2024-06-10', active: true, dukaId: 'd2',
+    dukaJina: 'Smart Hardware - Pugu', jumlaOrders: 35, mwishoKununua: '2026-11-09',
+  },
+  {
+    id: 'c3', jina: 'Fundi Joseph', simu: '0754-555-666', aina: 'fundi',
+    mahali: 'Pugu', deni: 850000, jumlaManunuzi: 3200000,
+    tareheSajili: '2025-03-20', active: true, dukaId: 'd1',
+    dukaJina: 'Smart Hardware - Kwembe', jumlaOrders: 8, mwishoKununua: '2026-11-08',
+  },
+  {
+    id: 'c4', jina: 'Mama Sarah', simu: '0754-777-888', aina: 'mteja',
+    mahali: 'Kariakoo', deni: 0, jumlaManunuzi: 1200000,
+    tareheSajili: '2025-05-01', active: true, dukaId: 'd3',
+    dukaJina: 'Smart Hardware - Kariakoo', jumlaOrders: 4, mwishoKununua: '2026-10-15',
+  },
+  {
+    id: 'c5', jina: 'Fundi Hassan', simu: '0754-999-000', aina: 'fundi',
+    mahali: 'Kwembe', deni: 450000, jumlaManunuzi: 2800000,
+    tareheSajili: '2025-08-12', active: true, dukaId: 'd1',
+    dukaJina: 'Smart Hardware - Kwembe', jumlaOrders: 6, mwishoKununua: '2026-11-10',
+  },
+  {
+    id: 'c6', jina: 'Fundi Mwita', simu: '0754-222-333', aina: 'fundi',
+    mahali: 'Pugu', deni: 0, jumlaManunuzi: 1800000,
+    tareheSajili: '2025-10-01', active: true, dukaId: 'd2',
+    dukaJina: 'Smart Hardware - Pugu', jumlaOrders: 3, mwishoKununua: '2026-11-05',
+  },
+  {
+    id: 'c7', jina: 'Jengo Group Ltd', simu: '0754-444-555', aina: 'kampuni',
+    mahali: 'Kariakoo', tin: '987-654-321', deni: 1500000, jumlaManunuzi: 15600000,
+    tareheSajili: '2024-08-20', active: true, dukaId: 'd3',
+    dukaJina: 'Smart Hardware - Kariakoo', jumlaOrders: 20, mwishoKununua: '2026-11-09',
+  },
+  {
+    id: 'c8', jina: 'Mama Amina', simu: '0754-666-777', aina: 'mteja',
+    mahali: 'Kwembe', deni: 0, jumlaManunuzi: 850000,
+    tareheSajili: '2025-12-10', active: true, dukaId: 'd1',
+    dukaJina: 'Smart Hardware - Kwembe', jumlaOrders: 2, mwishoKununua: '2026-10-20',
+  },
+]
+
+// ============================================================
+// AKAUNTI ZA WAFANYAKAZI (kila mmoja anaweka yake)
+// ============================================================
+export const akauntiWafanyakazi: AkauntiMfanyakazi[] = [
+  {
+    id: 'acc-u1',
+    mtumiajiId: 'u1',
+    jinaMtumiaji: 'Juma Hassan',
+    aina: 'mobile',
+    jina: 'M-Pesa',
+    namba: '0754-123-456',
+    jinaMmiliki: 'Juma Hassan',
+    ndiyoMsingi: true,
+  },
+  {
+    id: 'acc-u2',
+    mtumiajiId: 'u2',
+    jinaMtumiaji: 'Asha Mwinyi',
+    aina: 'mobile',
+    jina: 'Tigo Pesa',
+    namba: '0713-456-789',
+    jinaMmiliki: 'Asha Mwinyi',
+    ndiyoMsingi: true,
+  },
+  {
+    id: 'acc-u3',
+    mtumiajiId: 'u3',
+    jinaMtumiaji: 'Peter John',
+    aina: 'bank',
+    jina: 'CRDB Bank',
+    namba: '0150123456790',
+    jinaMmiliki: 'Peter John',
+    ndiyoMsingi: true,
+  },
+  {
+    id: 'acc-u4',
+    mtumiajiId: 'u4',
+    jinaMtumiaji: 'Fatuma Ali',
+    aina: 'mobile',
+    jina: 'Airtel Money',
+    namba: '0715-678-901',
+    jinaMmiliki: 'Fatuma Ali',
+    ndiyoMsingi: true,
+  },
+  {
+    id: 'acc-u5',
+    mtumiajiId: 'u5',
+    jinaMtumiaji: 'Moses Kimaro',
+    aina: 'mobile',
+    jina: 'Tigo Pesa',
+    namba: '0716-789-012',
+    jinaMmiliki: 'Moses Kimaro',
+    ndiyoMsingi: true,
+  },
+  {
+    id: 'acc-u6',
+    mtumiajiId: 'u6',
+    jinaMtumiaji: 'Grace Mushi',
+    aina: 'bank',
+    jina: 'NMB Bank',
+    namba: '2050123456789',
+    jinaMmiliki: 'Grace Mushi',
+    ndiyoMsingi: true,
+  },
+  // Mfanyakazi asiye na akaunti msingi (kwa demo ya "waliokosa akaunti")
+  {
+    id: 'acc-u7',
+    mtumiajiId: 'u7',
+    jinaMtumiaji: 'Hassan Mwinyi',
+    aina: 'mobile',
+    jina: 'M-Pesa',
+    namba: '0718-901-234',
+    jinaMmiliki: 'Hassan Mwinyi',
+    ndiyoMsingi: false,
+  },
+]
+
+// ============================================================
+// MISHAHARA
+// ============================================================
+export const mishahara: Mshahara[] = [
+  {
+    id: 'SAL-2026-001',
+    mtumiajiId: 'u1',
+    jinaMtumiaji: 'Juma Hassan',
+    nafasi: 'Muuzaji',
+    dukaId: 'd1',
+    dukaJina: 'Smart Hardware - Kwembe',
+    mwezi: 'Novemba 2026',
+    kipindi: '01 - 30 Nov 2026',
+    mshaharaMsingi: 450000,
+    posho: 50000,
+    overtime: 30000,
+    mafao: 20000,
+    makato: 25000,
+    jumla: 525000,
+    hali: 'imelipwa',
+    tareheMalipo: '2026-11-05',
+    njiaMalipo: 'mpesa',
+    akauntiMalipo: '0754-123-456',
+    kumbukumbu: 'MPESA-20261105-001',
+    aliyeidhinisha: 'Moses Kimaro',
+    tareheIdhini: '2026-11-05',
+    maelezo: 'Mshahara wa Novemba 2026',
+  },
+  {
+    id: 'SAL-2026-002',
+    mtumiajiId: 'u2',
+    jinaMtumiaji: 'Asha Mwinyi',
+    nafasi: 'Mhazini',
+    dukaId: 'd1',
+    dukaJina: 'Smart Hardware - Kwembe',
+    mwezi: 'Novemba 2026',
+    kipindi: '01 - 30 Nov 2026',
+    mshaharaMsingi: 400000,
+    posho: 40000,
+    overtime: 20000,
+    mafao: 15000,
+    makato: 20000,
+    jumla: 455000,
+    hali: 'inasubiri',
+    maelezo: 'Inasubiri idhini',
+  },
+  {
+    id: 'SAL-2026-003',
+    mtumiajiId: 'u3',
+    jinaMtumiaji: 'Peter John',
+    nafasi: 'Muuzaji',
     dukaId: 'd2',
     dukaJina: 'Smart Hardware - Pugu',
-    jumlaOrders: 35,
-    mwishoKununua: '2026-11-09',
+    mwezi: 'Novemba 2026',
+    kipindi: '01 - 30 Nov 2026',
+    mshaharaMsingi: 450000,
+    posho: 50000,
+    overtime: 35000,
+    mafao: 20000,
+    makato: 25000,
+    jumla: 530000,
+    hali: 'imelipwa',
+    tareheMalipo: '2026-11-05',
+    njiaMalipo: 'crdb',
+    akauntiMalipo: '0150123456790',
+    kumbukumbu: 'BANK-20261105-001',
+    aliyeidhinisha: 'Moses Kimaro',
+    tareheIdhini: '2026-11-05',
+    maelezo: 'Mshahara wa Novemba 2026',
   },
   {
-    id: 'c3',
-    jina: 'Fundi Joseph',
-    simu: '0754-555-666',
-    aina: 'fundi',
-    mahali: 'Pugu',
-    deni: 850000,
-    jumlaManunuzi: 3200000,
-    tareheSajili: '2025-03-20',
-    active: true,
-    dukaId: 'd1',
-    dukaJina: 'Smart Hardware - Kwembe',
-    jumlaOrders: 8,
-    mwishoKununua: '2026-11-08',
-  },
-  {
-    id: 'c4',
-    jina: 'Mama Sarah',
-    simu: '0754-777-888',
-    aina: 'mteja',
-    mahali: 'Kariakoo',
-    deni: 0,
-    jumlaManunuzi: 1200000,
-    tareheSajili: '2025-05-01',
-    active: true,
-    dukaId: 'd3',
-    dukaJina: 'Smart Hardware - Kariakoo',
-    jumlaOrders: 4,
-    mwishoKununua: '2026-10-15',
-  },
-  {
-    id: 'c5',
-    jina: 'Fundi Hassan',
-    simu: '0754-999-000',
-    aina: 'fundi',
-    mahali: 'Kwembe',
-    deni: 450000,
-    jumlaManunuzi: 2800000,
-    tareheSajili: '2025-08-12',
-    active: true,
-    dukaId: 'd1',
-    dukaJina: 'Smart Hardware - Kwembe',
-    jumlaOrders: 6,
-    mwishoKununua: '2026-11-10',
-  },
-  {
-    id: 'c6',
-    jina: 'Fundi Mwita',
-    simu: '0754-222-333',
-    aina: 'fundi',
-    mahali: 'Pugu',
-    deni: 0,
-    jumlaManunuzi: 1800000,
-    tareheSajili: '2025-10-01',
-    active: true,
+    id: 'SAL-2026-004',
+    mtumiajiId: 'u4',
+    jinaMtumiaji: 'Fatuma Ali',
+    nafasi: 'Mhazini',
     dukaId: 'd2',
     dukaJina: 'Smart Hardware - Pugu',
-    jumlaOrders: 3,
-    mwishoKununua: '2026-11-05',
+    mwezi: 'Novemba 2026',
+    kipindi: '01 - 30 Nov 2026',
+    mshaharaMsingi: 400000,
+    posho: 40000,
+    overtime: 15000,
+    mafao: 15000,
+    makato: 20000,
+    jumla: 450000,
+    hali: 'inasubiri',
+    maelezo: 'Inasubiri idhini',
   },
   {
-    id: 'c7',
-    jina: 'Jengo Group Ltd',
-    simu: '0754-444-555',
-    aina: 'kampuni',
-    mahali: 'Kariakoo',
-    tin: '987-654-321',
-    deni: 1500000,
-    jumlaManunuzi: 15600000,
-    tareheSajili: '2024-08-20',
-    active: true,
+    id: 'SAL-2026-005',
+    mtumiajiId: 'u5',
+    jinaMtumiaji: 'Moses Kimaro',
+    nafasi: 'Muuzaji',
     dukaId: 'd3',
     dukaJina: 'Smart Hardware - Kariakoo',
-    jumlaOrders: 20,
-    mwishoKununua: '2026-11-09',
+    mwezi: 'Novemba 2026',
+    kipindi: '01 - 30 Nov 2026',
+    mshaharaMsingi: 500000,
+    posho: 60000,
+    overtime: 40000,
+    mafao: 25000,
+    makato: 30000,
+    jumla: 595000,
+    hali: 'imelipwa',
+    tareheMalipo: '2026-11-05',
+    njiaMalipo: 'tigopesa',
+    akauntiMalipo: '0716-789-012',
+    kumbukumbu: 'TIGO-20261105-001',
+    aliyeidhinisha: 'Moses Kimaro',
+    tareheIdhini: '2026-11-05',
+    maelezo: 'Mshahara wa Novemba 2026',
   },
   {
-    id: 'c8',
-    jina: 'Mama Amina',
-    simu: '0754-666-777',
-    aina: 'mteja',
-    mahali: 'Kwembe',
-    deni: 0,
-    jumlaManunuzi: 850000,
-    tareheSajili: '2025-12-10',
-    active: true,
+    id: 'SAL-2026-006',
+    mtumiajiId: 'u6',
+    jinaMtumiaji: 'Grace Mushi',
+    nafasi: 'Admin',
     dukaId: 'd1',
     dukaJina: 'Smart Hardware - Kwembe',
-    jumlaOrders: 2,
-    mwishoKununua: '2026-10-20',
+    mwezi: 'Novemba 2026',
+    kipindi: '01 - 30 Nov 2026',
+    mshaharaMsingi: 600000,
+    posho: 80000,
+    overtime: 0,
+    mafao: 30000,
+    makato: 35000,
+    jumla: 675000,
+    hali: 'imelipwa',
+    tareheMalipo: '2026-11-05',
+    njiaMalipo: 'nmb',
+    akauntiMalipo: '2050123456789',
+    kumbukumbu: 'BANK-20261105-002',
+    aliyeidhinisha: 'Moses Kimaro',
+    tareheIdhini: '2026-11-05',
+    maelezo: 'Mshahara wa Novemba 2026',
   },
+  {
+    id: 'SAL-2026-007',
+    mtumiajiId: 'u7',
+    jinaMtumiaji: 'Hassan Mwinyi',
+    nafasi: 'Muuzaji',
+    dukaId: 'd1',
+    dukaJina: 'Smart Hardware - Kwembe',
+    mwezi: 'Novemba 2026',
+    kipindi: '01 - 30 Nov 2026',
+    mshaharaMsingi: 450000,
+    posho: 50000,
+    overtime: 25000,
+    mafao: 20000,
+    makato: 25000,
+    jumla: 520000,
+    hali: 'inasubiri',
+    maelezo: 'Inasubiri idhini',
+  },
+  {
+    id: 'SAL-2026-008',
+    mtumiajiId: 'u8',
+    jinaMtumiaji: 'Rehema Said',
+    nafasi: 'Muuzaji',
+    dukaId: 'd2',
+    dukaJina: 'Smart Hardware - Pugu',
+    mwezi: 'Novemba 2026',
+    kipindi: '01 - 30 Nov 2026',
+    mshaharaMsingi: 450000,
+    posho: 50000,
+    overtime: 20000,
+    mafao: 20000,
+    makato: 25000,
+    jumla: 515000,
+    hali: 'inasubiri',
+    maelezo: 'Inasubiri idhini',
+  },
+]
+
+// ============================================================
+// NJIA ZA MALIPO YA MISHAHARA
+// ============================================================
+export const NJIA_MISHAHARA: {
+  key: NjiaMalipoMshahara
+  label: string
+  aina: AinaAkaunti
+}[] = [
+  { key: 'mpesa', label: 'M-Pesa', aina: 'mobile' },
+  { key: 'tigopesa', label: 'Tigo Pesa', aina: 'mobile' },
+  { key: 'airtel', label: 'Airtel Money', aina: 'mobile' },
+  { key: 'halopesa', label: 'HaloPesa', aina: 'mobile' },
+  { key: 'crdb', label: 'CRDB Bank', aina: 'bank' },
+  { key: 'nmb', label: 'NMB Bank', aina: 'bank' },
+  { key: 'nbc', label: 'NBC Bank', aina: 'bank' },
+  { key: 'stanbic', label: 'Stanbic Bank', aina: 'bank' },
+  { key: 'other', label: 'Nyingine', aina: 'bank' },
+]
+
+// ============================================================
+// AINA ZA AKAUNTI
+// ============================================================
+export const AINA_AKAUNTI: { key: AinaAkaunti; label: string }[] = [
+  { key: 'mobile', label: 'Mobile Money' },
+  { key: 'bank', label: 'Benki' },
 ]

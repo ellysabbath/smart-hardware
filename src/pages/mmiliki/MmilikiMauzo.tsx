@@ -24,7 +24,6 @@ export default function MmilikiMauzo() {
 
   const dukaId = selectedDuka === 'zote' ? undefined : selectedDuka
 
-  // Faida ya jumla (maduka yote au duka moja)
   const faidaJumla = useMemo(
     () => hesabuFaidaKamili(mauzo, opex, dukaId),
     [mauzo, opex, dukaId]
@@ -35,7 +34,6 @@ export default function MmilikiMauzo() {
     [opex, dukaId]
   )
 
-  // Faida kwa kila duka
   const faidaKwaDuka = useMemo(() => {
     return maduka.map((d) => {
       const f = hesabuFaidaKamili(mauzo, opex, d.id)
@@ -43,7 +41,6 @@ export default function MmilikiMauzo() {
     })
   }, [maduka, mauzo, opex])
 
-  // Data ya chati - faida kwa kila duka
   const chartData = faidaKwaDuka.map((f) => ({
     jina: f.duka.jina.replace('Smart Hardware - ', ''),
     mauzo: f.mauzo,
@@ -104,53 +101,65 @@ export default function MmilikiMauzo() {
         </div>
       </div>
 
-      {/* HERO CARD - Faida Safi ya Jumla */}
-      <div
-        className={`rounded-2xl p-6 text-white ${
-          faidaJumla.hasara
-            ? 'bg-gradient-to-r from-red-600 to-red-500'
-            : 'bg-gradient-to-r from-emerald-600 to-emerald-500'
-        }`}
-      >
+      {/* HERO CARD - Faida Safi ya Jumla (Nyeupe) */}
+      <div className="bg-white rounded-xl border border-slate-200 p-5 md:p-6">
         <div className="flex items-start justify-between gap-3">
-          <div>
-            <div className="text-sm opacity-90">
-              {selectedDuka === 'zote' ? 'Faida Safi - Maduka Yote' : 'Faida Safi - Duka Moja'}
+          <div className="flex items-center gap-4">
+            <div className="w-14 h-14 rounded-2xl bg-slate-50 text-slate-700 grid place-items-center shrink-0">
+              {faidaJumla.hasara ? (
+                <TrendingDown size={28} />
+              ) : (
+                <TrendingUp size={28} />
+              )}
             </div>
-            <div className="text-3xl md:text-4xl font-bold mt-1">
-              {formatTsh(faidaJumla.faidaSafi)}
-            </div>
-            <div className="text-xs opacity-80 mt-1">
-              {faidaJumla.hasara ? 'Biashara inapata HASARA' : 'Biashara inapata FAIDA'}
-            </div>
-          </div>
-          <div className="w-14 h-14 rounded-2xl bg-white/20 grid place-items-center">
-            {faidaJumla.hasara ? <TrendingDown size={28} /> : <TrendingUp size={28} />}
-          </div>
-        </div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mt-5 pt-5 border-t border-white/20">
-          <div>
-            <div className="text-xs opacity-80">Zaka (10%)</div>
-            <div className="text-xl font-bold">{formatTsh(faidaJumla.zaka)}</div>
-          </div>
-          <div>
-            <div className="text-xs opacity-80">Sadaka (10%)</div>
-            <div className="text-xl font-bold">{formatTsh(faidaJumla.sadaka)}</div>
-          </div>
-          <div>
-            <div className="text-xs opacity-80">Jumla ya Bwana (20%)</div>
-            <div className="text-xl font-bold">{formatTsh(faidaJumla.jumlaYaMungu)}</div>
-          </div>
-        </div>
-
-        <div className="mt-4 pt-4 border-t border-white/20">
-          <div className="flex items-center justify-between">
             <div>
-              <div className="text-xs opacity-80">Inayobaki Kwako</div>
-              <div className="text-2xl font-bold">{formatTsh(faidaJumla.inayobaki)}</div>
+              <div className="text-sm text-slate-500">
+                {selectedDuka === 'zote'
+                  ? 'Faida Safi - Maduka Yote'
+                  : 'Faida Safi - Duka Moja'}
+              </div>
+              <div className="text-3xl md:text-4xl font-bold text-slate-900 mt-1">
+                {formatTsh(faidaJumla.faidaSafi)}
+              </div>
+              <div className="text-xs text-slate-500 mt-1">
+                {faidaJumla.hasara
+                  ? 'Biashara inapata HASARA'
+                  : 'Biashara inapata FAIDA'}
+              </div>
             </div>
-            <HandCoins size={28} className="opacity-80" />
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mt-5 pt-5 border-t border-slate-200">
+          <div>
+            <div className="text-xs text-slate-500">Zaka (10%)</div>
+            <div className="text-lg font-bold text-slate-900">
+              {formatTsh(faidaJumla.zaka)}
+            </div>
+          </div>
+          <div>
+            <div className="text-xs text-slate-500">Sadaka (10%)</div>
+            <div className="text-lg font-bold text-slate-900">
+              {formatTsh(faidaJumla.sadaka)}
+            </div>
+          </div>
+          <div>
+            <div className="text-xs text-slate-500">Jumla ya Bwana (20%)</div>
+            <div className="text-lg font-bold text-slate-900">
+              {formatTsh(faidaJumla.jumlaYaMungu)}
+            </div>
+          </div>
+        </div>
+
+        <div className="mt-4 pt-4 border-t border-slate-200 flex items-center justify-between">
+          <div>
+            <div className="text-xs text-slate-500">Inayobaki Kwako</div>
+            <div className="text-2xl font-bold text-slate-900">
+              {formatTsh(faidaJumla.inayobaki)}
+            </div>
+          </div>
+          <div className="w-12 h-12 rounded-xl bg-slate-50 text-slate-600 grid place-items-center">
+            <HandCoins size={22} />
           </div>
         </div>
       </div>
@@ -161,25 +170,25 @@ export default function MmilikiMauzo() {
           label="Mauzo Yote"
           value={formatTsh(faidaJumla.mauzo)}
           Icon={Receipt}
-          tone="brand"
+          accent="brand"
         />
         <StatCard
           label="Gharama ya Bidhaa (COGS)"
           value={formatTsh(faidaJumla.cogs)}
           Icon={Package}
-          tone="amber"
+          accent="amber"
         />
         <StatCard
           label="Faida Ghafi"
           value={formatTsh(faidaJumla.faidaGhafi)}
           Icon={TrendingUp}
-          tone="emerald"
+          accent="emerald"
         />
         <StatCard
           label="Gharama za Uendeshaji"
           value={formatTsh(faidaJumla.jumlaOpex)}
           Icon={Wallet}
-          tone="red"
+          accent="red"
         />
       </div>
 
@@ -194,7 +203,10 @@ export default function MmilikiMauzo() {
             <BarChart data={chartData}>
               <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
               <XAxis dataKey="jina" tick={{ fontSize: 11 }} />
-              <YAxis tick={{ fontSize: 11 }} tickFormatter={(v) => `${v / 1000000}M`} />
+              <YAxis
+                tick={{ fontSize: 11 }}
+                tickFormatter={(v) => `${v / 1000000}M`}
+              />
               <Tooltip formatter={(v) => formatTsh(Number(v ?? 0))} />
               <Legend wrapperStyle={{ fontSize: 11 }} />
               <Bar dataKey="mauzo" name="Mauzo" fill="#2563eb" radius={[4, 4, 0, 0]} />
@@ -219,7 +231,7 @@ export default function MmilikiMauzo() {
             >
               <div className="flex items-center justify-between gap-2 mb-3">
                 <div className="flex items-center gap-2 min-w-0">
-                  <div className="w-10 h-10 rounded-lg bg-brand-50 text-brand-600 grid place-items-center shrink-0">
+                  <div className="w-10 h-10 rounded-lg bg-slate-50 text-slate-700 grid place-items-center shrink-0">
                     <Store size={18} />
                   </div>
                   <div className="min-w-0">
@@ -306,7 +318,8 @@ export default function MmilikiMauzo() {
       <div className="bg-white rounded-xl border border-slate-200 p-4 md:p-5">
         <h2 className="font-semibold mb-3 flex items-center gap-2">
           <PiggyBank size={18} className="text-brand-600" />
-          Gharama za Uendeshaji - {selectedDuka === 'zote' ? 'Maduka Yote' : 'Duka Moja'}
+          Gharama za Uendeshaji -{' '}
+          {selectedDuka === 'zote' ? 'Maduka Yote' : 'Duka Moja'}
         </h2>
 
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 text-sm">
@@ -421,29 +434,36 @@ export default function MmilikiMauzo() {
         </div>
       </div>
 
-      {/* Zaka na Sadaka - Muhtasari wa Wiki */}
-      <div className="bg-gradient-to-r from-brand-600 to-brand-500 text-white rounded-2xl p-6">
+      {/* Zaka na Sadaka - Muhtasari wa Wiki (Nyeupe) */}
+      <div className="bg-white rounded-xl border border-slate-200 p-5 md:p-6">
         <div className="flex items-start justify-between gap-3">
-          <div>
-            <div className="text-sm opacity-90">Zaka na Sadaka - Jumla</div>
-            <div className="text-3xl font-bold mt-1">
-              {formatTsh(faidaJumla.jumlaYaMungu)}
+          <div className="flex items-center gap-4">
+            <div className="w-12 h-12 rounded-xl bg-slate-50 text-slate-700 grid place-items-center shrink-0">
+              <HandCoins size={24} />
             </div>
-            <div className="text-xs opacity-80 mt-1">
-              Zaka {formatTsh(faidaJumla.zaka)} + Sadaka {formatTsh(faidaJumla.sadaka)}
+            <div>
+              <div className="text-sm text-slate-500">Zaka na Sadaka - Jumla</div>
+              <div className="text-2xl font-bold text-slate-900">
+                {formatTsh(faidaJumla.jumlaYaMungu)}
+              </div>
+              <div className="text-xs text-slate-500 mt-0.5">
+                Zaka {formatTsh(faidaJumla.zaka)} + Sadaka{' '}
+                {formatTsh(faidaJumla.sadaka)}
+              </div>
             </div>
-          </div>
-          <div className="w-14 h-14 rounded-2xl bg-white/20 grid place-items-center">
-            <HandCoins size={28} />
           </div>
         </div>
 
-        <div className="mt-4 pt-4 border-t border-white/20 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div className="mt-4 pt-4 border-t border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div>
-            <div className="text-xs opacity-80">Inayobaki Kwako (Baada ya Zaka & Sadaka)</div>
-            <div className="text-2xl font-bold">{formatTsh(faidaJumla.inayobaki)}</div>
+            <div className="text-xs text-slate-500">
+              Inayobaki Kwako (Baada ya Zaka & Sadaka)
+            </div>
+            <div className="text-xl font-bold text-slate-900">
+              {formatTsh(faidaJumla.inayobaki)}
+            </div>
           </div>
-          <button className="inline-flex items-center gap-1.5 px-4 py-2 bg-white text-brand-700 rounded-lg text-sm font-semibold hover:bg-brand-50">
+          <button className="inline-flex items-center gap-1.5 px-4 py-2.5 bg-brand-600 text-white rounded-lg text-sm font-semibold hover:bg-brand-700">
             <CheckCircle2 size={16} />
             Nimelipa
           </button>
@@ -465,32 +485,47 @@ function GharamaItem({ label, value }: { label: string; value: number }) {
   )
 }
 
-type Tone = 'brand' | 'emerald' | 'amber' | 'red'
-const TONE: Record<Tone, string> = {
-  brand: 'bg-brand-50 text-brand-700',
-  emerald: 'bg-emerald-50 text-emerald-700',
-  amber: 'bg-amber-50 text-amber-700',
-  red: 'bg-red-50 text-red-700',
+// ============================================================
+// Stat Card (nyeupe + accent border-l)
+// ============================================================
+type Accent = 'brand' | 'emerald' | 'amber' | 'red'
+
+const ACCENT_BORDER: Record<Accent, string> = {
+  brand: 'border-l-brand-500',
+  emerald: 'border-l-emerald-500',
+  amber: 'border-l-amber-500',
+  red: 'border-l-red-500',
+}
+
+const ACCENT_TEXT: Record<Accent, string> = {
+  brand: 'text-brand-700',
+  emerald: 'text-emerald-700',
+  amber: 'text-amber-700',
+  red: 'text-red-700',
 }
 
 function StatCard({
   label,
   value,
   Icon,
-  tone,
+  accent,
 }: {
   label: string
   value: string
   Icon: React.ElementType
-  tone: Tone
+  accent: Accent
 }) {
   return (
-    <div className="bg-white rounded-xl border border-slate-200 p-4">
-      <div className={`inline-flex w-9 h-9 rounded-lg items-center justify-center ${TONE[tone]}`}>
-        <Icon size={16} />
+    <div
+      className={`bg-white rounded-xl border border-slate-200 border-l-4 ${ACCENT_BORDER[accent]} p-4`}
+    >
+      <div className="flex items-center gap-2">
+        <Icon size={16} className={ACCENT_TEXT[accent]} />
+        <div className="text-xs text-slate-500">{label}</div>
       </div>
-      <div className="text-xs text-slate-500 mt-2">{label}</div>
-      <div className="text-base md:text-lg font-bold mt-0.5 truncate">{value}</div>
+      <div className="text-base md:text-lg font-bold mt-2 truncate text-slate-900">
+        {value}
+      </div>
     </div>
   )
 }
