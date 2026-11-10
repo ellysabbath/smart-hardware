@@ -1,5 +1,6 @@
 import { madeni } from '../../data/demo'
 import Badge from '../../components/Badge'
+import { Printer } from 'lucide-react'
 
 export default function MtejaDeni() {
   return (
@@ -28,7 +29,7 @@ export default function MtejaDeni() {
         ))}
       </div>
       <button className="px-4 py-2 bg-brand-600 text-white rounded-lg text-sm hover:bg-brand-700">
-        📄 Pakua Statement (PDF)
+        <Printer/> Pakua Statement (PDF)
       </button>
     </div>
   )
