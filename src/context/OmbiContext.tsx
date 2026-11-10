@@ -2,17 +2,30 @@ import { createContext, useContext, useState, type ReactNode } from 'react'
 import type { OmbiMatumizi, HaliOmbi } from '../types'
 import { maombiMatumizi as maombiDemo } from '../data/demo'
 
+interface OngezaOmbiInput {
+  aina: string
+  kiasi: number
+  maelezo: string
+  simu: string
+  sababu: string
+  risitiUrl?: string
+  aliyeomba: string
+  duka: string
+}
+
 interface OmbiCtx {
   maombi: OmbiMatumizi[]
-  ongezaOmbi: (data: Omit<OmbiMatumizi, 'id' | 'tarehe' | 'hali' | 'aliyeomba' | 'duka'>) => OmbiMatumizi
-  idhinisha: (id: string, hali: HaliOmbi, maoni?: string) => void
+  ongezaOmbi: (data: OngezaOmbiInput) => OmbiMatumizi
+  idhinisha: (id: string, maoni?: string) => void
+  kataa: (id: string, maoni: string) => void
+  futa: (id: string) => void
+  hariri: (id: string, patch: Partial<OmbiMatumizi>) => void
   getOmbi: (id: string) => OmbiMatumizi | undefined
 }
 
 const OmbiContext = createContext<OmbiCtx | null>(null)
 
-const MTUMIAJI_DEMO = 'Juma Hassan'
-const DUKA_DEMO = 'Kwembe'
+const MMILIKI = 'Moses Kimaro'
 
 export function OmbiProvider({ children }: { children: ReactNode }) {
   const [maombi, setMaombi] = useState<OmbiMatumizi[]>(maombiDemo)
@@ -23,22 +36,20 @@ export function OmbiProvider({ children }: { children: ReactNode }) {
       id: `EXP-${new Date().getFullYear()}-${String(maombi.length + 1).padStart(3, '0')}`,
       tarehe: new Date().toISOString().split('T')[0],
       hali: 'inasubiri',
-      aliyeomba: MTUMIAJI_DEMO,
-      duka: DUKA_DEMO,
     }
     setMaombi((prev) => [ombi, ...prev])
     return ombi
   }
 
-  const idhinisha = (id: string, hali: HaliOmbi, maoni?: string) => {
+  const idhinisha = (id: string, maoni?: string) => {
     setMaombi((prev) =>
       prev.map((m) =>
         m.id === id
           ? {
               ...m,
-              hali,
+              hali: 'imekubaliwa' as HaliOmbi,
               maoni,
-              aliyeidhinisha: 'Moses Kimaro',
+              aliyeidhinisha: MMILIKI,
               tareheIdhini: new Date().toISOString().split('T')[0],
             }
           : m
@@ -46,10 +57,38 @@ export function OmbiProvider({ children }: { children: ReactNode }) {
     )
   }
 
+  const kataa = (id: string, maoni: string) => {
+    setMaombi((prev) =>
+      prev.map((m) =>
+        m.id === id
+          ? {
+              ...m,
+              hali: 'imekataliwa' as HaliOmbi,
+              maoni,
+              aliyeidhinisha: MMILIKI,
+              tareheIdhini: new Date().toISOString().split('T')[0],
+            }
+          : m
+      )
+    )
+  }
+
+  const futa = (id: string) => {
+    setMaombi((prev) => prev.filter((m) => m.id !== id))
+  }
+
+  const hariri = (id: string, patch: Partial<OmbiMatumizi>) => {
+    setMaombi((prev) =>
+      prev.map((m) => (m.id === id ? { ...m, ...patch } : m))
+    )
+  }
+
   const getOmbi = (id: string) => maombi.find((m) => m.id === id)
 
   return (
-    <OmbiContext.Provider value={{ maombi, ongezaOmbi, idhinisha, getOmbi }}>
+    <OmbiContext.Provider
+      value={{ maombi, ongezaOmbi, idhinisha, kataa, futa, hariri, getOmbi }}
+    >
       {children}
     </OmbiContext.Provider>
   )

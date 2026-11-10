@@ -1,5 +1,5 @@
 import { NavLink, useNavigate } from 'react-router-dom'
-import { Home, Package, ShoppingCart, Users, Store, Wallet, TrendingUp, HandCoins, Receipt, FileText, X, ShoppingBag, TruckIcon, UserPlus, Bell, BarChart3, Truck, PackagePlus, LogOutIcon } from 'lucide-react'
+import { Home, Package, ShoppingCart, Users, Store, Wallet, TrendingUp, HandCoins, Receipt, FileText, X, ShoppingBag, TruckIcon, UserPlus, Bell, BarChart3, Truck, PackagePlus, LogOutIcon, ArrowBigLeft } from 'lucide-react'
 
 const navByRole: Record<string, { to: string; label: string; icon: React.ElementType }[]> = {
   mteja: [
@@ -28,6 +28,7 @@ mmiliki: [
    { to: '/mmiliki/uingiza', label: 'Ingiza Vifaa', icon: PackagePlus },
    { to: '/mmiliki/wateja', label: 'Wateja', icon: UserPlus },
     { to: '/mmiliki/orders', label: 'Order Zote', icon: ShoppingBag }, 
+    { to: '/mmiliki/matumizi', label: 'Maombi ya Matumizi', icon: Wallet },
      { to: '/', label: 'toka', icon: LogOutIcon }, 
    
 
@@ -89,7 +90,7 @@ export default function Sidebar({ role, open, onClose }: SidebarProps) {
           onClick={() => navigate('/')}
           className="w-full text-sm text-slate-600 hover:text-brand-600 px-3 py-2 rounded-lg hover:bg-slate-100 text-left"
         >
-          ← Badilisha Mtumiaji
+          <ArrowBigLeft/>Badilisha Mtumiaji
         </button>
       </div>
     </>

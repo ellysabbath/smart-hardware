@@ -33,6 +33,7 @@ import Notifications from './pages/shared/Notifications'
 import NotificationDetail from './pages/shared/NotificationDetail'
 import MmilikiOrders from './pages/mmiliki/MmilikiOrders'
 import MmilikiWateja from './pages/mmiliki/MmilikiWateja'
+import MmilikiMatumizi from './pages/mmiliki/MmilikiMatumizi'
 
 export default function App() {
   return (
@@ -74,6 +75,7 @@ export default function App() {
           <Route path="zaka" element={<MmilikiZaka />} />
           <Route path="mauzo" element={<MmilikiMauzo />} />
           {/* Ingiza Vifaa (Mmiliki) */}
+          <Route path="matumizi" element={<MmilikiMatumizi />} />
           <Route path="uingiza" element={<UingizaVifaa role="mmiliki" />} />
           <Route path="orders" element={<MmilikiOrders />} />
           <Route path="wateja" element={<MmilikiWateja />} />
