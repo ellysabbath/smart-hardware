@@ -27,7 +27,7 @@ mmiliki: [
   { to: '/mmiliki/zaka', label: 'Zaka & Sadaka', icon: HandCoins },
    { to: '/mmiliki/uingiza', label: 'Ingiza Vifaa', icon: PackagePlus },
    { to: '/mmiliki/wateja', label: 'Wateja', icon: UserPlus },
-    { to: '/mmiliki/orders', label: 'Order Zangu', icon: ShoppingBag }, 
+    { to: '/mmiliki/orders', label: 'Order Zote', icon: ShoppingBag }, 
      { to: '/', label: 'toka', icon: LogOutIcon }, 
    
 

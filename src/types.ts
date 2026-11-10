@@ -422,3 +422,72 @@ export interface ZakaKipindi {
   jumlaYaMungu: number
   salioLako: number
 }
+
+// ============================================================
+// Badilisha Notification kuwa hivi
+// ============================================================
+
+export type AinaNotification = 'info' | 'warning' | 'success' | 'danger'
+
+export type KundiNotification =
+  | 'mauzo'
+  | 'stoki'
+  | 'deni'
+  | 'malipo'
+  | 'order'
+  | 'gharama'
+  | 'mtumiaji'
+  | 'mengine'
+
+export interface Notification {
+  id: string
+  title: string
+  message: string
+  time: string
+  type: AinaNotification
+  kundi: KundiNotification
+  read: boolean
+  route?: string
+  maelezo?: string
+}
+
+
+export interface MtejaKamili {
+  id: string
+  jina: string
+  simu: string
+  aina: AinaMteja
+  mahali?: string
+  tin?: string
+  deni: number
+  jumlaManunuzi: number
+  tareheSajili: string
+  active: boolean
+  dukaId?: string
+  dukaJina?: string
+  jumlaOrders?: number
+  mwishoKununua?: string
+}
+
+export type HaliOrderAdmin =
+  | 'inasubiri_malipo'
+  | 'imekamilika'
+  | 'imekataliwa'
+  | 'imesafirishwa'
+
+export interface OrderAdmin {
+  id: string
+  quotationId: string
+  mteja: string
+  simu: string
+  dukaId: string
+  dukaJina: string
+  muuzaji: string
+  bidhaa: OrderItem[]
+  jumla: number
+  malipo: Malipo[]
+  hali: HaliOrderAdmin
+  tarehe: string
+  muda: string
+  maelezo?: string
+}

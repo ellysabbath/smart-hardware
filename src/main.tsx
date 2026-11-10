@@ -12,6 +12,8 @@ import { DukaProvider } from './context/DukaContext'
 import { UingizajiProvider } from './context/UingizajiContext'
 import { MauzoProvider } from './context/MauzoContext'
 import { ZakaProvider } from './context/ZakaContext'
+import { NotificationProvider } from './context/NotificationContext'
+import { OrderAdminProvider } from './context/OrderAdminContext'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
@@ -25,7 +27,11 @@ createRoot(document.getElementById('root')!).render(
                      <UingizajiProvider>
                       <MauzoProvider>
                        <ZakaProvider>
-                          <App />
+                        <NotificationProvider>
+                          <OrderAdminProvider>
+                            <App />
+                          </OrderAdminProvider>
+                        </NotificationProvider>
                       </ZakaProvider>
                     </MauzoProvider>
                   </UingizajiProvider>

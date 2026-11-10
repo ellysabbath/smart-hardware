@@ -29,12 +29,18 @@ import MmilikiZaka from './pages/mmiliki/MmilikiZaka'
 // ---------- SHARED (Mmiliki + Admin) ----------
 import UingizaVifaa from './pages/mmiliki/UingizaVifaa'
 import MmilikiMauzo from './pages/mmiliki/MmilikiMauzo'
+import Notifications from './pages/shared/Notifications'
+import NotificationDetail from './pages/shared/NotificationDetail'
+import MmilikiOrders from './pages/mmiliki/MmilikiOrders'
+import MmilikiWateja from './pages/mmiliki/MmilikiWateja'
 
 export default function App() {
   return (
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Landing />} />
+        <Route path="/notifications" element={<Notifications />} />
+         <Route path="/notifications/:id" element={<NotificationDetail />} />
 
         {/* ================= MTEJA ================= */}
         <Route path="/mteja" element={<Layout role="mteja" />}>
@@ -69,6 +75,8 @@ export default function App() {
           <Route path="mauzo" element={<MmilikiMauzo />} />
           {/* Ingiza Vifaa (Mmiliki) */}
           <Route path="uingiza" element={<UingizaVifaa role="mmiliki" />} />
+          <Route path="orders" element={<MmilikiOrders />} />
+          <Route path="wateja" element={<MmilikiWateja />} />
         </Route>
 
         {/* ================= ADMIN ================= */}

@@ -17,10 +17,11 @@ import {
   CheckCircle2,
   Info,
   XCircle,
+  ArrowRight,
 } from 'lucide-react'
-import { notifications } from '../data/demo'
 import { searchEverything, type SearchType } from '../utils/search'
 import { useCart } from '../context/CartContext'
+import { useNotifications } from '../context/NotificationContext'
 import { iconForKundi } from '../utils/icons'
 
 type Role = 'mteja' | 'muuzaji' | 'mmiliki'
@@ -64,7 +65,6 @@ export default function TopBar({ role, onMenuClick }: TopBarProps) {
   const [searchOpen, setSearchOpen] = useState(false)
 
   const [notifOpen, setNotifOpen] = useState(false)
-  const [notifList, setNotifList] = useState(notifications)
 
   const [cartOpen, setCartOpen] = useState(false)
   const cart = useCart()
@@ -72,13 +72,19 @@ export default function TopBar({ role, onMenuClick }: TopBarProps) {
 
   const [profileOpen, setProfileOpen] = useState(false)
 
+  const {
+    notifications: notifList,
+    unreadCount,
+    markAsRead,
+    markAllRead,
+  } = useNotifications()
+
   const searchRef = useRef<HTMLDivElement>(null)
   const notifRef = useRef<HTMLDivElement>(null)
   const cartRef = useRef<HTMLDivElement>(null)
   const profileRef = useRef<HTMLDivElement>(null)
 
   const results = useMemo(() => searchEverything(query), [query])
-  const unreadCount = notifList.filter((n) => !n.read).length
 
   useEffect(() => {
     function handleClick(e: MouseEvent) {
@@ -129,12 +135,22 @@ export default function TopBar({ role, onMenuClick }: TopBarProps) {
     setCartOpen(false)
   }
 
-  const markAllRead = () => {
-    setNotifList((list) => list.map((n) => ({ ...n, read: true })))
+  // ============================================================
+  // Notification click - navigate
+  // ============================================================
+  const handleNotifClick = (n: typeof notifList[0]) => {
+    markAsRead(n.id)
+    setNotifOpen(false)
+    if (n.route) {
+      navigate(n.route)
+    } else {
+      navigate(`/${role}/notifications/${n.id}`)
+    }
   }
 
-  const handleNotifClick = (id: string) => {
-    setNotifList((list) => list.map((n) => (n.id === id ? { ...n, read: true } : n)))
+  const handleOnaZote = () => {
+    setNotifOpen(false)
+    navigate(`/${role}/notifications`)
   }
 
   const goToQuotation = () => {
@@ -171,6 +187,7 @@ export default function TopBar({ role, onMenuClick }: TopBarProps) {
           <Menu size={22} />
         </button>
 
+        {/* ===== SEARCH ===== */}
         <div ref={searchRef} className="flex-1 min-w-0 relative">
           <div className="relative">
             <Search
@@ -234,7 +251,9 @@ export default function TopBar({ role, onMenuClick }: TopBarProps) {
           )}
         </div>
 
+        {/* ===== RIGHT ACTIONS ===== */}
         <div className="flex items-center gap-0.5 md:gap-1 shrink-0">
+          {/* CART */}
           {showCart && (
             <div ref={cartRef} className="relative">
               <button
@@ -357,6 +376,7 @@ export default function TopBar({ role, onMenuClick }: TopBarProps) {
             </div>
           )}
 
+          {/* NOTIFICATIONS */}
           <div ref={notifRef} className="relative">
             <button
               onClick={toggleNotif}
@@ -394,8 +414,8 @@ export default function TopBar({ role, onMenuClick }: TopBarProps) {
                     notifList.map((n) => (
                       <button
                         key={n.id}
-                        onClick={() => handleNotifClick(n.id)}
-                        className={`w-full text-left p-3 hover:bg-slate-50 ${
+                        onClick={() => handleNotifClick(n)}
+                        className={`w-full text-left p-3 hover:bg-slate-50 transition ${
                           !n.read ? 'bg-brand-50/40' : ''
                         }`}
                       >
@@ -411,13 +431,17 @@ export default function TopBar({ role, onMenuClick }: TopBarProps) {
                             <div className="text-xs text-slate-500 mt-0.5">{n.message}</div>
                             <div className="text-[10px] text-slate-400 mt-1">{n.time}</div>
                           </div>
+                          <ArrowRight size={14} className="text-slate-300 shrink-0 mt-1" />
                         </div>
                       </button>
                     ))
                   )}
                 </div>
                 <div className="p-2 border-t border-slate-100 text-center">
-                  <button className="text-xs text-brand-600 hover:underline">
+                  <button
+                    onClick={handleOnaZote}
+                    className="text-xs text-brand-600 hover:underline"
+                  >
                     Ona taarifa zote
                   </button>
                 </div>
@@ -425,6 +449,7 @@ export default function TopBar({ role, onMenuClick }: TopBarProps) {
             )}
           </div>
 
+          {/* PROFILE */}
           <div ref={profileRef} className="relative">
             <button
               onClick={toggleProfile}
