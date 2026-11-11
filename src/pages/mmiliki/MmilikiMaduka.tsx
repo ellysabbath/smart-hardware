@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react'
-import { Store, Users, Package, Plus, X, Save, MapPin, Phone, AlertTriangle, CheckCircle2 } from 'lucide-react'
+import { Store, Users, Package, Plus, X, Save, MapPin, AlertTriangle, CheckCircle2 } from 'lucide-react'
 import { useStore } from '../../store/StoreContext'
 import { formatTsh } from '../../utils/faida'
 

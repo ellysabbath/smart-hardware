@@ -4,7 +4,7 @@ import {
   Bell, Search, Filter, CheckCheck, Trash2, ArrowRight,
   Info, AlertTriangle, CheckCircle2, XCircle, Inbox,
   ShoppingBag, Package, Wallet, CreditCard, FileText,
-  Users, MoreHorizontal, X,
+  Users, MoreHorizontal,
 } from 'lucide-react'
 import { useNotifications } from '../../context/NotificationContext'
 import type {
@@ -56,7 +56,6 @@ export default function Notifications() {
     markAllRead,
     futa,
     futaZote,
-    filterByKundi,
     search,
   } = useNotifications()
 
@@ -69,7 +68,7 @@ export default function Notifications() {
     if (filter !== 'zote') list = list.filter((n) => n.kundi === filter)
     if (showOnlyUnread) list = list.filter((n) => !n.read)
     return list
-  }, [q, filter, showOnlyUnread, notifications])
+  }, [q, filter, showOnlyUnread, notifications, search])
 
   const handleClick = (n: Notification) => {
     markAsRead(n.id)

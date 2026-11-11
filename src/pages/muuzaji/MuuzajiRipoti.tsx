@@ -1,10 +1,9 @@
 import { useMemo, useState } from 'react'
 import {
   BarChart3, TrendingUp, Package, Users, Wallet,
-  AlertTriangle, CheckCircle2, Download, Calendar,
-  FileText, Search, Filter, Trash2, X, Eye, Plus,
-  Clock, Store, User, ArrowDownToLine, Sheet, Table, File,
-  Layers,
+  AlertTriangle, CheckCircle2, Download,
+  FileText, Search, Trash2, X, Eye, Plus,
+  Clock, ArrowDownToLine, Sheet, Table, File,
 } from 'lucide-react'
 import {
   LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer,
@@ -13,6 +12,7 @@ import {
 import { useStore } from '../../store/StoreContext'
 import { formatTsh } from '../../utils/faida'
 import { iconForKundi } from '../../utils/icons'
+import { buildDocument } from '../../utils/documentGenerator'
 import type {
   AinaDocument,
   Document,
@@ -106,12 +106,11 @@ export default function MuuzajiRipoti() {
 }
 
 // ============================================================
-// Ripoti ya Mauzo (kutoka mauzo halisi)
+// Ripoti ya Mauzo
 // ============================================================
 function RipotiMauzoTab() {
   const { mauzo } = useStore()
 
-  // Group mauzo kwa tarehe
   const ripotiKwaTarehe = useMemo(() => {
     const map = new Map<string, { tarehe: string; mauzo: number; faida: number; orders: number }>()
     for (const m of mauzo) {
@@ -251,7 +250,7 @@ function RipotiMauzoTab() {
 }
 
 // ============================================================
-// Ripoti ya Stoki (kutoka bidhaa halisi)
+// Ripoti ya Stoki
 // ============================================================
 function RipotiStokiTab() {
   const { bidhaa } = useStore()
@@ -359,7 +358,7 @@ function RipotiStokiTab() {
 }
 
 // ============================================================
-// Ripoti ya Wateja (kutoka wateja + orders + malipo)
+// Ripoti ya Wateja
 // ============================================================
 function RipotiWatejaTab() {
   const { wateja, orders, deniLaMteja } = useStore()
@@ -443,10 +442,13 @@ function RipotiWatejaTab() {
 }
 
 // ============================================================
-// Tab: Documents (kutoka useStore)
+// Documents Tab
 // ============================================================
 function DocumentsTab() {
-  const { documents, setDocuments, bidhaa, wateja, mauzo } = useStore()
+  const {
+    documents, setDocuments,
+    bidhaa, wateja, mauzo, opex, mishahara, orders,
+  } = useStore()
   const [q, setQ] = useState('')
   const [filterAina, setFilterAina] = useState<AinaDocument | 'zote'>('zote')
   const [selected, setSelected] = useState<Document | null>(null)
@@ -477,29 +479,24 @@ function DocumentsTab() {
   }
 
   const handleZalisha = (aina: AinaDocument) => {
-    const meta = AINA_DOC_META[aina]
-    const jumla =
-      aina === 'mauzo'
-        ? mauzo.reduce((s, m) => s + m.jumlaMauzo, 0)
-        : aina === 'stoki'
-        ? bidhaa.reduce((s, b) => s + b.stoki * b.beiUnunuzi, 0)
-        : aina === 'wateja'
-        ? wateja.length
-        : 0
-
-    const doc: Document = {
-      id: `DOC-${Date.now()}`,
-      jina: `Ripoti ya ${meta.label} — ${new Date().toLocaleDateString('sw-TZ')}`,
+    // ✅ Tumia buildDocument — snapshot inajazwa kutoka data halisi
+    const docData = buildDocument({
       aina,
       format: 'pdf',
       dukaId: 'd1',
       dukaJina: 'Smart Hardware - Kwembe',
-      ukubwa: `${Math.max(1, Math.round(jumla / 100000))} KB`,
-      tarehe: new Date().toLocaleDateString('sw-TZ', { day: '2-digit', month: 'short', year: 'numeric' }),
-      muda: new Date().toLocaleTimeString('sw-TZ', { hour: '2-digit', minute: '2-digit' }),
-      hali: 'tayari',
       aliyezalisha: 'Juma Hassan',
-      kipindi: 'Novemba 2026',
+      mauzo,
+      bidhaa,
+      wateja,
+      orders,
+      opex,
+      mishahara,
+    })
+
+    const doc: Document = {
+      ...docData,
+      id: `DOC-${Date.now()}`,
     }
     setDocuments([doc, ...documents])
     setZalisha(false)
@@ -734,10 +731,10 @@ function DocumentDetailModal({ document, onClose }: { document: Document; onClos
           </div>
 
           <div className="flex items-center gap-1.5 text-xs text-slate-600">
-            <Store size={12} /> {document.dukaJina}
+            <FileText size={12} /> {document.dukaJina}
           </div>
           <div className="flex items-center gap-1.5 text-xs text-slate-600">
-            <User size={12} /> {document.aliyezalisha}
+            <Users size={12} /> {document.aliyezalisha}
           </div>
 
           <div className="flex gap-2 pt-2 border-t border-slate-200">
@@ -762,7 +759,7 @@ function DocumentDetailModal({ document, onClose }: { document: Document; onClos
 }
 
 // ============================================================
-// RipotiStat — white card tu
+// RipotiStat
 // ============================================================
 function RipotiStat({
   label, value, Icon, tone,

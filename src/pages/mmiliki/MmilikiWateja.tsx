@@ -4,7 +4,7 @@ import { useStore } from '../../store/StoreContext'
 import { formatTsh } from '../../utils/faida'
 
 export default function MmilikiWateja() {
-  const { wateja, orders, deniLaMteja } = useStore()
+  const { wateja,  deniLaMteja } = useStore()
   const [q, setQ] = useState('')
 
   const filtered = wateja.filter((m) => m.jina.toLowerCase().includes(q.toLowerCase()) || m.simu.includes(q))

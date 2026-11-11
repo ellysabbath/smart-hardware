@@ -1,5 +1,5 @@
 import { NavLink, useNavigate } from 'react-router-dom'
-import { Home, Package, ShoppingCart, Users, Store, Wallet, TrendingUp, HandCoins, Receipt, FileText, X, ShoppingBag, TruckIcon, UserPlus, Bell, BarChart3, Truck, PackagePlus, LogOutIcon, ArrowBigLeft, BellCheckIcon, StopCircle, HouseCog, HouseCogIcon, PackageX, DollarSign, CircleDollarSign, Banknote } from 'lucide-react'
+import { Home, Package, ShoppingCart, Users, Store, Wallet, TrendingUp, HandCoins, Receipt, FileText, X, ShoppingBag,  UserPlus, Bell, BarChart3, Truck, PackagePlus, LogOutIcon, ArrowBigLeft, BellCheckIcon, HouseCog, HouseCogIcon, PackageX, CircleDollarSign, Banknote } from 'lucide-react'
 
 const navByRole: Record<string, { to: string; label: string; icon: React.ElementType }[]> = {
   mteja: [

@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react'
 import {
-  ShoppingBag, Search, Filter, CheckCircle2, Clock, Truck, XCircle,
+  ShoppingBag, Search, Filter, CheckCircle2, Clock, XCircle,
   X, Package, Phone, CreditCard, AlertTriangle, Loader2, Check, Ban,
 } from 'lucide-react'
 import { useStore } from '../../store/StoreContext'

@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react'
 import {
   HandCoins, CheckCircle2, Clock, AlertTriangle, Plus, X, Save,
-  Receipt, Wallet, TrendingUp, Calendar,
+  Wallet, 
 } from 'lucide-react'
 import { useStore } from '../../store/StoreContext'
 import { formatTsh } from '../../utils/faida'

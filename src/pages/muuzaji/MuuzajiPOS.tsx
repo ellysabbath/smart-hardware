@@ -1,7 +1,7 @@
 import { useState, useMemo } from 'react'
 import {
   Search, Plus, Minus, ShoppingCart, Check, Banknote, Smartphone,
-  Wallet, X, Loader2, AlertTriangle, User, Store, Receipt,
+  Wallet, X, Loader2, AlertTriangle,  Receipt,
 } from 'lucide-react'
 import { useStore } from '../../store/StoreContext'
 import { formatTsh } from '../../utils/faida'

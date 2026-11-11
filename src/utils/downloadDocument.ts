@@ -9,7 +9,7 @@ export function downloadCsv(doc: Document) {
   rows.push(kichwa)
 
   for (const r of safu) {
-    rows.push(r.map((x) => String(x ?? '')))
+    rows.push(r.map((x: string | number) => String(x ?? '')))
   }
 
   if (jumla) {
@@ -21,7 +21,7 @@ export function downloadCsv(doc: Document) {
   }
 
   const csv = rows
-    .map((r) => r.map((c) => `"${String(c).replace(/"/g, '""')}"`).join(','))
+    .map((r) => r.map((c: string) => `"${String(c).replace(/"/g, '""')}"`).join(','))
     .join('\n')
 
   const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' })
@@ -29,32 +29,41 @@ export function downloadCsv(doc: Document) {
 }
 
 // ============================================================
-// Excel download (tumia CSV yenye .xls extension kama hack rahisi)
-// Kwa production tumia xlsx library
+// Excel download (HTML table → .xls)
 // ============================================================
 export function downloadExcel(doc: Document) {
   const { kichwa, safu, jumla } = doc.snapshot
-  const rows: string[][] = [kichwa, ...safu.map((r) => r.map((x) => String(x ?? '')))]
 
-  if (jumla) {
-    rows.push([])
-    rows.push(['JUMLA'])
-    for (const [k, v] of Object.entries(jumla)) {
-      rows.push([k, String(v)])
-    }
-  }
-
-  // Simple HTML table → Excel inafungua vizuri
   const html = `
     <html xmlns="http://www.w3.org/1999/xhtml">
       <head><meta charset="UTF-8" /></head>
       <body>
         <table border="1">
-          <thead><tr>${kichwa.map((h) => `<th>${h}</th>`).join('')}</tr></thead>
+          <thead><tr>${kichwa.map((h: string) => `<th>${h}</th>`).join('')}</tr></thead>
           <tbody>
-            ${safu.map((r) => `<tr>${r.map((c) => `<td>${String(c ?? '')}</td>`).join('')}</tr>`).join('')}
+            ${safu
+              .map(
+                (r) =>
+                  `<tr>${r
+                    .map((c: string | number) => `<td>${String(c ?? '')}</td>`)
+                    .join('')}</tr>`
+              )
+              .join('')}
           </tbody>
         </table>
+        ${
+          jumla
+            ? `<table border="1" style="margin-top:20px;">
+                <tr><th colspan="2">JUMLA</th></tr>
+                ${Object.entries(jumla)
+                  .map(
+                    ([k, v]) =>
+                      `<tr><td>${k.replace(/_/g, ' ')}</td><td>${v}</td></tr>`
+                  )
+                  .join('')}
+              </table>`
+            : ''
+        }
       </body>
     </html>
   `
@@ -63,8 +72,7 @@ export function downloadExcel(doc: Document) {
 }
 
 // ============================================================
-// PDF download — tumia print dialog ya browser (rahisi, hakuna library)
-// Kwa production tumia jspdf + jspdf-autotable
+// PDF download (print dialog)
 // ============================================================
 export function downloadPdf(doc: Document) {
   const { kichwa, safu, jumla, metadata } = doc.snapshot
@@ -87,6 +95,8 @@ export function downloadPdf(doc: Document) {
           tr:nth-child(even) td { background: #f8fafc; }
           .jumla { margin-top: 20px; font-size: 11px; background: #f8fafc; padding: 12px; border-radius: 6px; }
           .jumla strong { display: inline-block; min-width: 140px; }
+          .metadata { margin-top: 20px; font-size: 11px; color: #64748b; }
+          .metadata strong { color: #0f172a; }
           .footer { margin-top: 24px; font-size: 10px; color: #94a3b8; text-align: center; }
         </style>
       </head>
@@ -98,9 +108,16 @@ export function downloadPdf(doc: Document) {
           Aliyezalisha: ${doc.aliyezalisha} | ID: ${doc.id}
         </div>
         <table>
-          <thead><tr>${kichwa.map((h) => `<th>${h}</th>`).join('')}</tr></thead>
+          <thead><tr>${kichwa.map((h: string) => `<th>${h}</th>`).join('')}</tr></thead>
           <tbody>
-            ${safu.map((r) => `<tr>${r.map((c) => `<td>${String(c ?? '')}</td>`).join('')}</tr>`).join('')}
+            ${safu
+              .map(
+                (r) =>
+                  `<tr>${r
+                    .map((c: string | number) => `<td>${String(c ?? '')}</td>`)
+                    .join('')}</tr>`
+              )
+              .join('')}
           </tbody>
         </table>
         ${
@@ -113,6 +130,15 @@ export function downloadPdf(doc: Document) {
               </div>`
             : ''
         }
+        ${
+          metadata
+            ? `<div class="metadata">
+                ${Object.entries(metadata)
+                  .map(([k, v]) => `<div><strong>${k}:</strong> ${v}</div>`)
+                  .join('')}
+              </div>`
+            : ''
+        }
         <div class="footer">Imezalishwa kiotomatiki kutoka Smart Hardware POS</div>
       </body>
     </html>
@@ -120,7 +146,7 @@ export function downloadPdf(doc: Document) {
 
   const w = window.open('', '_blank')
   if (!w) {
-    alert('Ruhusu pop-ups kupakua PDF')
+    console.error('Pop-up imezuiwa. Ruhusu pop-ups kupakua PDF.')
     return
   }
   w.document.write(html)
@@ -157,6 +183,10 @@ function slug(s: string): string {
 // Pakua kulingana na format
 // ============================================================
 export function pakuaDocument(doc: Document) {
+  if (!doc.snapshot) {
+    console.error('Document haina snapshot — tafadhali itengeneze upya.')
+    return
+  }
   if (doc.format === 'csv') return downloadCsv(doc)
   if (doc.format === 'excel') return downloadExcel(doc)
   return downloadPdf(doc)

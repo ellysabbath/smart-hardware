@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react'
-import { Wallet, Banknote, CheckCircle2, Clock, Trash2, Users, Zap } from 'lucide-react'
+import { Wallet, Banknote, CheckCircle2, Clock, Users, Zap } from 'lucide-react'
 import { useStore } from '../../store/StoreContext'
 import { formatTsh } from '../../utils/faida'
 

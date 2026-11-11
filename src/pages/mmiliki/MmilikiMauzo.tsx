@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react'
 import {
-  TrendingUp, TrendingDown, Wallet, Receipt, HandCoins, Package,
-  Building2, BarChart3, Users, Store, ChevronRight,
+  TrendingUp, TrendingDown, Wallet, Receipt,Package,
+  Building2, BarChart3, Users, Store,
 } from 'lucide-react'
 import {
   BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, Legend,

@@ -3,6 +3,7 @@ import type {
   GharamaOpex,
   FaidaKamili,
   GharamaZote,
+  Mshahara,
 } from '../types'
 
 // ============================================================
@@ -14,15 +15,17 @@ export function hesabuFaidaGhafi(mauzo: MauzoYaDuka) {
 
 // ============================================================
 // Jumla ya gharama za OPEX kwa duka
+// (bila mishahara, kwa kuwa mishahara inahesabiwa tofauti)
 // ============================================================
 export function jumlaOpex(gharama: GharamaOpex[], dukaId?: string) {
   return gharama
     .filter((g) => !dukaId || g.dukaId === dukaId)
+    .filter((g) => g.aina !== 'mishahara')
     .reduce((s, g) => s + g.kiasi, 0)
 }
 
 // ============================================================
-// Gharama kwa aina (mishahara, kodi, n.k.)
+// Gharama kwa aina
 // ============================================================
 export function gharamaKwaAina(
   gharama: GharamaOpex[],
@@ -66,21 +69,31 @@ export function gharamaKwaAina(
 }
 
 // ============================================================
-// Hesabu Kamili ya Faida
+// Hesabu Kamili ya Faida (mishahara ni optional)
 // ============================================================
 export function hesabuFaidaKamili(
   mauzo: MauzoYaDuka[],
   opex: GharamaOpex[],
+  mishahara: Mshahara[] = [],
   dukaId?: string
 ): FaidaKamili {
   const filteredMauzo = mauzo.filter((m) => !dukaId || m.dukaId === dukaId)
   const filteredOpex = opex.filter((g) => !dukaId || g.dukaId === dukaId)
+  const filteredMishahara = mishahara.filter(
+    (m) => !dukaId || m.dukaId === dukaId
+  )
 
   const jumlaMauzo = filteredMauzo.reduce((s, m) => s + m.jumlaMauzo, 0)
   const jumlaCogs = filteredMauzo.reduce((s, m) => s + m.cogs, 0)
   const faidaGhafi = jumlaMauzo - jumlaCogs
-  const jumlaOpexZote = filteredOpex.reduce((s, g) => s + g.kiasi, 0)
-  const faidaSafi = faidaGhafi - jumlaOpexZote
+
+  const opexBilaMishahara = filteredOpex.filter((g) => g.aina !== 'mishahara')
+  const jumlaOpexZote = opexBilaMishahara.reduce((s, g) => s + g.kiasi, 0)
+
+  const jumlaMishahara = filteredMishahara.reduce((s, m) => s + m.jumla, 0)
+
+  const jumlaGharama = jumlaOpexZote + jumlaMishahara
+  const faidaSafi = faidaGhafi - jumlaGharama
 
   const faidaKwaMungu = faidaSafi > 0 ? faidaSafi : 0
   const zaka = faidaKwaMungu * 0.1
@@ -93,6 +106,8 @@ export function hesabuFaidaKamili(
     cogs: jumlaCogs,
     faidaGhafi,
     jumlaOpex: jumlaOpexZote,
+    jumlaMishahara,
+    jumlaGharama,
     faidaSafi,
     zaka,
     sadaka,

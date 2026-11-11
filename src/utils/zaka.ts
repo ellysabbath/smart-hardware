@@ -1,4 +1,4 @@
-import type { MauzoYaDuka, GharamaOpex, ZakaKipindi } from '../types'
+import type { MauzoYaDuka, GharamaOpex, ZakaKipindi, Mshahara } from '../types'
 import { hesabuFaidaKamili } from './faida'
 
 // ============================================================
@@ -6,21 +6,32 @@ import { hesabuFaidaKamili } from './faida'
 // ============================================================
 export function hesabuZakaKwaKipindi(
   mauzo: MauzoYaDuka[],
-  opex: GharamaOpex[]
+  opex: GharamaOpex[],
+  mishahara: Mshahara[] = []
 ): ZakaKipindi[] {
   // Kundi kwa tarehe
-  const map = new Map<string, { mauzo: MauzoYaDuka[]; opex: GharamaOpex[] }>()
+  const map = new Map<
+    string,
+    { mauzo: MauzoYaDuka[]; opex: GharamaOpex[]; mishahara: Mshahara[] }
+  >()
 
   for (const m of mauzo) {
-    const entry = map.get(m.tarehe) || { mauzo: [], opex: [] }
+    const entry = map.get(m.tarehe) || { mauzo: [], opex: [], mishahara: [] }
     entry.mauzo.push(m)
     map.set(m.tarehe, entry)
   }
 
   for (const o of opex) {
-    const entry = map.get(o.tarehe) || { mauzo: [], opex: [] }
+    const entry = map.get(o.tarehe) || { mauzo: [], opex: [], mishahara: [] }
     entry.opex.push(o)
     map.set(o.tarehe, entry)
+  }
+
+  for (const ms of mishahara) {
+    const tarehe = ms.tareheMalipo ?? new Date().toISOString().split('T')[0]
+    const entry = map.get(tarehe) || { mauzo: [], opex: [], mishahara: [] }
+    entry.mishahara.push(ms)
+    map.set(tarehe, entry)
   }
 
   // Hesabu kwa kila tarehe
@@ -28,8 +39,8 @@ export function hesabuZakaKwaKipindi(
   const tareheZote = Array.from(map.keys()).sort()
 
   for (const tarehe of tareheZote) {
-    const { mauzo: m, opex: o } = map.get(tarehe)!
-    const f = hesabuFaidaKamili(m, o)
+    const { mauzo: m, opex: o, mishahara: ms } = map.get(tarehe)!
+    const f = hesabuFaidaKamili(m, o, ms)
     result.push({
       tarehe,
       faidaHalisi: f.faidaSafi,

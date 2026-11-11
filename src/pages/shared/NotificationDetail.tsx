@@ -1,6 +1,6 @@
 import { useParams, useNavigate } from 'react-router-dom'
 import {
-  ArrowLeft, Bell, CheckCheck, Trash2, ArrowRight,
+  ArrowLeft, CheckCheck, Trash2, ArrowRight,
   Info, AlertTriangle, CheckCircle2, XCircle, Inbox,
 } from 'lucide-react'
 import { useNotifications } from '../../context/NotificationContext'

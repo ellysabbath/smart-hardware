@@ -82,7 +82,7 @@ export default function MuuzajiStoreManage() {
       {/* HEADER */}
       <div>
         <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-slate-900 flex items-center gap-2">
-          <Package size={26} className="text-brand-600" /> Usimamizi wa Stoki
+          <Store size={26} className="text-brand-600" /> Usimamizi wa Stoki
         </h1>
         <p className="text-sm text-slate-500 mt-1">
           Duka la {DUKA_JINA} — bidhaa, marekebisho, na uingizaji
@@ -301,7 +301,8 @@ function MarekebishoTable({
             className="w-full pl-9 pr-3 py-2 rounded-lg border border-slate-200 focus:border-brand-500 outline-none text-sm"
           />
         </div>
-        <div className="flex flex-wrap gap-1.5">
+        <div className="flex flex-wrap gap-1.5 items-center">
+          <ListFilter size={14} className="text-slate-400" />
           {(['zote', 'inasubiri', 'imethibitishwa', 'imekataliwa'] as const).map((k) => (
             <button
               key={k}
@@ -429,7 +430,8 @@ function UingizajiTable({ uingizaji }: { uingizaji: ReturnType<typeof useStore>[
             className="w-full pl-9 pr-3 py-2 rounded-lg border border-slate-200 focus:border-brand-500 outline-none text-sm"
           />
         </div>
-        <div className="flex flex-wrap gap-1.5">
+        <div className="flex flex-wrap gap-1.5 items-center">
+          <ListFilter size={14} className="text-slate-400" />
           {(['zote', 'inasubiri', 'imepokelewa', 'imekataliwa'] as const).map((k) => (
             <button
               key={k}

@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import {
   Lock, ArrowLeft, AlertTriangle, Eye, EyeOff,
-  CheckCircle2, ShieldCheck, KeyRound,
+  ShieldCheck, KeyRound,
 } from 'lucide-react'
 
 export default function ResetPassword() {

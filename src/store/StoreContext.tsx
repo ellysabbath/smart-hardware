@@ -107,6 +107,27 @@ interface StoreCtx {
   notifications: Notification[]
   documents: Document[]
 
+  // setters (kwa pages zinazohitaji)
+  setMaduka: (v: Duka[]) => void
+  setWafanyakazi: (v: Mtumiaji[]) => void
+  setBidhaa: (v: Bidhaa[]) => void
+  setWateja: (v: Mteja[]) => void
+  setMauzo: (v: MauzoYaDuka[]) => void
+  setOpex: (v: GharamaOpex[]) => void
+  setOrders: (v: Order[]) => void
+  setMalipo: (v: Malipo[]) => void
+  setZakaMalipo: (v: MalipoZaka[]) => void
+  setMaombi: (v: OmbiMatumizi[]) => void
+  setRipotiBidhaa: (v: RipotiBidhaa[]) => void
+  setMarekebishoStoki: (v: MarekebishoStoki[]) => void
+  setMishahara: (v: Mshahara[]) => void
+  setAkaunti: (v: AkauntiMfanyakazi[]) => void
+  setUingizaji: (v: UingizajiVifaa[]) => void
+  setGrn: (v: GRN[]) => void
+  setCarts: (v: PendingCart[]) => void
+  setNotifications: (v: Notification[]) => void
+  setDocuments: (v: Document[]) => void
+
   // mutations (write)
   ongezaDuka: (data: Omit<Duka, 'id'>) => Duka
   ongezaMtumiaji: (data: Omit<Mtumiaji, 'id'>) => Mtumiaji
@@ -128,6 +149,9 @@ interface StoreCtx {
     kiasi: number
     hali: 'imethibitishwa' | 'inasubiri'
   }) => void
+
+  thibitishaMalipo: (orderId: string, malipoId: string) => void
+  kataaMalipo: (orderId: string, malipoId: string) => void
 
   ongezaOpex: (data: Omit<GharamaOpex, 'id' | 'tarehe'>) => GharamaOpex
   rekodiZaka: (data: Omit<MalipoZaka, 'id'>) => MalipoZaka
@@ -158,7 +182,6 @@ interface StoreCtx {
   pokeaUingizaji: (id: string, aliyepokea: string) => void
 
   // documents (auto-generated kutoka data halisi)
-  setDocuments: (v: Document[]) => void
   ongezaDocument: (data: Omit<Document, 'id'>) => Document
   futaDocument: (id: string) => void
 
@@ -182,41 +205,41 @@ const Ctx = createContext<StoreCtx | null>(null)
 export function StoreProvider({ children }: { children: ReactNode }) {
   seedIfEmpty()
 
-  const [maduka, setMaduka] = useState<Duka[]>(() => db.get('maduka'))
-  const [wafanyakazi, setWafanyakazi] = useState<Mtumiaji[]>(() =>
+  const [maduka, setMadukaState] = useState<Duka[]>(() => db.get('maduka'))
+  const [wafanyakazi, setWafanyakaziState] = useState<Mtumiaji[]>(() =>
     db.get('wafanyakazi')
   )
-  const [bidhaa, setBidhaa] = useState<Bidhaa[]>(() => db.get('bidhaa'))
-  const [wateja, setWateja] = useState<Mteja[]>(() => db.get('wateja'))
-  const [mauzo, setMauzo] = useState<MauzoYaDuka[]>(() => db.get('mauzo'))
-  const [opex, setOpex] = useState<GharamaOpex[]>(() => db.get('opex'))
-  const [orders, setOrders] = useState<Order[]>(() => db.get('orders'))
-  const [malipo, setMalipo] = useState<Malipo[]>(() => db.get('malipo'))
-  const [zakaMalipo, setZakaMalipo] = useState<MalipoZaka[]>(() =>
+  const [bidhaa, setBidhaaState] = useState<Bidhaa[]>(() => db.get('bidhaa'))
+  const [wateja, setWatejaState] = useState<Mteja[]>(() => db.get('wateja'))
+  const [mauzo, setMauzoState] = useState<MauzoYaDuka[]>(() => db.get('mauzo'))
+  const [opex, setOpexState] = useState<GharamaOpex[]>(() => db.get('opex'))
+  const [orders, setOrdersState] = useState<Order[]>(() => db.get('orders'))
+  const [malipo, setMalipoState] = useState<Malipo[]>(() => db.get('malipo'))
+  const [zakaMalipo, setZakaMalipoState] = useState<MalipoZaka[]>(() =>
     db.get('zakaMalipo')
   )
-  const [maombi, setMaombi] = useState<OmbiMatumizi[]>(() => db.get('maombi'))
-  const [ripotiBidhaa, setRipotiBidhaa] = useState<RipotiBidhaa[]>(() =>
+  const [maombi, setMaombiState] = useState<OmbiMatumizi[]>(() => db.get('maombi'))
+  const [ripotiBidhaa, setRipotiBidhaaState] = useState<RipotiBidhaa[]>(() =>
     db.get('ripotiBidhaa')
   )
-  const [marekebishoStoki, setMarekebishoStoki] = useState<MarekebishoStoki[]>(
-    () => db.get('marekebishoStoki')
-  )
-  const [mishahara, setMishahara] = useState<Mshahara[]>(() =>
+  const [marekebishoStoki, setMarekebishoStokiState] = useState<
+    MarekebishoStoki[]
+  >(() => db.get('marekebishoStoki'))
+  const [mishahara, setMishaharaState] = useState<Mshahara[]>(() =>
     db.get('mishahara')
   )
-  const [akaunti, setAkaunti] = useState<AkauntiMfanyakazi[]>(() =>
+  const [akaunti, setAkauntiState] = useState<AkauntiMfanyakazi[]>(() =>
     db.get('akaunti')
   )
-  const [uingizaji, setUingizaji] = useState<UingizajiVifaa[]>(() =>
+  const [uingizaji, setUingizajiState] = useState<UingizajiVifaa[]>(() =>
     db.get('uingizaji')
   )
-  const [grn, setGrn] = useState<GRN[]>(() => db.get('grn'))
-  const [carts, setCarts] = useState<PendingCart[]>(() => db.get('carts'))
-  const [notifications, setNotifications] = useState<Notification[]>(() =>
+  const [grn, setGrnState] = useState<GRN[]>(() => db.get('grn'))
+  const [carts, setCartsState] = useState<PendingCart[]>(() => db.get('carts'))
+  const [notifications, setNotificationsState] = useState<Notification[]>(() =>
     db.get('notifications')
   )
-  const [documents, setDocuments] = useState<Document[]>(() =>
+  const [documents, setDocumentsState] = useState<Document[]>(() =>
     db.get('documents')
   )
   const [smsLog, setSmsLog] = useState<
@@ -224,15 +247,51 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   >([])
 
   // ============================================================
-  // PERSIST
+  // PERSIST — inarudisha boolean
   // ============================================================
   const persist = useCallback(
-    (key: string, data: any, setter: (v: any) => void) => {
+    (key: string, data: any, setter: (v: any) => void): boolean => {
       setter(data)
-      db.set(key as any, data as any)
+      const ok = db.set(key as any, data as any)
+      if (!ok) {
+        console.error('[store] Imeshindwa kuhifadhi', key)
+      }
+      return ok
     },
     []
   )
+
+  // ============================================================
+  // SETTERS (kwa pages zinazohitaji kuweka moja kwa moja)
+  // ============================================================
+  const setMaduka = (v: Duka[]) => persist('maduka', v, setMadukaState)
+  const setWafanyakazi = (v: Mtumiaji[]) =>
+    persist('wafanyakazi', v, setWafanyakaziState)
+  const setBidhaa = (v: Bidhaa[]) => persist('bidhaa', v, setBidhaaState)
+  const setWateja = (v: Mteja[]) => persist('wateja', v, setWatejaState)
+  const setMauzo = (v: MauzoYaDuka[]) => persist('mauzo', v, setMauzoState)
+  const setOpex = (v: GharamaOpex[]) => persist('opex', v, setOpexState)
+  const setOrders = (v: Order[]) => persist('orders', v, setOrdersState)
+  const setMalipo = (v: Malipo[]) => persist('malipo', v, setMalipoState)
+  const setZakaMalipo = (v: MalipoZaka[]) =>
+    persist('zakaMalipo', v, setZakaMalipoState)
+  const setMaombi = (v: OmbiMatumizi[]) => persist('maombi', v, setMaombiState)
+  const setRipotiBidhaa = (v: RipotiBidhaa[]) =>
+    persist('ripotiBidhaa', v, setRipotiBidhaaState)
+  const setMarekebishoStoki = (v: MarekebishoStoki[]) =>
+    persist('marekebishoStoki', v, setMarekebishoStokiState)
+  const setMishahara = (v: Mshahara[]) =>
+    persist('mishahara', v, setMishaharaState)
+  const setAkaunti = (v: AkauntiMfanyakazi[]) =>
+    persist('akaunti', v, setAkauntiState)
+  const setUingizaji = (v: UingizajiVifaa[]) =>
+    persist('uingizaji', v, setUingizajiState)
+  const setGrn = (v: GRN[]) => persist('grn', v, setGrnState)
+  const setCarts = (v: PendingCart[]) => persist('carts', v, setCartsState)
+  const setNotifications = (v: Notification[]) =>
+    persist('notifications', v, setNotificationsState)
+  const setDocuments = (v: Document[]) =>
+    persist('documents', v, setDocumentsState)
 
   // ============================================================
   // SMS
@@ -255,25 +314,25 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   // ============================================================
   const ongezaDuka: StoreCtx['ongezaDuka'] = (data) => {
     const d: Duka = { ...data, id: makeId('d') }
-    persist('maduka', [d, ...maduka], setMaduka)
+    persist('maduka', [d, ...maduka], setMadukaState)
     return d
   }
 
   const ongezaMtumiaji: StoreCtx['ongezaMtumiaji'] = (data) => {
     const u: Mtumiaji = { ...data, id: makeId('u') }
-    persist('wafanyakazi', [u, ...wafanyakazi], setWafanyakazi)
+    persist('wafanyakazi', [u, ...wafanyakazi], setWafanyakaziState)
     return u
   }
 
   const ongezaBidhaa: StoreCtx['ongezaBidhaa'] = (data) => {
     const b: Bidhaa = { ...data, id: makeId('b') }
-    persist('bidhaa', [b, ...bidhaa], setBidhaa)
+    persist('bidhaa', [b, ...bidhaa], setBidhaaState)
     return b
   }
 
   const ongezaMteja: StoreCtx['ongezaMteja'] = (data) => {
     const m: Mteja = { ...data, id: makeId('c') }
-    persist('wateja', [m, ...wateja], setWateja)
+    persist('wateja', [m, ...wateja], setWatejaState)
     return m
   }
 
@@ -316,13 +375,11 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       tarehe: new Date().toISOString().split('T')[0],
     }
 
-    // Punguza stock
     const bidhaaMpya = bidhaa.map((b) => {
       const it = items.find((x) => x.id === b.id)
       return it ? { ...b, stoki: Math.max(b.stoki - it.wingi, 0) } : b
     })
 
-    // Ongeza mauzo record
     const cogs = cogsForOrder(order, bidhaa)
     const sale: MauzoYaDuka = {
       id: makeId('SALE'),
@@ -336,15 +393,14 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       faidaGhafi: jumla - cogs,
     }
 
-    // Sasisha mteja
     const watejaMpya = wateja.map((c) =>
       c.id === mtejaId ? { ...c, jumlaManunuzi: c.jumlaManunuzi + jumla } : c
     )
 
-    persist('bidhaa', bidhaaMpya, setBidhaa)
-    persist('orders', [order, ...orders], setOrders)
-    persist('mauzo', [sale, ...mauzo], setMauzo)
-    persist('wateja', watejaMpya, setWateja)
+    persist('bidhaa', bidhaaMpya, setBidhaaState)
+    persist('orders', [order, ...orders], setOrdersState)
+    persist('mauzo', [sale, ...mauzo], setMauzoState)
+    persist('wateja', watejaMpya, setWatejaState)
 
     sendSms(
       mteja.simu,
@@ -385,15 +441,88 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     persist(
       'orders',
       orders.map((o) => (o.id === order.id ? orderMpya : o)),
-      setOrders
+      setOrdersState
     )
 
-    persist('malipo', [m, ...malipo], setMalipo)
+    persist('malipo', [m, ...malipo], setMalipoState)
 
     sendSms(
       data.simu,
       `Malipo ya Tsh ${data.kiasi.toLocaleString()} kwa order ${order.id} yamepokelewa. Asante!`
     )
+  }
+
+  // ============================================================
+  // THIBITISHA / KATAA MALIPO (kwa mmiliki)
+  // ============================================================
+  const thibitishaMalipo: StoreCtx['thibitishaMalipo'] = (orderId, malipoId) => {
+    const order = orders.find((o) => o.id === orderId)
+    if (!order) return
+
+    const malipoMpya = order.malipo.map((m) =>
+      m.id === malipoId ? { ...m, hali: 'imethibitishwa' as any } : m
+    )
+
+    const jumlaIliyolipwa = malipoMpya
+      .filter((m) => m.hali === 'imethibitishwa')
+      .reduce((s, m) => s + m.kiasi, 0)
+
+    const orderMpya: Order = {
+      ...order,
+      malipo: malipoMpya,
+      hali: jumlaIliyolipwa >= order.jumla ? 'imekamilika' : order.hali,
+    }
+
+    persist(
+      'orders',
+      orders.map((o) => (o.id === orderId ? orderMpya : o)),
+      setOrdersState
+    )
+    persist(
+      'malipo',
+      malipo.map((m) =>
+        m.id === malipoId ? { ...m, hali: 'imethibitishwa' as any } : m
+      ),
+      setMalipoState
+    )
+
+    const malipoThibitisha = malipoMpya.find((m) => m.id === malipoId)
+    if (malipoThibitisha) {
+      sendSms(
+        malipoThibitisha.simu,
+        `Malipo yako ya Tsh ${malipoThibitisha.kiasi.toLocaleString()} yamethibitishwa. Order ${orderId} imekamilika.`
+      )
+    }
+  }
+
+  const kataaMalipo: StoreCtx['kataaMalipo'] = (orderId, malipoId) => {
+    const order = orders.find((o) => o.id === orderId)
+    if (!order) return
+
+    const malipoMpya = order.malipo.map((m) =>
+      m.id === malipoId ? { ...m, hali: 'imekataliwa' as any } : m
+    )
+
+    persist(
+      'orders',
+      orders.map((o) => (o.id === orderId ? { ...o, malipo: malipoMpya } : o)),
+      setOrdersState
+    )
+    persist(
+      'malipo',
+      malipo.map((m) =>
+        m.id === malipoId ? { ...m, hali: 'imekataliwa' as any } : m
+      ),
+      setMalipoState
+    )
+
+    const malipoKataa = malipoMpya.find((m) => m.id === malipoId)
+    if (malipoKataa) {
+      sendSms(
+        malipoKataa.simu,
+        `Malipo yako ya Tsh ${malipoKataa.kiasi.toLocaleString()} yamekataliwa. Tafadhali wasiliana na duka.`
+      )
+    }
   }
 
   // ============================================================
@@ -405,7 +534,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       id: makeId('OPEX'),
       tarehe: new Date().toISOString().split('T')[0],
     }
-    persist('opex', [o, ...opex], setOpex)
+    persist('opex', [o, ...opex], setOpexState)
     return o
   }
 
@@ -414,7 +543,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   // ============================================================
   const rekodiZaka: StoreCtx['rekodiZaka'] = (data) => {
     const z: MalipoZaka = { ...data, id: makeId('ZAKA') }
-    persist('zakaMalipo', [z, ...zakaMalipo], setZakaMalipo)
+    persist('zakaMalipo', [z, ...zakaMalipo], setZakaMalipoState)
     return z
   }
 
@@ -428,7 +557,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       tarehe: new Date().toISOString().split('T')[0],
       hali: 'inasubiri',
     }
-    persist('maombi', [om, ...maombi], setMaombi)
+    persist('maombi', [om, ...maombi], setMaombiState)
     sendSms(
       '0716-789-012',
       `Ombi jipya ${om.id} la Tsh ${om.kiasi.toLocaleString()} kutoka ${om.aliyeomba}.`
@@ -450,7 +579,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
             }
           : m
       ),
-      setMaombi
+      setMaombiState
     )
     const om = maombi.find((m) => m.id === id)
     if (om)
@@ -474,7 +603,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
             }
           : m
       ),
-      setMaombi
+      setMaombiState
     )
     const om = maombi.find((m) => m.id === id)
     if (om)
@@ -496,7 +625,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       hali: 'inasubiri',
       thamani: data.wingi * (b?.beiUnunuzi ?? 0),
     }
-    persist('ripotiBidhaa', [r, ...ripotiBidhaa], setRipotiBidhaa)
+    persist('ripotiBidhaa', [r, ...ripotiBidhaa], setRipotiBidhaaState)
     return r
   }
 
@@ -506,13 +635,13 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     const bidhaaMpya = bidhaa.map((b) =>
       b.id === r.bidhaaId ? { ...b, stoki: Math.max(b.stoki - r.wingi, 0) } : b
     )
-    persist('bidhaa', bidhaaMpya, setBidhaa)
+    persist('bidhaa', bidhaaMpya, setBidhaaState)
     persist(
       'ripotiBidhaa',
       ripotiBidhaa.map((x) =>
         x.id === id ? { ...x, hali: 'imethibitishwa' } : x
       ),
-      setRipotiBidhaa
+      setRipotiBidhaaState
     )
   }
 
@@ -528,7 +657,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       hali: 'inasubiri',
       thamani: data.wingi * (b?.beiUnunuzi ?? 0),
     }
-    persist('marekebishoStoki', [m, ...marekebishoStoki], setMarekebishoStoki)
+    persist('marekebishoStoki', [m, ...marekebishoStoki], setMarekebishoStokiState)
     return m
   }
 
@@ -545,14 +674,14 @@ export function StoreProvider({ children }: { children: ReactNode }) {
           ? { ...b, stoki: Math.max(b.stoki - m.wingi, 0) }
           : b
       )
-      persist('bidhaa', bidhaaMpya, setBidhaa)
+      persist('bidhaa', bidhaaMpya, setBidhaaState)
     }
     persist(
       'marekebishoStoki',
       marekebishoStoki.map((x) =>
         x.id === id ? { ...x, hali: 'imethibitishwa' } : x
       ),
-      setMarekebishoStoki
+      setMarekebishoStokiState
     )
   }
 
@@ -572,7 +701,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       jumla,
       hali: 'inasubiri',
     }
-    persist('mishahara', [m, ...mishahara], setMishahara)
+    persist('mishahara', [m, ...mishahara], setMishaharaState)
     return m
   }
 
@@ -602,7 +731,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
             }
           : x
       ),
-      setMishahara
+      setMishaharaState
     )
     sendSms(
       acc.namba,
@@ -612,7 +741,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
 
   const ongezaAkaunti: StoreCtx['ongezaAkaunti'] = (data) => {
     const a: AkauntiMfanyakazi = { ...data, id: makeId('ACC') }
-    persist('akaunti', [...akaunti, a], setAkaunti)
+    persist('akaunti', [...akaunti, a], setAkauntiState)
     return a
   }
 
@@ -633,16 +762,14 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       jumlaBidhaa,
       jumlaThamani,
     }
-    persist('uingizaji', [u, ...uingizaji], setUingizaji)
+    persist('uingizaji', [u, ...uingizaji], setUingizajiState)
     return u
   }
 
-  // ✅ SAHIHI: sasa iko ndani ya Provider, si nje
   const pokeaUingizaji: StoreCtx['pokeaUingizaji'] = (id, aliyepokea) => {
     const u = uingizaji.find((x) => x.id === id)
     if (!u) return
 
-    // Ingiza bidhaa kwenye stock halisi
     const bidhaaMpya: Bidhaa[] = u.bidhaa.map((b) => ({
       id: makeId('b'),
       sku: b.sku,
@@ -659,7 +786,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       pichaUrl: b.pichaUrl,
     }))
 
-    persist('bidhaa', [...bidhaaMpya, ...bidhaa], setBidhaa)
+    persist('bidhaa', [...bidhaaMpya, ...bidhaa], setBidhaaState)
     persist(
       'uingizaji',
       uingizaji.map((x) =>
@@ -672,7 +799,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
             }
           : x
       ),
-      setUingizaji
+      setUingizajiState
     )
     sendSms(
       '0716-789-012',
@@ -681,18 +808,14 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   }
 
   // ============================================================
-  // DOCUMENTS (auto-generated kutoka data halisi)
+  // DOCUMENTS
   // ============================================================
-  const setDocumentsSafe: StoreCtx['setDocuments'] = (v) => {
-    persist('documents', v, setDocuments)
-  }
-
   const ongezaDocument: StoreCtx['ongezaDocument'] = (data) => {
     const doc: Document = {
       ...data,
       id: makeId('DOC'),
     }
-    persist('documents', [doc, ...documents], setDocuments)
+    persist('documents', [doc, ...documents], setDocumentsState)
     return doc
   }
 
@@ -700,7 +823,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     persist(
       'documents',
       documents.filter((d) => d.id !== id),
-      setDocuments
+      setDocumentsState
     )
   }
 
@@ -727,7 +850,6 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     return Math.max(jumlaOrder - jumlaMalipo, 0)
   }
 
-  // ✅ Pitisha mishahara kama parameter ya 3
   const faida = (dukaId?: string) =>
     computeFaida(mauzo, opex, mishahara, dukaId)
 
@@ -755,12 +877,35 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     notifications,
     documents,
     smsLog,
+
+    setMaduka,
+    setWafanyakazi,
+    setBidhaa,
+    setWateja,
+    setMauzo,
+    setOpex,
+    setOrders,
+    setMalipo,
+    setZakaMalipo,
+    setMaombi,
+    setRipotiBidhaa,
+    setMarekebishoStoki,
+    setMishahara,
+    setAkaunti,
+    setUingizaji,
+    setGrn,
+    setCarts,
+    setNotifications,
+    setDocuments,
+
     ongezaDuka,
     ongezaMtumiaji,
     ongezaBidhaa,
     ongezaMteja,
     createOrder,
     ongezaMalipo,
+    thibitishaMalipo,
+    kataaMalipo,
     ongezaOpex,
     rekodiZaka,
     ongezaOmbi,
@@ -775,7 +920,6 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     ongezaAkaunti,
     ongezaUingizaji,
     pokeaUingizaji,
-    setDocuments: setDocumentsSafe,
     ongezaDocument,
     futaDocument,
     sendSms,

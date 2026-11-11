@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import {
-  ShoppingCart, Plus, Minus, Trash2, X, Package, ArrowRight,
+  ShoppingCart, Plus, Minus, Trash2,  ArrowRight,
 } from 'lucide-react'
 import { useCart } from '../context/CartContext'
 import { iconForKundi } from '../utils/icons'

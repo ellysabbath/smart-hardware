@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react'
-import { Receipt, Search, ChevronRight, CheckCircle2, Clock } from 'lucide-react'
+import { Receipt, Search,  CheckCircle2, Clock } from 'lucide-react'
 import { useStore } from '../../store/StoreContext'
 import { formatTsh } from '../../utils/faida'
 

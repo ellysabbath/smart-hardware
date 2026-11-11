@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import {
-  FileText, Trash2, Plus, Minus, Smartphone, ArrowLeft, CheckCircle2, ShoppingBag,
+  FileText, Trash2, Plus, Minus, Smartphone, ArrowLeft, CheckCircle2, 
 } from 'lucide-react'
 import { useCart } from '../../context/CartContext'
 import { useStore } from '../../store/StoreContext'
