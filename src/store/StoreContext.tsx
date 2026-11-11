@@ -16,6 +16,7 @@ import type {
   GharamaOpex,
   Order,
   Malipo,
+  NjiaMalipo,
   MalipoZaka,
   OmbiMatumizi,
   RipotiBidhaa,
@@ -53,11 +54,9 @@ export function computeFaida(
   const jumlaCogs = fm.reduce((s, m) => s + m.cogs, 0)
   const faidaGhafi = jumlaMauzo - jumlaCogs
 
-  // OPEX = gharama za uendeshaji (bila mishahara ili kuepuka double count)
   const opexBilaMishahara = fo.filter((o) => o.aina !== 'mishahara')
   const jumlaOpex = opexBilaMishahara.reduce((s, o) => s + o.kiasi, 0)
 
-  // Mishahara
   const jumlaMishahara = fmish.reduce((s, m) => s + m.jumla, 0)
 
   const jumlaGharama = jumlaOpex + jumlaMishahara
@@ -107,7 +106,7 @@ interface StoreCtx {
   notifications: Notification[]
   documents: Document[]
 
-  // setters (kwa pages zinazohitaji)
+  // setters
   setMaduka: (v: Duka[]) => void
   setWafanyakazi: (v: Mtumiaji[]) => void
   setBidhaa: (v: Bidhaa[]) => void
@@ -128,7 +127,7 @@ interface StoreCtx {
   setNotifications: (v: Notification[]) => void
   setDocuments: (v: Document[]) => void
 
-  // mutations (write)
+  // mutations
   ongezaDuka: (data: Omit<Duka, 'id'>) => Duka
   ongezaMtumiaji: (data: Omit<Mtumiaji, 'id'>) => Mtumiaji
   ongezaBidhaa: (data: Omit<Bidhaa, 'id'>) => Bidhaa
@@ -143,7 +142,7 @@ interface StoreCtx {
 
   ongezaMalipo: (data: {
     orderId: string
-    njia: 'cash' | 'mpesa' | 'tigopesa' | 'benki'
+    njia: NjiaMalipo
     simu: string
     kumbukumbu: string
     kiasi: number
@@ -181,15 +180,12 @@ interface StoreCtx {
   ) => UingizajiVifaa
   pokeaUingizaji: (id: string, aliyepokea: string) => void
 
-  // documents (auto-generated kutoka data halisi)
   ongezaDocument: (data: Omit<Document, 'id'>) => Document
   futaDocument: (id: string) => void
 
-  // sms simulation
   smsLog: { id: string; to: string; message: string; time: string }[]
   sendSms: (to: string, message: string) => void
 
-  // convenience
   getBidhaa: (id: string) => Bidhaa | undefined
   getMteja: (id: string) => Mteja | undefined
   getDuka: (id: string) => Duka | undefined
@@ -247,7 +243,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   >([])
 
   // ============================================================
-  // PERSIST — inarudisha boolean
+  // PERSIST
   // ============================================================
   const persist = useCallback(
     (key: string, data: any, setter: (v: any) => void): boolean => {
@@ -262,7 +258,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   )
 
   // ============================================================
-  // SETTERS (kwa pages zinazohitaji kuweka moja kwa moja)
+  // SETTERS
   // ============================================================
   const setMaduka = (v: Duka[]) => persist('maduka', v, setMadukaState)
   const setWafanyakazi = (v: Mtumiaji[]) =>
@@ -419,12 +415,12 @@ export function StoreProvider({ children }: { children: ReactNode }) {
 
     const m: Malipo = {
       id: makeId('M'),
-      njia: data.njia as any,
+      njia: data.njia,
       simu: data.simu,
       kumbukumbu: data.kumbukumbu,
       kiasi: data.kiasi,
       tarehe: new Date().toISOString().split('T')[0],
-      hali: data.hali as any,
+      hali: data.hali,
     }
 
     const malipoYote = [...order.malipo, m]
@@ -460,7 +456,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     if (!order) return
 
     const malipoMpya = order.malipo.map((m) =>
-      m.id === malipoId ? { ...m, hali: 'imethibitishwa' as any } : m
+      m.id === malipoId ? { ...m, hali: 'imethibitishwa' as const } : m
     )
 
     const jumlaIliyolipwa = malipoMpya
@@ -481,7 +477,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     persist(
       'malipo',
       malipo.map((m) =>
-        m.id === malipoId ? { ...m, hali: 'imethibitishwa' as any } : m
+        m.id === malipoId ? { ...m, hali: 'imethibitishwa' as const } : m
       ),
       setMalipoState
     )
@@ -500,7 +496,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     if (!order) return
 
     const malipoMpya = order.malipo.map((m) =>
-      m.id === malipoId ? { ...m, hali: 'imekataliwa' as any } : m
+      m.id === malipoId ? { ...m, hali: 'imekataliwa' as const } : m
     )
 
     persist(
@@ -511,7 +507,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     persist(
       'malipo',
       malipo.map((m) =>
-        m.id === malipoId ? { ...m, hali: 'imekataliwa' as any } : m
+        m.id === malipoId ? { ...m, hali: 'imekataliwa' as const } : m
       ),
       setMalipoState
     )
@@ -665,9 +661,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     const m = marekebishoStoki.find((x) => x.id === id)
     if (!m) return
     if (
-      ['uharibifu', 'expiry', 'upotevu', 'kurudisha_msambazaji'].includes(
-        m.aina
-      )
+      ['uharibifu', 'expiry', 'upotevu', 'kurudisha_msambazaji'].includes(m.aina)
     ) {
       const bidhaaMpya = bidhaa.map((b) =>
         b.id === m.bidhaaId
