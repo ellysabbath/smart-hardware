@@ -71,7 +71,7 @@ export default function App() {
         {/* ================= MUUZAJI ================= */}
         <Route path="/muuzaji" element={<Layout role="muuzaji" />}>
           <Route index element={<MuuzajiPOS />} />
-          <Route path="ripoti-bidhaa" element={<MuuzajiRipotiBidhaa />} />
+          <Route path="ripoti-bidhaa" element={<MuuzajiStoreManage />} />
           <Route path="risiti" element={<MuuzajiRisiti />} />
           <Route path="pokea" element={<MuuzajiPokeaBidhaa />} />
           <Route path="wateja" element={<MuuzajiWateja />} />
@@ -80,7 +80,7 @@ export default function App() {
           <Route path="carts" element={<MuuzajiCarts />} />
           <Route path="ripoti" element={<MuuzajiRipoti />} />
           <Route path="matumizi" element={<MuuzajiMatumizi />} />
-          <Route path="store-manage" element={<MuuzajiStoreManage />} />
+          <Route path="store-manage" element={<MuuzajiRipotiBidhaa />} />
           {/* Muuzaji athibitishe maingizo ya vifaa */}
           <Route path="uingiza" element={<MuuzajiPokeaBidhaa />} />
           {/* Notifications za Muuzaji */}

@@ -21,8 +21,9 @@ import { DocumentProvider } from './context/DocumentContext'
 import { MshaharaProvider } from './context/MshaharaContext'
 
 createRoot(document.getElementById('root')!).render(
-  <StrictMode>
-    <StoreProvider>
+  // ✅ StoreProvider NJE ya StrictMode — inasimamia localStorage
+  <StoreProvider>
+    <StrictMode>
       <CustomerProvider>
         <CartProvider>
           <OrderProvider>
@@ -56,6 +57,6 @@ createRoot(document.getElementById('root')!).render(
           </OrderProvider>
         </CartProvider>
       </CustomerProvider>
-    </StoreProvider>
-  </StrictMode>
+    </StrictMode>
+  </StoreProvider>
 )

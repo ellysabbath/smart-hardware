@@ -133,7 +133,7 @@ function Fomu({ onClose, onSubmit, bidhaa }: { onClose: () => void; onSubmit: an
         </div>
         <form onSubmit={submit} className="p-4 space-y-3">
           <select value={bidhaaId} onChange={(e) => setBidhaaId(e.target.value)} className="w-full px-3 py-2.5 rounded-lg border border-slate-200 outline-none text-sm">
-            <option value="">— Chagua bidhaa —</option>
+            <option value="">-- Chagua bidhaa --</option>
             {bidhaa.map((x) => <option key={x.id} value={x.id}>{x.jina} ({x.stoki} {x.uom})</option>)}
           </select>
           <div className="grid grid-cols-2 gap-2">

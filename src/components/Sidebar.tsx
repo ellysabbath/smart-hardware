@@ -14,8 +14,8 @@ const navByRole: Record<string, { to: string; label: string; icon: React.Element
     { to: '/muuzaji/risiti', label: 'Risiti za Leo', icon: Receipt },
     { to: '/muuzaji/pokea', label: 'Pokea Bidhaa', icon: Truck },
     { to: '/muuzaji/wateja', label: 'Wateja', icon: UserPlus },
-    { to: '/muuzaji/store-manage', label: 'ripoti za stoo', icon: UserPlus },
-    { to: '/muuzaji/ripoti-bidhaa', label: 'hali ya bidhaa', icon: HouseCogIcon },
+    { to: '/muuzaji/ripoti-bidhaa', label: 'ripoti za stoo', icon: UserPlus },
+    { to: '/muuzaji/store-manage', label: 'store', icon: HouseCogIcon },
     { to: '/muuzaji/mshahara', label: 'Mshahara Wangu', icon: CircleDollarSign },
     { to: '/muuzaji/carts', label: 'Carts Zinazosubiri', icon: Bell },
     { to: '/muuzaji/matumizi', label: 'Maombi ya Matumizi', icon: Wallet }, // MPYA

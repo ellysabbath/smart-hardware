@@ -71,7 +71,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
     const result: CartDetailedLine[] = []
     for (const l of lines) {
       const b = bidhaa.find((x) => x.id === l.id)
-      if (!b) continue   // bidhaa imefutwa — iondolewe
+      if (!b) continue
       result.push({
         id: b.id,
         jina: b.jina,

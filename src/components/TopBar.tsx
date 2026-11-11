@@ -65,12 +65,11 @@ export default function TopBar({ role, onMenuClick }: TopBarProps) {
   const [searchOpen, setSearchOpen] = useState(false)
 
   const [notifOpen, setNotifOpen] = useState(false)
-
   const [cartOpen, setCartOpen] = useState(false)
+  const [profileOpen, setProfileOpen] = useState(false)
+
   const cart = useCart()
   const showCart = role === 'mteja' || role === 'muuzaji'
-
-  const [profileOpen, setProfileOpen] = useState(false)
 
   const {
     notifications: notifList,
@@ -135,9 +134,6 @@ export default function TopBar({ role, onMenuClick }: TopBarProps) {
     setCartOpen(false)
   }
 
-  // ============================================================
-  // Notification click - navigate
-  // ============================================================
   const handleNotifClick = (n: typeof notifList[0]) => {
     markAsRead(n.id)
     setNotifOpen(false)
@@ -253,12 +249,12 @@ export default function TopBar({ role, onMenuClick }: TopBarProps) {
 
         {/* ===== RIGHT ACTIONS ===== */}
         <div className="flex items-center gap-0.5 md:gap-1 shrink-0">
-          {/* CART */}
+          {/* CART — mteja + muuzaji */}
           {showCart && (
             <div ref={cartRef} className="relative">
               <button
                 onClick={toggleCart}
-                className="relative flex items-center gap-2 px-2 md:px-2.5 py-2 rounded-lg hover:bg-slate-100"
+                className="relative flex items-center gap-2 px-2 md:px-2.5 py-2 rounded-lg hover:bg-slate-100 transition"
                 aria-label="Cart"
               >
                 <div className="relative">
@@ -278,39 +274,66 @@ export default function TopBar({ role, onMenuClick }: TopBarProps) {
 
               {cartOpen && (
                 <div className="absolute right-0 top-full mt-2 w-[calc(100vw-1.5rem)] sm:w-96 max-w-sm bg-white rounded-xl border border-slate-200 shadow-xl overflow-hidden">
+                  {/* Header */}
                   <div className="p-3 border-b border-slate-100 flex justify-between items-center">
                     <div>
-                      <div className="font-semibold text-sm">Cart Yako</div>
-                      <div className="text-xs text-slate-500">
-                        {cart.count} bidhaa - Tsh {cart.total.toLocaleString()}
+                      <div className="font-semibold text-sm flex items-center gap-1.5">
+                        <ShoppingCart size={14} className="text-brand-600" />
+                        Cart Yako
+                        {cart.count > 0 && (
+                          <span className="text-[10px] font-bold bg-brand-600 text-white px-1.5 py-0.5 rounded-full">
+                            {cart.count}
+                          </span>
+                        )}
+                      </div>
+                      <div className="text-xs text-slate-500 mt-0.5">
+                        Tsh {cart.total.toLocaleString()}
                       </div>
                     </div>
                     {cart.detailed.length > 0 && (
                       <button
                         onClick={cart.clear}
-                        className="text-xs text-red-600 hover:underline"
+                        className="text-xs text-red-600 hover:underline font-medium"
                       >
                         Ondoa zote
                       </button>
                     )}
                   </div>
 
+                  {/* Items */}
                   <div className="max-h-80 overflow-auto divide-y divide-slate-100">
                     {cart.detailed.length === 0 ? (
                       <div className="p-8 text-center text-sm text-slate-500">
-                        <ShoppingCart size={32} className="mx-auto mb-2 text-slate-300" />
-                        Cart yako ni tupu
+                        <ShoppingCart
+                          size={32}
+                          className="mx-auto mb-2 text-slate-300"
+                        />
+                        <div className="font-medium">Cart yako ni tupu</div>
+                        <div className="text-xs text-slate-400 mt-1">
+                          Ongeza bidhaa kuanza
+                        </div>
                       </div>
                     ) : (
                       cart.detailed.map((l) => {
                         const Icon = iconForKundi(l.iconKey)
                         return (
                           <div key={l.id} className="p-3 flex gap-3">
-                            <div className="w-10 h-10 rounded-lg bg-slate-100 text-slate-600 grid place-items-center shrink-0">
-                              <Icon size={18} />
+                            {/* ✅ Picha au icon */}
+                            <div className="w-12 h-12 rounded-lg bg-slate-50 border border-slate-200 overflow-hidden grid place-items-center shrink-0 text-slate-600">
+                              {l.pichaUrl ? (
+                                <img
+                                  src={l.pichaUrl}
+                                  alt={l.jina}
+                                  className="w-full h-full object-cover"
+                                />
+                              ) : (
+                                <Icon size={18} />
+                              )}
                             </div>
                             <div className="flex-1 min-w-0">
-                              <div className="text-sm font-medium truncate">{l.jina}</div>
+                              <div className="text-sm font-medium truncate">
+                                {l.jina}
+                              </div>
                               <div className="text-xs text-slate-500">
                                 Tsh {l.bei.toLocaleString()} / {l.uom}
                               </div>
@@ -322,12 +345,12 @@ export default function TopBar({ role, onMenuClick }: TopBarProps) {
                                 >
                                   <Minus size={12} />
                                 </button>
-                                <span className="text-sm font-semibold w-6 text-center">
+                                <span className="text-sm font-bold w-6 text-center">
                                   {l.wingi}
                                 </span>
                                 <button
                                   onClick={() => cart.inc(l.id)}
-                                  className="w-6 h-6 rounded-md bg-slate-100 hover:bg-slate-200 grid place-items-center"
+                                  className="w-6 h-6 rounded-md bg-brand-600 text-white hover:bg-brand-700 grid place-items-center"
                                   aria-label="Ongeza"
                                 >
                                   <Plus size={12} />
@@ -341,7 +364,7 @@ export default function TopBar({ role, onMenuClick }: TopBarProps) {
                                 </button>
                               </div>
                             </div>
-                            <div className="text-sm font-semibold self-start whitespace-nowrap">
+                            <div className="text-sm font-bold self-start whitespace-nowrap">
                               Tsh {l.jumla.toLocaleString()}
                             </div>
                           </div>
@@ -350,24 +373,28 @@ export default function TopBar({ role, onMenuClick }: TopBarProps) {
                     )}
                   </div>
 
+                  {/* Footer */}
                   <div className="p-3 border-t border-slate-100 space-y-2">
                     <div className="flex justify-between text-sm">
-                      <span>Jumla</span>
-                      <span className="font-bold">Tsh {cart.total.toLocaleString()}</span>
+                      <span className="font-medium">Jumla</span>
+                      <span className="font-bold text-base">
+                        Tsh {cart.total.toLocaleString()}
+                      </span>
                     </div>
                     <div className="grid grid-cols-2 gap-2">
                       <button
                         onClick={goToBidhaa}
-                        className="px-3 py-2 rounded-lg bg-slate-100 text-sm hover:bg-slate-200"
+                        className="px-3 py-2 rounded-lg bg-slate-100 text-sm hover:bg-slate-200 font-medium"
                       >
-                        Endelea Kununua
+                        Endelea
                       </button>
                       <button
                         onClick={goToQuotation}
                         disabled={cart.detailed.length === 0}
-                        className="px-3 py-2 rounded-lg bg-brand-600 text-white text-sm font-semibold hover:bg-brand-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="px-3 py-2 rounded-lg bg-brand-600 text-white text-sm font-semibold hover:bg-brand-700 disabled:opacity-50 disabled:cursor-not-allowed inline-flex items-center justify-center gap-1"
                       >
-                        Nenda Quotation
+                        Quotation
+                        <ArrowRight size={14} />
                       </button>
                     </div>
                   </div>
@@ -428,8 +455,12 @@ export default function TopBar({ role, onMenuClick }: TopBarProps) {
                                 <span className="w-1.5 h-1.5 rounded-full bg-brand-600 shrink-0" />
                               )}
                             </div>
-                            <div className="text-xs text-slate-500 mt-0.5">{n.message}</div>
-                            <div className="text-[10px] text-slate-400 mt-1">{n.time}</div>
+                            <div className="text-xs text-slate-500 mt-0.5">
+                              {n.message}
+                            </div>
+                            <div className="text-[10px] text-slate-400 mt-1">
+                              {n.time}
+                            </div>
                           </div>
                           <ArrowRight size={14} className="text-slate-300 shrink-0 mt-1" />
                         </div>
