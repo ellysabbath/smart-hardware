@@ -2,6 +2,7 @@ import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import './index.css'
 import App from './App'
+import { StoreProvider } from './store/StoreContext'
 import { CartProvider } from './context/CartContext'
 import { OrderProvider } from './context/OrderContext'
 import { CustomerProvider } from './context/CustomerContext'
@@ -21,38 +22,40 @@ import { MshaharaProvider } from './context/MshaharaContext'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <CustomerProvider>
-      <CartProvider>
-        <OrderProvider>
-          <GRNProvider>
-            <PendingCartProvider>
-              <OmbiProvider>
+    <StoreProvider>
+      <CustomerProvider>
+        <CartProvider>
+          <OrderProvider>
+            <GRNProvider>
+              <PendingCartProvider>
+                <OmbiProvider>
                   <DukaProvider>
-                     <UingizajiProvider>
+                    <UingizajiProvider>
                       <MauzoProvider>
-                       <ZakaProvider>
-                        <NotificationProvider>
-                          <OrderAdminProvider>
+                        <ZakaProvider>
+                          <NotificationProvider>
+                            <OrderAdminProvider>
                               <RipotiBidhaaProvider>
                                 <StokiProvider>
-                                       <DocumentProvider>
-                                           <MshaharaProvider>
-                                               <App />
-                                             </MshaharaProvider>
-                                        </DocumentProvider>
+                                  <DocumentProvider>
+                                    <MshaharaProvider>
+                                      <App />
+                                    </MshaharaProvider>
+                                  </DocumentProvider>
                                 </StokiProvider>
                               </RipotiBidhaaProvider>
-                          </OrderAdminProvider>
-                        </NotificationProvider>
-                      </ZakaProvider>
-                    </MauzoProvider>
-                  </UingizajiProvider>
-                </DukaProvider>
-              </OmbiProvider>
-            </PendingCartProvider>
-          </GRNProvider>
-        </OrderProvider>
-      </CartProvider>
-    </CustomerProvider>
+                            </OrderAdminProvider>
+                          </NotificationProvider>
+                        </ZakaProvider>
+                      </MauzoProvider>
+                    </UingizajiProvider>
+                  </DukaProvider>
+                </OmbiProvider>
+              </PendingCartProvider>
+            </GRNProvider>
+          </OrderProvider>
+        </CartProvider>
+      </CustomerProvider>
+    </StoreProvider>
   </StrictMode>
 )

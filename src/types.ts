@@ -1,4 +1,3 @@
-
 // ============================================================
 // SMART HARDWARE - Central Types
 // ============================================================
@@ -101,12 +100,12 @@ export interface Bidhaa {
   location: string
   expiry?: string
   iconKey?: KundiBidhaa
+  pichaUrl?: string   // ← ongeza hii
 }
 
 export interface BidhaaKamili extends Bidhaa {
   mtengenezaji?: string
   uzito?: string
-  pichaUrl?: string
   sikuZilizobaki?: number
 }
 
@@ -115,6 +114,7 @@ export interface Duka {
   id: string
   jina: string
   mahali: string
+  stokiJumla?: number
   mauzoLeo: number
   faidaLeo: number
   wafanyakazi: number
@@ -325,6 +325,7 @@ export type AinaUingizaji = 'moja' | 'bulk'
 
 export type HaliUingizaji = 'inasubiri' | 'imepokelewa' | 'imekataliwa'
 
+// ✅ BidhaaMpya — mara MOJA tu, yenye pichaUrl
 export interface BidhaaMpya {
   jina: string
   sku: string
@@ -336,6 +337,7 @@ export interface BidhaaMpya {
   location: string
   expiry?: string
   iconKey: KundiBidhaa
+  pichaUrl?: string
 }
 
 export interface UingizajiVifaa {
@@ -400,6 +402,8 @@ export interface FaidaKamili {
   cogs: number
   faidaGhafi: number
   jumlaOpex: number
+  jumlaMishahara: number   // ← ongeza hii
+  jumlaGharama: number     // ← ongeza hii
   faidaSafi: number
   zaka: number
   sadaka: number
@@ -549,6 +553,14 @@ export type AinaDocument =
 
 export type HaliDocument = 'tayari' | 'inasindika' | 'imeshindwa'
 
+// Snapshot ya data iliyotumika kutengeneza document
+export interface DocumentSnapshot {
+  kichwa: string[]
+  safu: (string | number)[][]
+  jumla?: Record<string, string | number>
+  metadata?: Record<string, string | number>
+}
+
 export interface Document {
   id: string
   jina: string
@@ -562,10 +574,11 @@ export interface Document {
   hali: HaliDocument
   aliyezalisha: string
   kipindi: string
+  snapshot: DocumentSnapshot   // ✅ muhimu
 }
 
 // ============================================================
-// MISHAHARA (types zote hapa - mara moja tu)
+// MISHAHARA
 // ============================================================
 
 export type AinaAkaunti = 'bank' | 'mobile'
@@ -587,7 +600,6 @@ export type HaliMshahara =
   | 'imeshindwa'
   | 'imekataliwa'
 
-// Akaunti ya kampuni (mmiliki anaiweka, sio mfanyakazi)
 export interface AkauntiKampuni {
   id: string
   aina: AinaAkaunti
@@ -597,7 +609,6 @@ export interface AkauntiKampuni {
   ndiyoMsingi: boolean
 }
 
-// Akaunti ya mfanyakazi (kila mfanyakazi anaweka yake)
 export interface AkauntiMfanyakazi {
   id: string
   mtumiajiId: string

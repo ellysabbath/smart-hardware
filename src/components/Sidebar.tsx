@@ -34,7 +34,7 @@ mmiliki: [
    { to: '/mmiliki/wateja', label: 'Wateja', icon: UserPlus },
     { to: '/mmiliki/orders', label: 'Order Zote', icon: ShoppingBag }, 
     { to: '/mmiliki/matumizi', label: 'Maombi ya Matumizi', icon: Wallet },
-      { to: '/mmiliki/store', label: 'store', icon: HouseCog },
+      { to: '/mmiliki/store-manage', label: 'store', icon: HouseCog },
     { to: '/mmiliki/notifications', label: 'notifications', icon: BellCheckIcon },
      { to: '/', label: 'toka', icon: LogOutIcon }, 
    

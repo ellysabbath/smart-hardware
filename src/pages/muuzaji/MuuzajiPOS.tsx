@@ -1,21 +1,29 @@
-import { useState } from 'react'
-import { bidhaa } from '../../data/demo'
+import { useState, useMemo } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { Search, Plus, Minus, ShoppingCart, Check } from 'lucide-react'
+import { useStore } from '../../store/StoreContext'
 
 export default function MuuzajiPOS() {
-  const [cart, setCart] = useState<{ id: string; wingi: number }[]>([])
+  const navigate = useNavigate()
+  const { bidhaa, wateja, createOrder, ongezaMalipo, sendSms } = useStore()
   const [q, setQ] = useState('')
+  const [cart, setCart] = useState<{ id: string; wingi: number }[]>([])
+  const [mtejaId, setMtejaId] = useState(wateja[0]?.id ?? '')
+  const [njiaMalipo, setNjiaMalipo] = useState<'cash' | 'mpesa' | 'deni'>('cash')
+  const [toast, setToast] = useState<string | null>(null)
 
-  const filtered = bidhaa.filter((b) =>
-    b.jina.toLowerCase().includes(q.toLowerCase()) || b.sku.toLowerCase().includes(q.toLowerCase())
+  const filtered = useMemo(
+    () => bidhaa.filter((b) =>
+      b.jina.toLowerCase().includes(q.toLowerCase()) ||
+      b.sku.toLowerCase().includes(q.toLowerCase())
+    ),
+    [bidhaa, q]
   )
 
-  const add = (id: string) => {
-    setCart((c) => {
-      const ex = c.find((x) => x.id === id)
-      if (ex) return c.map((x) => (x.id === id ? { ...x, wingi: x.wingi + 1 } : x))
-      return [...c, { id, wingi: 1 }]
-    })
-  }
+  const add = (id: string) => setCart((c) => {
+    const ex = c.find((x) => x.id === id)
+    return ex ? c.map((x) => x.id === id ? { ...x, wingi: x.wingi + 1 } : x) : [...c, { id, wingi: 1 }]
+  })
 
   const lines = cart.map((c) => {
     const b = bidhaa.find((x) => x.id === c.id)!
@@ -23,68 +31,87 @@ export default function MuuzajiPOS() {
   })
   const total = lines.reduce((s, l) => s + l.jumla, 0)
 
+  const kamilisha = () => {
+    if (cart.length === 0 || !mtejaId) return
+    const order = createOrder({
+      mtejaId, dukaId: 'd1', muuzaji: 'Juma Hassan', items: cart,
+    })
+    if (njiaMalipo !== 'deni') {
+      ongezaMalipo({
+        orderId: order.id,
+        njia: njiaMalipo === 'cash' ? 'cash' : 'mpesa',
+        simu: order.simu, kumbukumbu: 'CASH', kiasi: total,
+        hali: 'imethibitishwa',
+      })
+    }
+    setToast(`Order ${order.id} imekamilika${njiaMalipo === 'deni' ? ' (Deni)' : ''}. SMS imetumwa kwa ${order.simu}`)
+    setCart([])
+    setTimeout(() => setToast(null), 4000)
+  }
+
   return (
-    <div className="grid lg:grid-cols-3 gap-6 h-[calc(100vh-4rem)]">
+    <div className="grid lg:grid-cols-3 gap-6">
       <div className="lg:col-span-2 space-y-4">
-        <div>
-          <h1 className="text-2xl font-bold">POS - Duka la Kwembe</h1>
-          <p className="text-slate-500 text-sm">Muuzaji: Juma Hassan</p>
-        </div>
+        <h1 className="text-2xl font-bold">POS</h1>
         <input
-          value={q}
-          onChange={(e) => setQ(e.target.value)}
-          placeholder="Scan barcode au tafuta bidhaa..."
-          className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-brand-500 outline-none"
+          value={q} onChange={(e) => setQ(e.target.value)}
+          placeholder="Tafuta bidhaa..."
+          className="w-full px-4 py-3 rounded-xl border outline-none"
         />
-        <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-3 overflow-auto max-h-[calc(100vh-14rem)]">
+        <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-3 max-h-[60vh] overflow-auto">
           {filtered.map((b) => (
-            <button
-              key={b.id}
-              onClick={() => add(b.id)}
-              className="bg-white rounded-xl border border-slate-200 p-4 text-left hover:border-brand-500 hover:shadow-sm transition"
-            >
-              <div className="text-3xl">{b.picha}</div>
-              <div className="font-semibold text-sm mt-1">{b.jina}</div>
+            <button key={b.id} onClick={() => add(b.id)}
+              className="bg-white rounded-xl border p-4 text-left hover:border-brand-500">
+              <div className="font-semibold text-sm">{b.jina}</div>
               <div className="text-xs text-slate-500">{b.sku}</div>
               <div className="text-brand-700 font-bold mt-2">Tsh {b.beiMauzo.toLocaleString()}</div>
-              <div className="text-xs text-slate-500">Stoki: {b.stoki}</div>
+              <div className="text-xs">Stoki: {b.stoki}</div>
             </button>
           ))}
         </div>
       </div>
-      <div className="bg-white rounded-xl border border-slate-200 p-5 flex flex-col">
+
+      <div className="bg-white rounded-xl border p-5 flex flex-col">
         <h2 className="font-semibold mb-3">Cart ({lines.length})</h2>
-        <div className="flex-1 overflow-auto divide-y divide-slate-100">
-          {lines.length === 0 && <div className="text-sm text-slate-400 text-center py-10">Hakuna bidhaa bado</div>}
+        <select value={mtejaId} onChange={(e) => setMtejaId(e.target.value)}
+          className="mb-3 px-3 py-2 rounded-lg border text-sm">
+          {wateja.map((w) => <option key={w.id} value={w.id}>{w.jina}</option>)}
+        </select>
+        <div className="flex-1 overflow-auto divide-y">
           {lines.map((l) => (
-            <div key={l.id} className="py-3">
-              <div className="flex justify-between">
-                <div className="text-sm font-medium">{l.jina}</div>
-                <div className="text-sm font-semibold">Tsh {l.jumla.toLocaleString()}</div>
+            <div key={l.id} className="py-2 flex justify-between text-sm">
+              <div>
+                <div>{l.jina}</div>
+                <div className="text-xs text-slate-500">{l.wingi} × {l.beiMauzo.toLocaleString()}</div>
               </div>
-              <div className="flex justify-between text-xs text-slate-500 mt-1">
-                <span>{l.wingi} {l.uom} × {l.beiMauzo.toLocaleString()}</span>
-                <button onClick={() => setCart((c) => c.filter((x) => x.id !== l.id))} className="text-red-500">Ondoa</button>
-              </div>
+              <div className="font-semibold">Tsh {l.jumla.toLocaleString()}</div>
             </div>
           ))}
         </div>
         <div className="border-t pt-3 mt-3 space-y-2">
           <div className="flex justify-between text-sm">
-            <span>Jumla</span>
-            <span className="font-bold text-lg">Tsh {total.toLocaleString()}</span>
+            <span>Jumla</span><span className="font-bold text-lg">Tsh {total.toLocaleString()}</span>
           </div>
-          <div className="grid grid-cols-2 gap-2">
-            <button className="px-3 py-2 bg-slate-100 rounded-lg text-sm hover:bg-slate-200">Cash</button>
-            <button className="px-3 py-2 bg-slate-100 rounded-lg text-sm hover:bg-slate-200">M-Pesa</button>
-            <button className="px-3 py-2 bg-slate-100 rounded-lg text-sm hover:bg-slate-200">Tigo Pesa</button>
-            <button className="px-3 py-2 bg-slate-100 rounded-lg text-sm hover:bg-slate-200">Deni</button>
+          <div className="grid grid-cols-3 gap-2">
+            {(['cash', 'mpesa', 'deni'] as const).map((n) => (
+              <button key={n} onClick={() => setNjiaMalipo(n)}
+                className={`px-2 py-2 rounded-lg text-xs ${njiaMalipo === n ? 'bg-brand-600 text-white' : 'bg-slate-100'}`}>
+                {n.toUpperCase()}
+              </button>
+            ))}
           </div>
-          <button className="w-full py-3 bg-emerald-600 text-white rounded-lg font-semibold hover:bg-emerald-700">
-            ✓ Kamilisha Mauzo
+          <button onClick={kamilisha}
+            className="w-full py-3 bg-emerald-600 text-white rounded-lg font-semibold hover:bg-emerald-700">
+            <Check size={16} className="inline mr-1" /> Kamilisha
           </button>
         </div>
       </div>
+
+      {toast && (
+        <div className="fixed bottom-4 right-4 z-50 bg-slate-900 text-white px-4 py-3 rounded-lg text-sm max-w-xs">
+          {toast}
+        </div>
+      )}
     </div>
   )
 }

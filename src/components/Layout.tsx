@@ -3,6 +3,7 @@ import { Outlet } from 'react-router-dom'
 import Sidebar from './Sidebar'
 import TopBar from './TopBar'
 import Footer from './Footer'
+import SmsToast from './SmsToast'
 
 export default function Layout({ role }: { role: 'mteja' | 'muuzaji' | 'mmiliki' }) {
   const [sidebarOpen, setSidebarOpen] = useState(false)
@@ -20,6 +21,9 @@ export default function Layout({ role }: { role: 'mteja' | 'muuzaji' | 'mmiliki'
 
         <Footer />
       </div>
+
+      {/* SMS Toast — inaonekana juu ya kila kitu */}
+      <SmsToast />
     </div>
   )
 }

@@ -1,29 +1,19 @@
 import {
-  Package,
-  Box,
-  Layers,
-  Grid3x3,
-  Hammer,
-  PaintBucket,
-  Wrench,
-  Zap,
-  Home,
+  Package, Layers, Home, PaintBucket, Wrench, Zap, Droplet, Box,
 } from 'lucide-react'
-import type { LucideIcon } from 'lucide-react'
 import type { KundiBidhaa } from '../types'
 
-const ICONS: Record<KundiBidhaa, LucideIcon> = {
-  Saruji: Box,
-  Nondo: Grid3x3,
+const ICONS: Record<KundiBidhaa, React.ElementType> = {
+  Saruji: Package,
+  Nondo: Layers,
   Mabati: Home,
   Mbao: Layers,
   Rangi: PaintBucket,
-  Bomba: Wrench,
+  Bomba: Droplet,
   Umeme: Zap,
-  Zana: Hammer,
+  Zana: Wrench,
 }
 
-export function iconForKundi(kundi?: KundiBidhaa): LucideIcon {
-  if (!kundi) return Package
-  return ICONS[kundi] ?? Package
+export function iconForKundi(kundi?: KundiBidhaa): React.ElementType {
+  return kundi ? ICONS[kundi] ?? Box : Box
 }

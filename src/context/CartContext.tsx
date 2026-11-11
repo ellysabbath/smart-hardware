@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, useMemo, type ReactNode } from 'react'
-import { bidhaa } from '../data/demo'
+import { useStore } from '../store/StoreContext'
 import type { KundiBidhaa } from '../types'
 
 export interface CartLine {
@@ -17,6 +17,7 @@ export interface CartDetailedLine {
   jumla: number
   stoki: number
   iconKey?: KundiBidhaa
+  pichaUrl?: string
 }
 
 interface CartCtx {
@@ -35,6 +36,7 @@ interface CartCtx {
 const CartContext = createContext<CartCtx | null>(null)
 
 export function CartProvider({ children }: { children: ReactNode }) {
+  const { bidhaa } = useStore()
   const [lines, setLines] = useState<CartLine[]>([])
 
   const add = (id: string, wingi = 1) => {
@@ -64,11 +66,12 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
   const clear = () => setLines([])
 
+  // ✅ Sasisha detailed kutoka bidhaa halisi (useStore)
   const detailed = useMemo<CartDetailedLine[]>(() => {
     const result: CartDetailedLine[] = []
     for (const l of lines) {
       const b = bidhaa.find((x) => x.id === l.id)
-      if (!b) continue
+      if (!b) continue   // bidhaa imefutwa — iondolewe
       result.push({
         id: b.id,
         jina: b.jina,
@@ -79,15 +82,19 @@ export function CartProvider({ children }: { children: ReactNode }) {
         jumla: b.beiMauzo * l.wingi,
         stoki: b.stoki,
         iconKey: b.iconKey,
+        pichaUrl: b.pichaUrl,
       })
     }
     return result
-  }, [lines])
+  }, [lines, bidhaa])
 
   const count = useMemo(() => detailed.reduce((s, l) => s + l.wingi, 0), [detailed])
   const total = useMemo(() => detailed.reduce((s, l) => s + l.jumla, 0), [detailed])
 
-  const value: CartCtx = { lines, detailed, count, total, add, remove, setWingi, inc, dec, clear }
+  const value: CartCtx = {
+    lines, detailed, count, total,
+    add, remove, setWingi, inc, dec, clear,
+  }
 
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>
 }

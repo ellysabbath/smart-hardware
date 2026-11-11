@@ -15647,6 +15647,3088 @@ export const AINA_AKAUNTI: { key: AinaAkaunti; label: string }[] = [
   { key: 'bank', label: 'Benki' },
 ]
 
+import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import Layout from './components/Layout'
+import Landing from './pages/Landing'
+
+// ---------- MTEJA ----------
+import MtejaHome from './pages/mteja/MtejaHome'
+import MtejaBidhaa from './pages/mteja/MtejaBidhaa'
+import MtejaQuotation from './pages/mteja/MtejaQuotation'
+import MtejaOrders from './pages/mteja/MtejaOrders'
+import MtejaOrder from './pages/mteja/MtejaOrder'
+import MtejaDeni from './pages/mteja/MtejaDeni'
+
+// ---------- MUUZAJI ----------
+import MuuzajiPOS from './pages/muuzaji/MuuzajiPOS'
+import MuuzajiRisiti from './pages/muuzaji/MuuzajiRisiti'
+import MuuzajiPokeaBidhaa from './pages/muuzaji/MuuzajiPokeaBidhaa'
+import MuuzajiWateja from './pages/muuzaji/MuuzajiWateja'
+import MuuzajiCarts from './pages/muuzaji/MuuzajiCarts'
+import MuuzajiRipoti from './pages/muuzaji/MuuzajiRipoti'
+import MuuzajiMatumizi from './pages/muuzaji/MuuzajiMatumizi'
+
+// ---------- MMILIKI ----------
+import MmilikiDashboard from './pages/mmiliki/MmilikiDashboard'
+import MmilikiMaduka from './pages/mmiliki/MmilikiMaduka'
+import MmilikiWafanyakazi from './pages/mmiliki/MmilikiWafanyakazi'
+import MmilikiFaida from './pages/mmiliki/MmilikiFaida'
+import MmilikiZaka from './pages/mmiliki/MmilikiZaka'
+
+// ---------- SHARED (Mmiliki + Admin) ----------
+import UingizaVifaa from './pages/mmiliki/UingizaVifaa'
+import MmilikiMauzo from './pages/mmiliki/MmilikiMauzo'
+import Notifications from './pages/shared/Notifications'
+import NotificationDetail from './pages/shared/NotificationDetail'
+import MmilikiOrders from './pages/mmiliki/MmilikiOrders'
+import MmilikiWateja from './pages/mmiliki/MmilikiWateja'
+import MmilikiMatumizi from './pages/mmiliki/MmilikiMatumizi'
+import MuuzajiRipotiBidhaa from './pages/muuzaji/MuuzajiRipotiBidhaa'
+import MmilikiRipotiBidhaa from './pages/mmiliki/MmilikiRipotiBidhaa'
+import MmilikiStoreManage from './pages/mmiliki/MmilikiStoreManage'
+import MuuzajiStoreManage from './pages/muuzaji/MuuzajiStoreManage'
+import MmilikiMishahara from './pages/mmiliki/MmilikiMishahara'
+import MuuzajiMshahara from './pages/muuzaji/MuuzajiMshahara'
+import Login from './pages/auth/Login'
+import ForgotPassword from './pages/auth/ForgotPassword'
+import ResetPassword from './pages/auth/ResetPassword'
+import ResetComplete from './pages/auth/ResetComplete'
+
+export default function App() {
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Landing />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+       <Route path="/reset-password" element={<ResetPassword />} />
+       <Route path="/reset-complete" element={<ResetComplete />} />
+
+        {/* ================= MTEJA ================= */}
+        <Route path="/mteja" element={<Layout role="mteja" />}>
+          <Route index element={<MtejaHome />} />
+          <Route path="bidhaa" element={<MtejaBidhaa />} />
+          <Route path="quotation" element={<MtejaQuotation />} />
+          <Route path="orders" element={<MtejaOrders />} />
+          <Route path="order/:id" element={<MtejaOrder />} />
+          <Route path="deni" element={<MtejaDeni />} />
+          {/* Notifications za Mteja */}
+          <Route path="notifications" element={<Notifications />} />
+          <Route path="notifications/:id" element={<NotificationDetail />} />
+        </Route>
+
+        {/* ================= MUUZAJI ================= */}
+        <Route path="/muuzaji" element={<Layout role="muuzaji" />}>
+          <Route index element={<MuuzajiPOS />} />
+          <Route path="ripoti-bidhaa" element={<MuuzajiRipotiBidhaa />} />
+          <Route path="risiti" element={<MuuzajiRisiti />} />
+          <Route path="pokea" element={<MuuzajiPokeaBidhaa />} />
+          <Route path="wateja" element={<MuuzajiWateja />} />
+          <Route path="mshahara" element={<MuuzajiMshahara />} />
+
+          <Route path="carts" element={<MuuzajiCarts />} />
+          <Route path="ripoti" element={<MuuzajiRipoti />} />
+          <Route path="matumizi" element={<MuuzajiMatumizi />} />
+          <Route path="store-manage" element={<MuuzajiStoreManage />} />
+          {/* Muuzaji athibitishe maingizo ya vifaa */}
+          <Route path="uingiza" element={<MuuzajiPokeaBidhaa />} />
+          {/* Notifications za Muuzaji */}
+          <Route path="notifications" element={<Notifications />} />
+          <Route path="notifications/:id" element={<NotificationDetail />} />
+        </Route>
+
+        {/* ================= MMILIKI ================= */}
+        <Route path="/mmiliki" element={<Layout role="mmiliki" />}>
+          <Route index element={<MmilikiDashboard />} />
+          <Route path="maduka" element={<MmilikiMaduka />} />
+          <Route path="mishahara" element={<MmilikiMishahara />} />
+          <Route path="wafanyakazi" element={<MmilikiWafanyakazi />} />
+          <Route path="ripoti-bidhaa" element={<MmilikiRipotiBidhaa />} />
+          <Route path="store-manage" element={<MmilikiStoreManage />} />
+          <Route path="faida" element={<MmilikiFaida />} />
+          <Route path="zaka" element={<MmilikiZaka />} />
+          <Route path="mauzo" element={<MmilikiMauzo />} />
+          <Route path="matumizi" element={<MmilikiMatumizi />} />
+          <Route path="uingiza" element={<UingizaVifaa role="mmiliki" />} />
+          <Route path="orders" element={<MmilikiOrders />} />
+          <Route path="wateja" element={<MmilikiWateja />} />
+          {/* Notifications za Mmiliki */}
+          <Route path="notifications" element={<Notifications />} />
+          <Route path="notifications/:id" element={<NotificationDetail />} />
+        </Route>
+
+        {/* ================= ADMIN ================= */}
+        <Route path="/admin" element={<Layout role="mmiliki" />}>
+          <Route path="uingiza" element={<UingizaVifaa role="admin" />} />
+          {/* Notifications za Admin */}
+          <Route path="notifications" element={<Notifications />} />
+          <Route path="notifications/:id" element={<NotificationDetail />} />
+        </Route>
+      </Routes>
+    </BrowserRouter>
+  )
+}
+
+import { createContext, useContext, useState, useMemo, type ReactNode } from 'react'
+import { bidhaa } from '../data/demo'
+import type { KundiBidhaa } from '../types'
+
+export interface CartLine {
+  id: string
+  wingi: number
+}
+
+export interface CartDetailedLine {
+  id: string
+  jina: string
+  sku: string
+  uom: string
+  bei: number
+  wingi: number
+  jumla: number
+  stoki: number
+  iconKey?: KundiBidhaa
+}
+
+interface CartCtx {
+  lines: CartLine[]
+  detailed: CartDetailedLine[]
+  count: number
+  total: number
+  add: (id: string, wingi?: number) => void
+  remove: (id: string) => void
+  setWingi: (id: string, wingi: number) => void
+  inc: (id: string) => void
+  dec: (id: string) => void
+  clear: () => void
+}
+
+const CartContext = createContext<CartCtx | null>(null)
+
+export function CartProvider({ children }: { children: ReactNode }) {
+  const [lines, setLines] = useState<CartLine[]>([])
+
+  const add = (id: string, wingi = 1) => {
+    setLines((prev) => {
+      const ex = prev.find((x) => x.id === id)
+      if (ex) return prev.map((x) => (x.id === id ? { ...x, wingi: x.wingi + wingi } : x))
+      return [...prev, { id, wingi }]
+    })
+  }
+
+  const remove = (id: string) => setLines((prev) => prev.filter((x) => x.id !== id))
+
+  const setWingi = (id: string, wingi: number) => {
+    if (wingi <= 0) return remove(id)
+    setLines((prev) => prev.map((x) => (x.id === id ? { ...x, wingi } : x)))
+  }
+
+  const inc = (id: string) =>
+    setLines((prev) => prev.map((x) => (x.id === id ? { ...x, wingi: x.wingi + 1 } : x)))
+
+  const dec = (id: string) =>
+    setLines((prev) =>
+      prev
+        .map((x) => (x.id === id ? { ...x, wingi: x.wingi - 1 } : x))
+        .filter((x) => x.wingi > 0)
+    )
+
+  const clear = () => setLines([])
+
+  const detailed = useMemo<CartDetailedLine[]>(() => {
+    const result: CartDetailedLine[] = []
+    for (const l of lines) {
+      const b = bidhaa.find((x) => x.id === l.id)
+      if (!b) continue
+      result.push({
+        id: b.id,
+        jina: b.jina,
+        sku: b.sku,
+        uom: b.uom,
+        bei: b.beiMauzo,
+        wingi: l.wingi,
+        jumla: b.beiMauzo * l.wingi,
+        stoki: b.stoki,
+        iconKey: b.iconKey,
+      })
+    }
+    return result
+  }, [lines])
+
+  const count = useMemo(() => detailed.reduce((s, l) => s + l.wingi, 0), [detailed])
+  const total = useMemo(() => detailed.reduce((s, l) => s + l.jumla, 0), [detailed])
+
+  const value: CartCtx = { lines, detailed, count, total, add, remove, setWingi, inc, dec, clear }
+
+  return <CartContext.Provider value={value}>{children}</CartContext.Provider>
+}
+
+export function useCart() {
+  const ctx = useContext(CartContext)
+  if (!ctx) throw new Error('useCart must be used within CartProvider')
+  return ctx
+}
+
+import { createContext, useContext, useState, type ReactNode } from 'react'
+import type { Mteja } from '../types'
+import { wateja as watejaDemo } from '../data/demo'
+
+interface CustomerCtx {
+  wateja: Mteja[]
+  ongezaMteja: (m: Omit<Mteja, 'id' | 'tareheSajili' | 'deni' | 'jumlaManunuzi' | 'active'>) => Mteja
+  tafutaMteja: (q: string) => Mteja[]
+  getMteja: (id: string) => Mteja | undefined
+}
+
+const CustomerContext = createContext<CustomerCtx | null>(null)
+
+export function CustomerProvider({ children }: { children: ReactNode }) {
+  const [wateja, setWateja] = useState<Mteja[]>(watejaDemo)
+
+  const ongezaMteja: CustomerCtx['ongezaMteja'] = (data) => {
+    const mteja: Mteja = {
+      ...data,
+      id: `c${Date.now()}`,
+      deni: 0,
+      jumlaManunuzi: 0,
+      tareheSajili: new Date().toISOString().split('T')[0],
+      active: true,
+    }
+    setWateja((prev) => [mteja, ...prev])
+    return mteja
+  }
+
+  const tafutaMteja = (q: string) => {
+    const query = q.toLowerCase().trim()
+    if (!query) return wateja
+    return wateja.filter(
+      (m) =>
+        m.jina.toLowerCase().includes(query) ||
+        m.simu.includes(query) ||
+        m.aina.includes(query)
+    )
+  }
+
+  const getMteja = (id: string) => wateja.find((m) => m.id === id)
+
+  return (
+    <CustomerContext.Provider value={{ wateja, ongezaMteja, tafutaMteja, getMteja }}>
+      {children}
+    </CustomerContext.Provider>
+  )
+}
+
+export function useCustomers() {
+  const ctx = useContext(CustomerContext)
+  if (!ctx) throw new Error('useCustomers must be used within CustomerProvider')
+  return ctx
+}
+
+import { createContext, useContext, useState, type ReactNode } from 'react'
+import type { Document, AinaDocument, HaliDocument } from '../types'
+
+interface OngezaDocumentInput {
+  jina: string
+  aina: AinaDocument
+  format: 'pdf' | 'csv' | 'excel'
+  dukaId: string
+  dukaJina: string
+  ukubwa: string
+  kipindi: string
+  aliyezalisha: string
+}
+
+interface DocumentCtx {
+  documents: Document[]
+  ongezaDocument: (data: OngezaDocumentInput) => Document
+  futa: (id: string) => void
+  getDocument: (id: string) => Document | undefined
+}
+
+const DocumentContext = createContext<DocumentCtx | null>(null)
+
+const DOCUMENTS_DEMO: Document[] = [
+  {
+    id: 'DOC-2026-001',
+    jina: 'Ripoti ya Mauzo - Wiki 1 Nov',
+    aina: 'mauzo',
+    format: 'pdf',
+    dukaId: 'd1',
+    dukaJina: 'Smart Hardware - Kwembe',
+    ukubwa: '245 KB',
+    tarehe: '09 Nov 2026',
+    muda: '15:30',
+    hali: 'tayari',
+    aliyezalisha: 'Juma Hassan',
+    kipindi: '01 Nov - 07 Nov 2026',
+  },
+  {
+    id: 'DOC-2026-002',
+    jina: 'Ripoti ya Stoki - Novemba',
+    aina: 'stoki',
+    format: 'excel',
+    dukaId: 'd1',
+    dukaJina: 'Smart Hardware - Kwembe',
+    ukubwa: '128 KB',
+    tarehe: '09 Nov 2026',
+    muda: '14:15',
+    hali: 'tayari',
+    aliyezalisha: 'Juma Hassan',
+    kipindi: 'Novemba 2026',
+  },
+  {
+    id: 'DOC-2026-003',
+    jina: 'Ripoti ya Wateja - Q4 2026',
+    aina: 'wateja',
+    format: 'csv',
+    dukaId: 'd1',
+    dukaJina: 'Smart Hardware - Kwembe',
+    ukubwa: '56 KB',
+    tarehe: '08 Nov 2026',
+    muda: '10:00',
+    hali: 'tayari',
+    aliyezalisha: 'Juma Hassan',
+    kipindi: 'Okt - Des 2026',
+  },
+  {
+    id: 'DOC-2026-004',
+    jina: 'Ripoti ya Madeni - Novemba',
+    aina: 'madeni',
+    format: 'pdf',
+    dukaId: 'd1',
+    dukaJina: 'Smart Hardware - Kwembe',
+    ukubwa: '180 KB',
+    tarehe: '07 Nov 2026',
+    muda: '16:45',
+    hali: 'tayari',
+    aliyezalisha: 'Juma Hassan',
+    kipindi: 'Novemba 2026',
+  },
+  {
+    id: 'DOC-2026-005',
+    jina: 'Ripoti ya Jumla - Novemba',
+    aina: 'jumla',
+    format: 'pdf',
+    dukaId: 'd1',
+    dukaJina: 'Smart Hardware - Kwembe',
+    ukubwa: '320 KB',
+    tarehe: '06 Nov 2026',
+    muda: '09:30',
+    hali: 'inasindika',
+    aliyezalisha: 'Juma Hassan',
+    kipindi: 'Novemba 2026',
+  },
+]
+
+export function DocumentProvider({ children }: { children: ReactNode }) {
+  const [documents, setDocuments] = useState<Document[]>(DOCUMENTS_DEMO)
+
+  const ongezaDocument: DocumentCtx['ongezaDocument'] = (data) => {
+    const doc: Document = {
+      ...data,
+      id: `DOC-${new Date().getFullYear()}-${String(documents.length + 6).padStart(3, '0')}`,
+      tarehe: new Date().toLocaleDateString('sw-TZ', {
+        day: '2-digit',
+        month: 'short',
+        year: 'numeric',
+      }),
+      muda: new Date().toLocaleTimeString('sw-TZ', {
+        hour: '2-digit',
+        minute: '2-digit',
+      }),
+      hali: 'tayari',
+    }
+    setDocuments((prev) => [doc, ...prev])
+    return doc
+  }
+
+  const futa = (id: string) => {
+    setDocuments((prev) => prev.filter((d) => d.id !== id))
+  }
+
+  const getDocument = (id: string) => documents.find((d) => d.id === id)
+
+  return (
+    <DocumentContext.Provider value={{ documents, ongezaDocument, futa, getDocument }}>
+      {children}
+    </DocumentContext.Provider>
+  )
+}
+
+export function useDocuments() {
+  const ctx = useContext(DocumentContext)
+  if (!ctx) throw new Error('useDocuments must be used within DocumentProvider')
+  return ctx
+}
+
+import { createContext, useContext, useState, type ReactNode } from 'react'
+import type { DukaKamili, MtumiajiKamili, HaliDuka } from '../types'
+import {
+  madukaKamili as madukaDemo,
+  wafanyakaziKamili as wafanyakaziDemo,
+} from '../data/demo'
+
+interface FunguaDukaInput {
+  jina: string
+  mahali: string
+  simu: string
+  msimamiziId?: string
+}
+
+interface DukaCtx {
+  maduka: DukaKamili[]
+  wafanyakazi: MtumiajiKamili[]
+  funguaDuka: (data: FunguaDukaInput) => DukaKamili
+  wekaMsimamizi: (dukaId: string, mtumiajiId: string) => void
+  badilishaHali: (dukaId: string, hali: HaliDuka) => void
+  ongezaMtumiaji: (data: Omit<MtumiajiKamili, 'id' | 'tareheSajili' | 'active'>) => MtumiajiKamili
+  getDuka: (id: string) => DukaKamili | undefined
+  wafanyakaziWasioNaDuka: () => MtumiajiKamili[]
+  wafanyakaziWaDuka: (dukaId: string) => MtumiajiKamili[]
+}
+
+const DukaContext = createContext<DukaCtx | null>(null)
+
+export function DukaProvider({ children }: { children: ReactNode }) {
+  const [maduka, setMaduka] = useState<DukaKamili[]>(madukaDemo)
+  const [wafanyakazi, setWafanyakazi] = useState<MtumiajiKamili[]>(wafanyakaziDemo)
+
+  const funguaDuka: DukaCtx['funguaDuka'] = (data) => {
+    const msimamizi = data.msimamiziId
+      ? wafanyakazi.find((w) => w.id === data.msimamiziId)
+      : undefined
+
+    const duka: DukaKamili = {
+      id: `d${Date.now()}`,
+      jina: data.jina,
+      mahali: data.mahali,
+      simu: data.simu,
+      msimamiziId: msimamizi?.id,
+      msimamiziJina: msimamizi?.jina,
+      tareheKufunguliwa: new Date().toISOString().split('T')[0],
+      hali: 'hai',
+      mauzoLeo: 0,
+      faidaLeo: 0,
+      wafanyakazi: 0,
+      stokiJumla: 0,
+    }
+    setMaduka((prev) => [duka, ...prev])
+
+    // Mpangie msimamizi kwenye duka
+    if (msimamizi) {
+      setWafanyakazi((prev) =>
+        prev.map((w) =>
+          w.id === msimamizi.id ? { ...w, dukaId: duka.id, dukaJina: duka.jina } : w
+        )
+      )
+    }
+    return duka
+  }
+
+  const wekaMsimamizi = (dukaId: string, mtumiajiId: string) => {
+    const mtumiaji = wafanyakazi.find((w) => w.id === mtumiajiId)
+    if (!mtumiaji) return
+
+    // Sasisha duka
+    setMaduka((prev) =>
+      prev.map((d) =>
+        d.id === dukaId
+          ? { ...d, msimamiziId: mtumiaji.id, msimamiziJina: mtumiaji.jina }
+          : d
+      )
+    )
+
+    // Sasisha mtumiaji
+    setWafanyakazi((prev) =>
+      prev.map((w) =>
+        w.id === mtumiajiId
+          ? { ...w, dukaId, dukaJina: maduka.find((d) => d.id === dukaId)?.jina }
+          : w
+      )
+    )
+  }
+
+  const badilishaHali = (dukaId: string, hali: HaliDuka) => {
+    setMaduka((prev) => prev.map((d) => (d.id === dukaId ? { ...d, hali } : d)))
+  }
+
+  const ongezaMtumiaji: DukaCtx['ongezaMtumiaji'] = (data) => {
+    const mtumiaji: MtumiajiKamili = {
+      ...data,
+      id: `u${Date.now()}`,
+      tareheSajili: new Date().toISOString().split('T')[0],
+      active: true,
+    }
+    setWafanyakazi((prev) => [mtumiaji, ...prev])
+    return mtumiaji
+  }
+
+  const getDuka = (id: string) => maduka.find((d) => d.id === id)
+
+  const wafanyakaziWasioNaDuka = () =>
+    wafanyakazi.filter((w) => !w.dukaId && w.active)
+
+  const wafanyakaziWaDuka = (dukaId: string) =>
+    wafanyakazi.filter((w) => w.dukaId === dukaId)
+
+  return (
+    <DukaContext.Provider
+      value={{
+        maduka,
+        wafanyakazi,
+        funguaDuka,
+        wekaMsimamizi,
+        badilishaHali,
+        ongezaMtumiaji,
+        getDuka,
+        wafanyakaziWasioNaDuka,
+        wafanyakaziWaDuka,
+      }}
+    >
+      {children}
+    </DukaContext.Provider>
+  )
+}
+
+export function useDuka() {
+  const ctx = useContext(DukaContext)
+  if (!ctx) throw new Error('useDuka must be used within DukaProvider')
+  return ctx
+}
+
+import { createContext, useContext, useState, type ReactNode } from 'react'
+import type { GRN, GRNItem, HaliGRN } from '../types'
+import { grnList as grnDemo } from '../data/demo'
+
+interface GRNCtx {
+  grns: GRN[]
+  ongezaGRN: (grn: Omit<GRN, 'id' | 'aliyeingiza'>) => GRN
+  pokeaBidhaa: (id: string, items: GRNItem[]) => void
+  getGRN: (id: string) => GRN | undefined
+}
+
+const GRNContext = createContext<GRNCtx | null>(null)
+
+const ALIYEINGIZA = 'Juma Hassan'
+
+function hesabuHali(items: GRNItem[]): HaliGRN {
+  const zote = items.every((i) => i.iliyopokelewa >= i.iliyoagizwa)
+  const hakuna = items.every((i) => i.iliyopokelewa === 0)
+  if (hakuna) return 'inasubiri'
+  if (zote) return 'imepokelewa'
+  return 'upungufu'
+}
+
+export function GRNProvider({ children }: { children: ReactNode }) {
+  const [grns, setGrns] = useState<GRN[]>(grnDemo)
+
+  const ongezaGRN: GRNCtx['ongezaGRN'] = (data) => {
+    const grn: GRN = {
+      ...data,
+      id: `GRN-${new Date().getFullYear()}-${String(grns.length + 48).padStart(3, '0')}`,
+      aliyeingiza: ALIYEINGIZA,
+      hali: hesabuHali(data.bidhaa),
+    }
+    setGrns((prev) => [grn, ...prev])
+    return grn
+  }
+
+  const pokeaBidhaa = (id: string, items: GRNItem[]) => {
+    setGrns((prev) =>
+      prev.map((g) =>
+        g.id === id
+          ? { ...g, bidhaa: items, hali: hesabuHali(items) }
+          : g
+      )
+    )
+  }
+
+  const getGRN = (id: string) => grns.find((g) => g.id === id)
+
+  return (
+    <GRNContext.Provider value={{ grns, ongezaGRN, pokeaBidhaa, getGRN }}>
+      {children}
+    </GRNContext.Provider>
+  )
+}
+
+export function useGRN() {
+  const ctx = useContext(GRNContext)
+  if (!ctx) throw new Error('useGRN must be used within GRNProvider')
+  return ctx
+}
+
+import { createContext, useContext, useState, type ReactNode } from 'react'
+import type {
+  MauzoYaDuka,
+  GharamaOpex,
+  AinaGharamaOpex,
+} from '../types'
+import {
+  mauzoYaDuka as mauzoDemo,
+  gharamaOpex as opexDemo,
+} from '../data/demo'
+
+interface OngezaMauzoInput {
+  dukaId: string
+  dukaJina: string
+  muuzaji: string
+  bidhaa: MauzoYaDuka['bidhaa']
+  cogs: number
+}
+
+interface OngezaOpexInput {
+  dukaId: string
+  dukaJina: string
+  aina: AinaGharamaOpex
+  maelezo: string
+  kiasi: number
+  aliyeingiza: string
+}
+
+interface MauzoCtx {
+  mauzo: MauzoYaDuka[]
+  opex: GharamaOpex[]
+  ongezaMauzo: (data: OngezaMauzoInput) => MauzoYaDuka
+  ongezaOpex: (data: OngezaOpexInput) => GharamaOpex
+  futaOpex: (id: string) => void
+  getMauzo: (id: string) => MauzoYaDuka | undefined
+}
+
+const MauzoContext = createContext<MauzoCtx | null>(null)
+
+export function MauzoProvider({ children }: { children: ReactNode }) {
+  const [mauzo, setMauzo] = useState<MauzoYaDuka[]>(mauzoDemo)
+  const [opex, setOpex] = useState<GharamaOpex[]>(opexDemo)
+
+  const ongezaMauzo: MauzoCtx['ongezaMauzo'] = (data) => {
+    const jumlaMauzo = data.bidhaa.reduce((s, b) => s + b.jumla, 0)
+    const faidaGhafi = jumlaMauzo - data.cogs
+
+    const m: MauzoYaDuka = {
+      id: `SALE-${new Date().getFullYear()}-${String(mauzo.length + 1).padStart(3, '0')}`,
+      tarehe: new Date().toISOString().split('T')[0],
+      dukaId: data.dukaId,
+      dukaJina: data.dukaJina,
+      muuzaji: data.muuzaji,
+      bidhaa: data.bidhaa,
+      jumlaMauzo,
+      cogs: data.cogs,
+      faidaGhafi,
+    }
+    setMauzo((prev) => [m, ...prev])
+    return m
+  }
+
+  const ongezaOpex: MauzoCtx['ongezaOpex'] = (data) => {
+    const g: GharamaOpex = {
+      ...data,
+      id: `OPEX-${Date.now()}`,
+      tarehe: new Date().toISOString().split('T')[0],
+    }
+    setOpex((prev) => [g, ...prev])
+    return g
+  }
+
+  const futaOpex = (id: string) => {
+    setOpex((prev) => prev.filter((g) => g.id !== id))
+  }
+
+  const getMauzo = (id: string) => mauzo.find((m) => m.id === id)
+
+  return (
+    <MauzoContext.Provider
+      value={{ mauzo, opex, ongezaMauzo, ongezaOpex, futaOpex, getMauzo }}
+    >
+      {children}
+    </MauzoContext.Provider>
+  )
+}
+
+export function useMauzo() {
+  const ctx = useContext(MauzoContext)
+  if (!ctx) throw new Error('useMauzo must be used within MauzoProvider')
+  return ctx
+}
+
+import { createContext, useContext, useState, type ReactNode } from 'react'
+import type {
+  Mshahara,
+  MalipoMshahara,
+  NjiaMalipoMshahara,
+  AkauntiMfanyakazi,
+  HaliMshahara,
+  BulkPaymentResult,
+} from '../types'
+import {
+  mishahara as mishaharaDemo,
+  akauntiWafanyakazi as akauntiDemo,
+} from '../data/demo'
+
+// ============================================================
+// Types za ndani
+// ============================================================
+interface OngezaMshaharaInput {
+  mtumiajiId: string
+  jinaMtumiaji: string
+  nafasi: string
+  dukaId: string
+  dukaJina: string
+  mwezi: string
+  kipindi: string
+  mshaharaMsingi: number
+  posho: number
+  overtime: number
+  mafao: number
+  makato: number
+  maelezo?: string
+}
+
+interface OngezaAkauntiInput {
+  mtumiajiId: string
+  jinaMtumiaji: string
+  aina: 'bank' | 'mobile'
+  jina: string
+  namba: string
+  jinaMmiliki: string
+  ndiyoMsingi: boolean
+}
+
+interface MshaharaCtx {
+  mishahara: Mshahara[]
+  malipo: MalipoMshahara[]
+  akaunti: AkauntiMfanyakazi[]
+  ongezaMshahara: (data: OngezaMshaharaInput) => Mshahara
+  lipaMshaharaMmoja: (mshaharaId: string) => MalipoMshahara | null
+  lipaBulk: (mishaharaIds: string[]) => BulkPaymentResult
+  lipaZoteZinazosubiri: () => BulkPaymentResult
+  ongezaAkaunti: (data: OngezaAkauntiInput) => AkauntiMfanyakazi
+  futaAkaunti: (id: string) => void
+  futaMshahara: (id: string) => void
+  getMshahara: (id: string) => Mshahara | undefined
+  getAkauntiMsingi: (mtumiajiId: string) => AkauntiMfanyakazi | undefined
+  mishaharaYaMtumiaji: (mtumiajiId: string) => Mshahara[]
+}
+
+const MshaharaContext = createContext<MshaharaCtx | null>(null)
+
+const ALIYEIDHINISHA = 'Moses Kimaro'
+
+// ============================================================
+// Ramani ya njia kutoka akaunti
+// ============================================================
+const AINA_TO_NJIA: Record<string, NjiaMalipoMshahara> = {
+  'M-Pesa': 'mpesa',
+  'Tigo Pesa': 'tigopesa',
+  'Airtel Money': 'airtel',
+  'HaloPesa': 'halopesa',
+  'CRDB Bank': 'crdb',
+  'NMB Bank': 'nmb',
+  'NBC Bank': 'nbc',
+  'Stanbic Bank': 'stanbic',
+}
+
+function njiaKutokaAkaunti(akaunti: AkauntiMfanyakazi): NjiaMalipoMshahara {
+  return AINA_TO_NJIA[akaunti.jina] ?? 'other'
+}
+
+// ============================================================
+// Tengeneza kumbukumbu (prefix + tarehe + namba)
+// ============================================================
+function tengenezaKumbukumbu(
+  njia: NjiaMalipoMshahara,
+  tarehe: string,
+  idx: number
+): string {
+  const prefix =
+    njia === 'mpesa'
+      ? 'MPESA'
+      : njia === 'tigopesa'
+      ? 'TIGO'
+      : njia === 'airtel'
+      ? 'AIRTEL'
+      : njia === 'halopesa'
+      ? 'HALO'
+      : 'BANK'
+  const tareheFmt = tarehe.replace(/-/g, '')
+  return `${prefix}-${tareheFmt}-${String(idx + 1).padStart(3, '0')}`
+}
+
+// ============================================================
+// Tengeneza tarehe na muda wa sasa
+// ============================================================
+function tareheNaMudaSasa() {
+  const sasa = new Date()
+  return {
+    tareheISO: sasa.toISOString().split('T')[0],
+    tareheFmt: sasa.toLocaleDateString('sw-TZ', {
+      day: '2-digit',
+      month: 'short',
+      year: 'numeric',
+    }),
+    muda: sasa.toLocaleTimeString('sw-TZ', {
+      hour: '2-digit',
+      minute: '2-digit',
+    }),
+  }
+}
+
+// ============================================================
+// Provider
+// ============================================================
+export function MshaharaProvider({ children }: { children: ReactNode }) {
+  const [mishahara, setMishahara] = useState<Mshahara[]>(mishaharaDemo)
+  const [malipo, setMalipo] = useState<MalipoMshahara[]>([])
+  const [akaunti, setAkaunti] = useState<AkauntiMfanyakazi[]>(akauntiDemo)
+
+  // ============================================================
+  // Ongeza mshahara mpya
+  // ============================================================
+  const ongezaMshahara: MshaharaCtx['ongezaMshahara'] = (data) => {
+    const jumla =
+      data.mshaharaMsingi +
+      data.posho +
+      data.overtime +
+      data.mafao -
+      data.makato
+    const m: Mshahara = {
+      ...data,
+      id: `SAL-${new Date().getFullYear()}-${String(
+        mishahara.length + 7
+      ).padStart(3, '0')}`,
+      jumla,
+      hali: 'inasubiri',
+    } as Mshahara
+    setMishahara((prev) => [m, ...prev])
+    return m
+  }
+
+  // ============================================================
+  // Lipa mshahara mmoja
+  // ============================================================
+  const lipaMshaharaMmoja: MshaharaCtx['lipaMshaharaMmoja'] = (mshaharaId) => {
+    const mshahara = mishahara.find((m) => m.id === mshaharaId)
+    if (!mshahara) return null
+    if (mshahara.hali !== 'inasubiri') return null
+
+    // Tafuta akaunti msingi ya mfanyakazi
+    const akauntiMfanyakazi = akaunti.find(
+      (a) => a.mtumiajiId === mshahara.mtumiajiId && a.ndiyoMsingi
+    )
+    if (!akauntiMfanyakazi) return null
+
+    const njia = njiaKutokaAkaunti(akauntiMfanyakazi)
+    const { tareheISO, tareheFmt, muda } = tareheNaMudaSasa()
+    const kumbukumbu = tengenezaKumbukumbu(njia, tareheISO, 0)
+
+    const malipoMpya: MalipoMshahara = {
+      id: `PAY-${Date.now()}`,
+      mshaharaId,
+      mtumiajiId: mshahara.mtumiajiId,
+      jinaMtumiaji: mshahara.jinaMtumiaji,
+      kiasi: mshahara.jumla,
+      njia,
+      akaunti: akauntiMfanyakazi.namba,
+      kumbukumbu,
+      tarehe: tareheFmt,
+      muda,
+      hali: 'imelipwa',
+    }
+
+    // Sasisha malipo
+    setMalipo((prev) => [malipoMpya, ...prev])
+
+    // Sasisha mshahara
+    setMishahara((prev) =>
+      prev.map((m) =>
+        m.id === mshaharaId
+          ? {
+              ...m,
+              hali: 'imelipwa' as HaliMshahara,
+              tareheMalipo: tareheISO,
+              njiaMalipo: njia,
+              akauntiMalipo: akauntiMfanyakazi.namba,
+              kumbukumbu,
+              aliyeidhinisha: ALIYEIDHINISHA,
+              tareheIdhini: tareheISO,
+            }
+          : m
+      )
+    )
+    return malipoMpya
+  }
+
+  // ============================================================
+  // Lipa bulk (wafanyakazi waliochaguliwa)
+  // ============================================================
+  const lipaBulk: MshaharaCtx['lipaBulk'] = (mishaharaIds) => {
+    // Kwanza hesabu malipo yote
+    const { tareheISO, tareheFmt, muda } = tareheNaMudaSasa()
+    const malipoMapya: MalipoMshahara[] = []
+    const zilizofanikiwa: string[] = []
+    const zilizoshindwa: string[] = []
+    const waliokosaAkaunti: string[] = []
+    let jumla = 0
+
+    // Ramani ya kumbukumbu kwa kila mshaharaId
+    const kumbukumbuMap = new Map<string, string>()
+
+    mishaharaIds.forEach((id, idx) => {
+      const mshahara = mishahara.find((m) => m.id === id)
+      if (!mshahara || mshahara.hali !== 'inasubiri') {
+        zilizoshindwa.push(id)
+        return
+      }
+
+      const akauntiMfanyakazi = akaunti.find(
+        (a) => a.mtumiajiId === mshahara.mtumiajiId && a.ndiyoMsingi
+      )
+      if (!akauntiMfanyakazi) {
+        waliokosaAkaunti.push(mshahara.jinaMtumiaji)
+        zilizoshindwa.push(id)
+        return
+      }
+
+      const njia = njiaKutokaAkaunti(akauntiMfanyakazi)
+      const kumbukumbu = tengenezaKumbukumbu(njia, tareheISO, idx)
+
+      const malipoMpya: MalipoMshahara = {
+        id: `PAY-${Date.now()}-${idx}`,
+        mshaharaId: id,
+        mtumiajiId: mshahara.mtumiajiId,
+        jinaMtumiaji: mshahara.jinaMtumiaji,
+        kiasi: mshahara.jumla,
+        njia,
+        akaunti: akauntiMfanyakazi.namba,
+        kumbukumbu,
+        tarehe: tareheFmt,
+        muda,
+        hali: 'imelipwa',
+      }
+
+      malipoMapya.push(malipoMpya)
+      zilizofanikiwa.push(id)
+      kumbukumbuMap.set(id, kumbukumbu)
+      jumla += mshahara.jumla
+    })
+
+    // Sasisha mishahara kwa kutumia kumbukumbuMap
+    setMishahara((prev) =>
+      prev.map((m) => {
+        if (!zilizofanikiwa.includes(m.id)) return m
+
+        const mshahara = mishahara.find((x) => x.id === m.id)
+        if (!mshahara) return m
+
+        const akauntiMfanyakazi = akaunti.find(
+          (a) => a.mtumiajiId === mshahara.mtumiajiId && a.ndiyoMsingi
+        )
+        if (!akauntiMfanyakazi) return m
+
+        const njia = njiaKutokaAkaunti(akauntiMfanyakazi)
+        const kumbukumbu = kumbukumbuMap.get(m.id) ?? ''
+
+        return {
+          ...m,
+          hali: 'imelipwa' as HaliMshahara,
+          tareheMalipo: tareheISO,
+          njiaMalipo: njia,
+          akauntiMalipo: akauntiMfanyakazi.namba,
+          kumbukumbu,
+          aliyeidhinisha: ALIYEIDHINISHA,
+          tareheIdhini: tareheISO,
+        }
+      })
+    )
+
+    // Sasisha malipo
+    setMalipo((prev) => [...malipoMapya, ...prev])
+
+    return {
+      jumla,
+      zilizofanikiwa: zilizofanikiwa.length,
+      zilizoshindwa: zilizoshindwa.length,
+      malipo: malipoMapya,
+      waliokosaAkaunti,
+    }
+  }
+
+  // ============================================================
+  // Lipa zote zinazosubiri (button moja)
+  // ============================================================
+  const lipaZoteZinazosubiri: MshaharaCtx['lipaZoteZinazosubiri'] = () => {
+    const zinazosubiri = mishahara.filter((m) => m.hali === 'inasubiri')
+    return lipaBulk(zinazosubiri.map((m) => m.id))
+  }
+
+  // ============================================================
+  // Akaunti za wafanyakazi
+  // ============================================================
+  const ongezaAkaunti: MshaharaCtx['ongezaAkaunti'] = (data) => {
+    const a: AkauntiMfanyakazi = {
+      ...data,
+      id: `acc-${Date.now()}`,
+    }
+    setAkaunti((prev) => [...prev, a])
+    return a
+  }
+
+  const futaAkaunti = (id: string) => {
+    setAkaunti((prev) => prev.filter((a) => a.id !== id))
+  }
+
+  const futaMshahara = (id: string) => {
+    setMishahara((prev) => prev.filter((m) => m.id !== id))
+  }
+
+  const getMshahara = (id: string) => mishahara.find((m) => m.id === id)
+
+  const getAkauntiMsingi = (mtumiajiId: string) =>
+    akaunti.find((a) => a.mtumiajiId === mtumiajiId && a.ndiyoMsingi)
+
+  const mishaharaYaMtumiaji = (mtumiajiId: string) =>
+    mishahara.filter((m) => m.mtumiajiId === mtumiajiId)
+
+  return (
+    <MshaharaContext.Provider
+      value={{
+        mishahara,
+        malipo,
+        akaunti,
+        ongezaMshahara,
+        lipaMshaharaMmoja,
+        lipaBulk,
+        lipaZoteZinazosubiri,
+        ongezaAkaunti,
+        futaAkaunti,
+        futaMshahara,
+        getMshahara,
+        getAkauntiMsingi,
+        mishaharaYaMtumiaji,
+      }}
+    >
+      {children}
+    </MshaharaContext.Provider>
+  )
+}
+
+export function useMshahara() {
+  const ctx = useContext(MshaharaContext)
+  if (!ctx) throw new Error('useMshahara must be used within MshaharaProvider')
+  return ctx
+}
+
+import { createContext, useContext, useState, type ReactNode } from 'react'
+import type { Notification, KundiNotification } from '../types'
+import { notifications as notificationsDemo } from '../data/demo'
+
+interface NotificationCtx {
+  notifications: Notification[]
+  unreadCount: number
+  markAsRead: (id: string) => void
+  markAllRead: () => void
+  futa: (id: string) => void
+  futaZote: () => void
+  getNotification: (id: string) => Notification | undefined
+  filterByKundi: (kundi: KundiNotification | 'zote') => Notification[]
+  search: (q: string) => Notification[]
+}
+
+const NotificationContext = createContext<NotificationCtx | null>(null)
+
+export function NotificationProvider({ children }: { children: ReactNode }) {
+  const [notifications, setNotifications] = useState<Notification[]>(
+    notificationsDemo
+  )
+
+  const unreadCount = notifications.filter((n) => !n.read).length
+
+  const markAsRead = (id: string) => {
+    setNotifications((prev) =>
+      prev.map((n) => (n.id === id ? { ...n, read: true } : n))
+    )
+  }
+
+  const markAllRead = () => {
+    setNotifications((prev) => prev.map((n) => ({ ...n, read: true })))
+  }
+
+  const futa = (id: string) => {
+    setNotifications((prev) => prev.filter((n) => n.id !== id))
+  }
+
+  const futaZote = () => {
+    setNotifications([])
+  }
+
+  const getNotification = (id: string) =>
+    notifications.find((n) => n.id === id)
+
+  const filterByKundi = (kundi: KundiNotification | 'zote') => {
+    if (kundi === 'zote') return notifications
+    return notifications.filter((n) => n.kundi === kundi)
+  }
+
+  const search = (q: string) => {
+    const query = q.toLowerCase().trim()
+    if (!query) return notifications
+    return notifications.filter(
+      (n) =>
+        n.title.toLowerCase().includes(query) ||
+        n.message.toLowerCase().includes(query) ||
+        (n.maelezo?.toLowerCase().includes(query) ?? false)
+    )
+  }
+
+  return (
+    <NotificationContext.Provider
+      value={{
+        notifications,
+        unreadCount,
+        markAsRead,
+        markAllRead,
+        futa,
+        futaZote,
+        getNotification,
+        filterByKundi,
+        search,
+      }}
+    >
+      {children}
+    </NotificationContext.Provider>
+  )
+}
+
+export function useNotifications() {
+  const ctx = useContext(NotificationContext)
+  if (!ctx)
+    throw new Error('useNotifications must be used within NotificationProvider')
+  return ctx
+}
+
+import { createContext, useContext, useState, type ReactNode } from 'react'
+import type { OmbiMatumizi, HaliOmbi } from '../types'
+import { maombiMatumizi as maombiDemo } from '../data/demo'
+
+interface OngezaOmbiInput {
+  aina: string
+  kiasi: number
+  maelezo: string
+  simu: string
+  sababu: string
+  risitiUrl?: string
+  aliyeomba: string
+  duka: string
+}
+
+interface OmbiCtx {
+  maombi: OmbiMatumizi[]
+  ongezaOmbi: (data: OngezaOmbiInput) => OmbiMatumizi
+  idhinisha: (id: string, maoni?: string) => void
+  kataa: (id: string, maoni: string) => void
+  futa: (id: string) => void
+  hariri: (id: string, patch: Partial<OmbiMatumizi>) => void
+  getOmbi: (id: string) => OmbiMatumizi | undefined
+}
+
+const OmbiContext = createContext<OmbiCtx | null>(null)
+
+const MMILIKI = 'Moses Kimaro'
+
+export function OmbiProvider({ children }: { children: ReactNode }) {
+  const [maombi, setMaombi] = useState<OmbiMatumizi[]>(maombiDemo)
+
+  const ongezaOmbi: OmbiCtx['ongezaOmbi'] = (data) => {
+    const ombi: OmbiMatumizi = {
+      ...data,
+      id: `EXP-${new Date().getFullYear()}-${String(maombi.length + 1).padStart(3, '0')}`,
+      tarehe: new Date().toISOString().split('T')[0],
+      hali: 'inasubiri',
+    }
+    setMaombi((prev) => [ombi, ...prev])
+    return ombi
+  }
+
+  const idhinisha = (id: string, maoni?: string) => {
+    setMaombi((prev) =>
+      prev.map((m) =>
+        m.id === id
+          ? {
+              ...m,
+              hali: 'imekubaliwa' as HaliOmbi,
+              maoni,
+              aliyeidhinisha: MMILIKI,
+              tareheIdhini: new Date().toISOString().split('T')[0],
+            }
+          : m
+      )
+    )
+  }
+
+  const kataa = (id: string, maoni: string) => {
+    setMaombi((prev) =>
+      prev.map((m) =>
+        m.id === id
+          ? {
+              ...m,
+              hali: 'imekataliwa' as HaliOmbi,
+              maoni,
+              aliyeidhinisha: MMILIKI,
+              tareheIdhini: new Date().toISOString().split('T')[0],
+            }
+          : m
+      )
+    )
+  }
+
+  const futa = (id: string) => {
+    setMaombi((prev) => prev.filter((m) => m.id !== id))
+  }
+
+  const hariri = (id: string, patch: Partial<OmbiMatumizi>) => {
+    setMaombi((prev) =>
+      prev.map((m) => (m.id === id ? { ...m, ...patch } : m))
+    )
+  }
+
+  const getOmbi = (id: string) => maombi.find((m) => m.id === id)
+
+  return (
+    <OmbiContext.Provider
+      value={{ maombi, ongezaOmbi, idhinisha, kataa, futa, hariri, getOmbi }}
+    >
+      {children}
+    </OmbiContext.Provider>
+  )
+}
+
+export function useMaombi() {
+  const ctx = useContext(OmbiContext)
+  if (!ctx) throw new Error('useMaombi must be used within OmbiProvider')
+  return ctx
+}
+
+
+import { createContext, useContext, useState, type ReactNode } from 'react'
+import type { OrderAdmin, HaliOrderAdmin } from '../types'
+import { ordersAdmin as ordersDemo } from '../data/demo'
+
+interface OrderAdminCtx {
+  orders: OrderAdmin[]
+  badilishaHali: (id: string, hali: HaliOrderAdmin) => void
+  thibitishaMalipo: (orderId: string, malipoId: string) => void
+  futa: (id: string) => void
+  getOrder: (id: string) => OrderAdmin | undefined
+}
+
+const OrderAdminContext = createContext<OrderAdminCtx | null>(null)
+
+export function OrderAdminProvider({ children }: { children: ReactNode }) {
+  const [orders, setOrders] = useState<OrderAdmin[]>(ordersDemo)
+
+  const badilishaHali = (id: string, hali: HaliOrderAdmin) => {
+    setOrders((prev) => prev.map((o) => (o.id === id ? { ...o, hali } : o)))
+  }
+
+  const thibitishaMalipo = (orderId: string, malipoId: string) => {
+    setOrders((prev) =>
+      prev.map((o) => {
+        if (o.id !== orderId) return o
+        return {
+          ...o,
+          malipo: o.malipo.map((m) =>
+            m.id === malipoId ? { ...m, hali: 'imethibitishwa' } : m
+          ),
+        }
+      })
+    )
+  }
+
+  const futa = (id: string) => {
+    setOrders((prev) => prev.filter((o) => o.id !== id))
+  }
+
+  const getOrder = (id: string) => orders.find((o) => o.id === id)
+
+  return (
+    <OrderAdminContext.Provider
+      value={{ orders, badilishaHali, thibitishaMalipo, futa, getOrder }}
+    >
+      {children}
+    </OrderAdminContext.Provider>
+  )
+}
+
+export function useOrderAdmin() {
+  const ctx = useContext(OrderAdminContext)
+  if (!ctx) throw new Error('useOrderAdmin must be used within OrderAdminProvider')
+  return ctx
+}
+
+import { createContext, useContext, useState, type ReactNode } from 'react'
+import type { Order, Malipo, OrderItem } from '../types'
+
+interface OrderCtx {
+  orders: Order[]
+  createOrder: (items: OrderItem[], total: number, malipo: Malipo[]) => Order
+  getOrder: (id: string) => Order | undefined
+}
+
+const OrderContext = createContext<OrderCtx | null>(null)
+
+const MTEOA_DEMO = 'Mjenzi Mwakyusa'
+const SIMU_DEMO = '0754-111-222'
+
+export function OrderProvider({ children }: { children: ReactNode }) {
+  const [orders, setOrders] = useState<Order[]>([])
+
+  const createOrder = (
+    items: OrderItem[],
+    total: number,
+    malipo: Malipo[]
+  ): Order => {
+    const order: Order = {
+      id: `ORD-${Date.now().toString().slice(-6)}`,
+      quotationId: `Q-2026-${Math.floor(1000 + Math.random() * 9000)}`,
+      mteja: MTEOA_DEMO,
+      simu: SIMU_DEMO,
+      bidhaa: items,
+      jumla: total,
+      malipo,
+      hali: 'imekamilika',
+      tarehe: new Date().toLocaleString('sw-TZ'),
+    }
+    setOrders((prev) => [order, ...prev])
+    return order
+  }
+
+  const getOrder = (id: string) => orders.find((o) => o.id === id)
+
+  return (
+    <OrderContext.Provider value={{ orders, createOrder, getOrder }}>
+      {children}
+    </OrderContext.Provider>
+  )
+}
+
+export function useOrders() {
+  const ctx = useContext(OrderContext)
+  if (!ctx) throw new Error('useOrders must be used within OrderProvider')
+  return ctx
+}
+
+import { createContext, useContext, useState, type ReactNode } from 'react'
+import type { PendingCart } from '../types'
+import { pendingCarts as cartsDemo } from '../data/demo'
+
+interface PendingCartCtx {
+  carts: PendingCart[]
+  tumaNotify: (id: string) => void
+  kamilisha: (id: string) => void
+  getCart: (id: string) => PendingCart | undefined
+}
+
+const PendingCartContext = createContext<PendingCartCtx | null>(null)
+
+export function PendingCartProvider({ children }: { children: ReactNode }) {
+  const [carts, setCarts] = useState<PendingCart[]>(cartsDemo)
+
+  const tumaNotify = (id: string) => {
+    setCarts((prev) =>
+      prev.map((c) => (c.id === id ? { ...c, imetumwa: true } : c))
+    )
+  }
+
+  const kamilisha = (id: string) => {
+    setCarts((prev) =>
+      prev.map((c) =>
+        c.id === id
+          ? { ...c, aina: 'imekamilika', imelipwa: c.jumla }
+          : c
+      )
+    )
+  }
+
+  const getCart = (id: string) => carts.find((c) => c.id === id)
+
+  return (
+    <PendingCartContext.Provider value={{ carts, tumaNotify, kamilisha, getCart }}>
+      {children}
+    </PendingCartContext.Provider>
+  )
+}
+
+export function usePendingCarts() {
+  const ctx = useContext(PendingCartContext)
+  if (!ctx) throw new Error('usePendingCarts must be used within PendingCartProvider')
+  return ctx
+}
+
+import { createContext, useContext, useState, type ReactNode } from 'react'
+import type {
+  RipotiBidhaa,
+  AinaRipotiBidhaa,
+  HaliRipoti,
+} from '../types'
+import { ripotiBidhaa as ripotiDemo } from '../data/demo'
+
+interface OngezaRipotiInput {
+  bidhaaId: string
+  jina: string
+  sku: string
+  uom: string
+  kundi: string
+  dukaId: string
+  dukaJina: string
+  aina: AinaRipotiBidhaa
+  wingi: number
+  beiUnunuzi: number
+  sababu: string
+  maelezo?: string
+  pichaUrl?: string
+  expiry?: string
+  mtengenezaji?: string
+  uzito?: string
+}
+
+interface RipotiBidhaaCtx {
+  ripoti: RipotiBidhaa[]
+  ongezaRipoti: (data: OngezaRipotiInput) => RipotiBidhaa
+  thibitisha: (id: string) => void
+  kataa: (id: string, maelezo?: string) => void
+  futa: (id: string) => void
+  getRipoti: (id: string) => RipotiBidhaa | undefined
+}
+
+const RipotiBidhaaContext = createContext<RipotiBidhaaCtx | null>(null)
+
+const ALIYEINGIZA = 'Juma Hassan'
+const DUKA_ID = 'd1'
+const DUKA_JINA = 'Smart Hardware - Kwembe'
+
+export function RipotiBidhaaProvider({ children }: { children: ReactNode }) {
+  const [ripoti, setRipoti] = useState<RipotiBidhaa[]>(ripotiDemo)
+
+  const ongezaRipoti: RipotiBidhaaCtx['ongezaRipoti'] = (data) => {
+    const r: RipotiBidhaa = {
+      ...data,
+      id: `RIP-${new Date().getFullYear()}-${String(ripoti.length + 5).padStart(3, '0')}`,
+      thamani: data.wingi * data.beiUnunuzi,
+      aliyeingiza: ALIYEINGIZA,
+      dukaId: DUKA_ID,
+      dukaJina: DUKA_JINA,
+      tarehe: new Date().toISOString().split('T')[0],
+      hali: 'inasubiri',
+    } as RipotiBidhaa
+    setRipoti((prev) => [r, ...prev])
+    return r
+  }
+
+  const thibitisha = (id: string) => {
+    setRipoti((prev) =>
+      prev.map((r) => (r.id === id ? { ...r, hali: 'imethibitishwa' as HaliRipoti } : r))
+    )
+  }
+
+  const kataa = (id: string, maelezo?: string) => {
+    setRipoti((prev) =>
+      prev.map((r) =>
+        r.id === id
+          ? { ...r, hali: 'imekataliwa' as HaliRipoti, maelezo: maelezo || r.maelezo }
+          : r
+      )
+    )
+  }
+
+  const futa = (id: string) => {
+    setRipoti((prev) => prev.filter((r) => r.id !== id))
+  }
+
+  const getRipoti = (id: string) => ripoti.find((r) => r.id === id)
+
+  return (
+    <RipotiBidhaaContext.Provider
+      value={{ ripoti, ongezaRipoti, thibitisha, kataa, futa, getRipoti }}
+    >
+      {children}
+    </RipotiBidhaaContext.Provider>
+  )
+}
+
+export function useRipotiBidhaa() {
+  const ctx = useContext(RipotiBidhaaContext)
+  if (!ctx) throw new Error('useRipotiBidhaa must be used within RipotiBidhaaProvider')
+  return ctx
+}
+
+
+import { createContext, useContext, useState, type ReactNode } from 'react'
+import type {
+  MarekebishoStoki,
+  AinaMarekebishoStoki,
+  HaliMarekebisho,
+} from '../types'
+
+interface OngezaMarekebishoInput {
+  bidhaaId: string
+  jina: string
+  sku: string
+  uom: string
+  kundi: string
+  dukaId: string
+  dukaJina: string
+  aina: AinaMarekebishoStoki
+  wingi: number
+  beiUnunuzi: number
+  sababu: string
+  maelezo?: string
+  pichaUrl?: string
+  expiry?: string
+  mtengenezaji?: string
+  uzito?: string
+  aliyeingiza: string
+}
+
+interface StokiCtx {
+  marekebisho: MarekebishoStoki[]
+  ongezaMarekebisho: (data: OngezaMarekebishoInput) => MarekebishoStoki
+  thibitisha: (id: string) => void
+  kataa: (id: string, maelezo?: string) => void
+  futa: (id: string) => void
+  getMarekebisho: (id: string) => MarekebishoStoki | undefined
+}
+
+const StokiContext = createContext<StokiCtx | null>(null)
+
+const MAREKEBISHO_DEMO: MarekebishoStoki[] = [
+  {
+    id: 'ADJ-2026-001',
+    bidhaaId: '2',
+    jina: 'Saruji Twiga 50kg',
+    sku: 'SAR-TWI-50',
+    uom: 'Mfuko',
+    kundi: 'Saruji',
+    dukaId: 'd1',
+    dukaJina: 'Smart Hardware - Kwembe',
+    aina: 'uharibifu',
+    wingi: 5,
+    beiUnunuzi: 15500,
+    thamani: 77500,
+    sababu: 'Saruji imekauka',
+    maelezo: 'Saruji 5 zimekauka kwa sababu ya unyevu',
+    expiry: '2027-01-20',
+    mtengenezaji: 'Twiga',
+    uzito: '50kg',
+    aliyeingiza: 'Juma Hassan',
+    tarehe: '2026-11-09',
+    hali: 'imethibitishwa',
+  },
+  {
+    id: 'ADJ-2026-002',
+    bidhaaId: '5',
+    jina: 'Mabati G30',
+    sku: 'MAB-G30',
+    uom: 'Mita',
+    kundi: 'Mabati',
+    dukaId: 'd1',
+    dukaJina: 'Smart Hardware - Kwembe',
+    aina: 'mauzo',
+    wingi: 32,
+    beiUnunuzi: 28000,
+    thamani: 896000,
+    sababu: 'Mauzo ya leo',
+    aliyeingiza: 'Juma Hassan',
+    tarehe: '2026-11-10',
+    hali: 'imethibitishwa',
+  },
+  {
+    id: 'ADJ-2026-003',
+    bidhaaId: '7',
+    jina: 'Rangi Nyeupe 20L',
+    sku: 'RAN-WH-20',
+    uom: 'Lita',
+    kundi: 'Rangi',
+    dukaId: 'd1',
+    dukaJina: 'Smart Hardware - Kwembe',
+    aina: 'expiry',
+    wingi: 2,
+    beiUnunuzi: 82000,
+    thamani: 164000,
+    sababu: 'Rangi imeisha muda',
+    aliyeingiza: 'Asha Mwinyi',
+    tarehe: '2026-11-08',
+    hali: 'imethibitishwa',
+  },
+  {
+    id: 'ADJ-2026-004',
+    bidhaaId: '3',
+    jina: 'Nondo D12',
+    sku: 'NON-D12',
+    uom: 'Kg',
+    kundi: 'Nondo',
+    dukaId: 'd2',
+    dukaJina: 'Smart Hardware - Pugu',
+    aina: 'kurudisha_msambazaji',
+    wingi: 200,
+    beiUnunuzi: 2100,
+    thamani: 420000,
+    sababu: 'Nondo zilipinda',
+    aliyeingiza: 'Peter John',
+    tarehe: '2026-11-09',
+    hali: 'inasubiri',
+    maelezo: 'Zinarudishwa kwa Steel Masters',
+  },
+]
+
+export function StokiProvider({ children }: { children: ReactNode }) {
+  const [marekebisho, setMarekebisho] = useState<MarekebishoStoki[]>(MAREKEBISHO_DEMO)
+
+  const ongezaMarekebisho: StokiCtx['ongezaMarekebisho'] = (data) => {
+    const m: MarekebishoStoki = {
+      ...data,
+      id: `ADJ-${new Date().getFullYear()}-${String(marekebisho.length + 5).padStart(3, '0')}`,
+      thamani: data.wingi * data.beiUnunuzi,
+      tarehe: new Date().toISOString().split('T')[0],
+      hali: 'inasubiri',
+    } as MarekebishoStoki
+    setMarekebisho((prev) => [m, ...prev])
+    return m
+  }
+
+  const thibitisha = (id: string) => {
+    setMarekebisho((prev) =>
+      prev.map((m) =>
+        m.id === id ? { ...m, hali: 'imethibitishwa' as HaliMarekebisho } : m
+      )
+    )
+  }
+
+  const kataa = (id: string, maelezo?: string) => {
+    setMarekebisho((prev) =>
+      prev.map((m) =>
+        m.id === id
+          ? { ...m, hali: 'imekataliwa' as HaliMarekebisho, maelezo: maelezo || m.maelezo }
+          : m
+      )
+    )
+  }
+
+  const futa = (id: string) => {
+    setMarekebisho((prev) => prev.filter((m) => m.id !== id))
+  }
+
+  const getMarekebisho = (id: string) => marekebisho.find((m) => m.id === id)
+
+  return (
+    <StokiContext.Provider
+      value={{ marekebisho, ongezaMarekebisho, thibitisha, kataa, futa, getMarekebisho }}
+    >
+      {children}
+    </StokiContext.Provider>
+  )
+}
+
+export function useStoki() {
+  const ctx = useContext(StokiContext)
+  if (!ctx) throw new Error('useStoki must be used within StokiProvider')
+  return ctx
+}
+
+import { createContext, useContext, useState, type ReactNode } from 'react'
+import type {
+  UingizajiVifaa,
+  BidhaaMpya,
+  AinaUingizaji,
+  HaliUingizaji,
+} from '../types'
+import { uingizajiVifaa as uingizajiDemo } from '../data/demo'
+
+// ============================================================
+// Input ya kuongeza uingizaji mpya
+// ============================================================
+interface OngezaInput {
+  aina: AinaUingizaji
+  dukaId: string
+  dukaJina: string
+  bidhaa: BidhaaMpya[]
+  aliyeingiza: string
+  nafasi: 'mmiliki' | 'admin'
+  maelezo?: string
+}
+
+interface UingizajiCtx {
+  uingizaji: UingizajiVifaa[]
+  ongezaUingizaji: (data: OngezaInput) => UingizajiVifaa
+  pokea: (id: string, aliyepokea: string) => void
+  kataa: (id: string, aliyepokea: string, maelezo?: string) => void
+  getUingizaji: (id: string) => UingizajiVifaa | undefined
+}
+
+const UingizajiContext = createContext<UingizajiCtx | null>(null)
+
+export function UingizajiProvider({ children }: { children: ReactNode }) {
+  const [uingizaji, setUingizaji] = useState<UingizajiVifaa[]>(uingizajiDemo)
+
+  const ongezaUingizaji: UingizajiCtx['ongezaUingizaji'] = (data) => {
+    const jumlaBidhaa = data.bidhaa.reduce((s, b) => s + b.stoki, 0)
+    const jumlaThamani = data.bidhaa.reduce((s, b) => s + b.stoki * b.beiUnunuzi, 0)
+
+    const u: UingizajiVifaa = {
+      id: `INP-${new Date().getFullYear()}-${String(uingizaji.length + 1).padStart(3, '0')}`,
+      aina: data.aina,
+      dukaId: data.dukaId,
+      dukaJina: data.dukaJina,
+      bidhaa: data.bidhaa,
+      jumlaBidhaa,
+      jumlaThamani,
+      aliyeingiza: data.aliyeingiza,
+      nafasi: data.nafasi,
+      tarehe: new Date().toISOString().split('T')[0],
+      hali: 'inasubiri',
+      maelezo: data.maelezo,
+    }
+    setUingizaji((prev) => [u, ...prev])
+    return u
+  }
+
+  const pokea = (id: string, aliyepokea: string) => {
+    setUingizaji((prev) =>
+      prev.map((u) =>
+        u.id === id
+          ? {
+              ...u,
+              hali: 'imepokelewa' as HaliUingizaji,
+              aliyepokea,
+              tareheKupokea: new Date().toISOString().split('T')[0],
+            }
+          : u
+      )
+    )
+  }
+
+  const kataa = (id: string, aliyepokea: string, maelezo?: string) => {
+    setUingizaji((prev) =>
+      prev.map((u) =>
+        u.id === id
+          ? {
+              ...u,
+              hali: 'imekataliwa' as HaliUingizaji,
+              aliyepokea,
+              tareheKupokea: new Date().toISOString().split('T')[0],
+              maelezo: maelezo || u.maelezo,
+            }
+          : u
+      )
+    )
+  }
+
+  const getUingizaji = (id: string) => uingizaji.find((u) => u.id === id)
+
+  return (
+    <UingizajiContext.Provider value={{ uingizaji, ongezaUingizaji, pokea, kataa, getUingizaji }}>
+      {children}
+    </UingizajiContext.Provider>
+  )
+}
+
+export function useUingizaji() {
+  const ctx = useContext(UingizajiContext)
+  if (!ctx) throw new Error('useUingizaji must be used within UingizajiProvider')
+  return ctx
+}
+
+
+import { createContext, useContext, useState, type ReactNode } from 'react'
+import type { MalipoZaka } from '../types'
+
+interface ZakaCtx {
+  malipo: MalipoZaka[]
+  rekodiMalipo: (data: Omit<MalipoZaka, 'id'>) => MalipoZaka
+  futaMalipo: (id: string) => void
+}
+
+const ZakaContext = createContext<ZakaCtx | null>(null)
+
+const MALIPO_DEMO: MalipoZaka[] = [
+  {
+    id: 'ZAKA-001',
+    tarehe: '2026-11-08',
+    kiasi: 50000,
+    aina: 'zaka',
+    risiti: 'RIS-001',
+    maelezo: 'Zaka ya wiki iliyopita',
+  },
+]
+
+export function ZakaProvider({ children }: { children: ReactNode }) {
+  const [malipo, setMalipo] = useState<MalipoZaka[]>(MALIPO_DEMO)
+
+  const rekodiMalipo: ZakaCtx['rekodiMalipo'] = (data) => {
+    const m: MalipoZaka = {
+      ...data,
+      id: `ZAKA-${Date.now()}`,
+    }
+    setMalipo((prev) => [m, ...prev])
+    return m
+  }
+
+  const futaMalipo = (id: string) => {
+    setMalipo((prev) => prev.filter((m) => m.id !== id))
+  }
+
+  return (
+    <ZakaContext.Provider value={{ malipo, rekodiMalipo, futaMalipo }}>
+      {children}
+    </ZakaContext.Provider>
+  )
+}
+
+export function useZaka() {
+  const ctx = useContext(ZakaContext)
+  if (!ctx) throw new Error('useZaka must be used within ZakaProvider')
+  return ctx
+}
+
+import { useState, useRef, useEffect, useMemo } from 'react'
+import { useNavigate } from 'react-router-dom'
+import {
+  Search,
+  Bell,
+  Menu,
+  Settings,
+  User,
+  LogOut,
+  ChevronDown,
+  X,
+  ShoppingCart,
+  Plus,
+  Minus,
+  Trash2,
+  AlertTriangle,
+  CheckCircle2,
+  Info,
+  XCircle,
+  ArrowRight,
+} from 'lucide-react'
+import { searchEverything, type SearchType } from '../utils/search'
+import { useCart } from '../context/CartContext'
+import { useNotifications } from '../context/NotificationContext'
+import { iconForKundi } from '../utils/icons'
+
+type Role = 'mteja' | 'muuzaji' | 'mmiliki'
+
+interface TopBarProps {
+  role: Role
+  onMenuClick: () => void
+}
+
+interface UserProfile {
+  name: string
+  email: string
+  initials: string
+}
+
+const USERS: Record<Role, UserProfile> = {
+  mteja: { name: 'Mjenzi Mwakyusa', email: 'mwakyusa@email.com', initials: 'MM' },
+  muuzaji: { name: 'Juma Hassan', email: 'juma@smarthardware.co.tz', initials: 'JH' },
+  mmiliki: { name: 'Moses Kimaro', email: 'moses@smarthardware.co.tz', initials: 'MK' },
+}
+
+const ROLE_LABEL: Record<Role, string> = {
+  mteja: 'Mteja',
+  muuzaji: 'Muuzaji',
+  mmiliki: 'Mmiliki',
+}
+
+const TYPE_LABEL: Record<SearchType, string> = {
+  bidhaa: 'Bidhaa',
+  duka: 'Duka',
+  mtumiaji: 'Mtumiaji',
+  deni: 'Deni',
+  gharama: 'Gharama',
+}
+
+export default function TopBar({ role, onMenuClick }: TopBarProps) {
+  const navigate = useNavigate()
+  const user = USERS[role]
+
+  const [query, setQuery] = useState('')
+  const [searchOpen, setSearchOpen] = useState(false)
+
+  const [notifOpen, setNotifOpen] = useState(false)
+
+  const [cartOpen, setCartOpen] = useState(false)
+  const cart = useCart()
+  const showCart = role === 'mteja' || role === 'muuzaji'
+
+  const [profileOpen, setProfileOpen] = useState(false)
+
+  const {
+    notifications: notifList,
+    unreadCount,
+    markAsRead,
+    markAllRead,
+  } = useNotifications()
+
+  const searchRef = useRef<HTMLDivElement>(null)
+  const notifRef = useRef<HTMLDivElement>(null)
+  const cartRef = useRef<HTMLDivElement>(null)
+  const profileRef = useRef<HTMLDivElement>(null)
+
+  const results = useMemo(() => searchEverything(query), [query])
+
+  useEffect(() => {
+    function handleClick(e: MouseEvent) {
+      const t = e.target as Node
+      if (searchRef.current && !searchRef.current.contains(t)) setSearchOpen(false)
+      if (notifRef.current && !notifRef.current.contains(t)) setNotifOpen(false)
+      if (cartRef.current && !cartRef.current.contains(t)) setCartOpen(false)
+      if (profileRef.current && !profileRef.current.contains(t)) setProfileOpen(false)
+    }
+    document.addEventListener('mousedown', handleClick)
+    return () => document.removeEventListener('mousedown', handleClick)
+  }, [])
+
+  useEffect(() => {
+    function onKey(e: KeyboardEvent) {
+      if (e.key === 'Escape') {
+        setSearchOpen(false)
+        setNotifOpen(false)
+        setCartOpen(false)
+        setProfileOpen(false)
+      }
+    }
+    document.addEventListener('keydown', onKey)
+    return () => document.removeEventListener('keydown', onKey)
+  }, [])
+
+  const handleSearchResult = (route?: string) => {
+    if (route) navigate(route)
+    setQuery('')
+    setSearchOpen(false)
+  }
+
+  const toggleNotif = () => {
+    setNotifOpen((v) => !v)
+    setCartOpen(false)
+    setProfileOpen(false)
+  }
+
+  const toggleCart = () => {
+    setCartOpen((v) => !v)
+    setNotifOpen(false)
+    setProfileOpen(false)
+  }
+
+  const toggleProfile = () => {
+    setProfileOpen((v) => !v)
+    setNotifOpen(false)
+    setCartOpen(false)
+  }
+
+  // ============================================================
+  // Notification click - navigate
+  // ============================================================
+  const handleNotifClick = (n: typeof notifList[0]) => {
+    markAsRead(n.id)
+    setNotifOpen(false)
+    if (n.route) {
+      navigate(n.route)
+    } else {
+      navigate(`/${role}/notifications/${n.id}`)
+    }
+  }
+
+  const handleOnaZote = () => {
+    setNotifOpen(false)
+    navigate(`/${role}/notifications`)
+  }
+
+  const goToQuotation = () => {
+    setCartOpen(false)
+    navigate('/mteja/quotation')
+  }
+
+  const goToBidhaa = () => {
+    setCartOpen(false)
+    navigate(role === 'muuzaji' ? '/muuzaji' : '/mteja/bidhaa')
+  }
+
+  const notifIcon = (type: string) => {
+    switch (type) {
+      case 'danger':
+        return <XCircle size={16} className="text-red-500" />
+      case 'warning':
+        return <AlertTriangle size={16} className="text-amber-500" />
+      case 'success':
+        return <CheckCircle2 size={16} className="text-emerald-500" />
+      default:
+        return <Info size={16} className="text-brand-500" />
+    }
+  }
+
+  return (
+    <header className="sticky top-0 z-30 bg-white border-b border-slate-200">
+      <div className="h-16 px-3 md:px-6 flex items-center gap-2 md:gap-3">
+        <button
+          onClick={onMenuClick}
+          className="lg:hidden p-2 -ml-1 rounded-lg hover:bg-slate-100 shrink-0"
+          aria-label="Fungua menyu"
+        >
+          <Menu size={22} />
+        </button>
+
+        {/* ===== SEARCH ===== */}
+        <div ref={searchRef} className="flex-1 min-w-0 relative">
+          <div className="relative">
+            <Search
+              size={18}
+              className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none"
+            />
+            <input
+              value={query}
+              onChange={(e) => {
+                setQuery(e.target.value)
+                setSearchOpen(true)
+              }}
+              onFocus={() => setSearchOpen(true)}
+              placeholder="Tafuta bidhaa, duka, mtu, deni..."
+              className="w-full pl-10 pr-9 py-2.5 rounded-xl bg-slate-100 border border-transparent focus:bg-white focus:border-brand-500 outline-none text-sm"
+            />
+            {query && (
+              <button
+                onClick={() => {
+                  setQuery('')
+                  setSearchOpen(false)
+                }}
+                className="absolute right-2 top-1/2 -translate-y-1/2 p-1 rounded-md hover:bg-slate-200"
+                aria-label="Futa"
+              >
+                <X size={14} />
+              </button>
+            )}
+          </div>
+
+          {searchOpen && query && (
+            <div className="absolute top-full mt-2 left-0 right-0 bg-white rounded-xl border border-slate-200 shadow-xl max-h-[70vh] overflow-auto">
+              {results.length === 0 ? (
+                <div className="p-6 text-center text-sm text-slate-500">
+                  Hakuna matokeo ya "
+                  <span className="font-medium text-slate-700">{query}</span>"
+                </div>
+              ) : (
+                <div className="py-1">
+                  {results.map((r, i) => (
+                    <button
+                      key={`${r.type}-${i}`}
+                      onClick={() => handleSearchResult(r.route)}
+                      className="w-full px-3 py-2.5 flex items-center gap-3 hover:bg-slate-50 text-left"
+                    >
+                      <span className="w-8 h-8 rounded-lg bg-slate-100 text-slate-600 grid place-items-center shrink-0">
+                        <r.Icon size={16} />
+                      </span>
+                      <div className="flex-1 min-w-0">
+                        <div className="text-sm font-medium truncate">{r.title}</div>
+                        <div className="text-xs text-slate-500 truncate">{r.subtitle}</div>
+                      </div>
+                      <span className="hidden sm:inline text-[10px] uppercase font-semibold text-slate-400 bg-slate-100 px-1.5 py-0.5 rounded shrink-0">
+                        {TYPE_LABEL[r.type]}
+                      </span>
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+
+        {/* ===== RIGHT ACTIONS ===== */}
+        <div className="flex items-center gap-0.5 md:gap-1 shrink-0">
+          {/* CART */}
+          {showCart && (
+            <div ref={cartRef} className="relative">
+              <button
+                onClick={toggleCart}
+                className="relative flex items-center gap-2 px-2 md:px-2.5 py-2 rounded-lg hover:bg-slate-100"
+                aria-label="Cart"
+              >
+                <div className="relative">
+                  <ShoppingCart size={20} />
+                  {cart.count > 0 && (
+                    <span className="absolute -top-2 -right-2 min-w-4 h-4 px-1 bg-brand-600 text-white text-[10px] rounded-full grid place-items-center font-bold">
+                      {cart.count > 99 ? '99+' : cart.count}
+                    </span>
+                  )}
+                </div>
+                {cart.total > 0 && (
+                  <span className="hidden md:inline text-xs font-semibold text-brand-700 bg-brand-50 px-2 py-1 rounded-md whitespace-nowrap">
+                    Tsh {cart.total.toLocaleString()}
+                  </span>
+                )}
+              </button>
+
+              {cartOpen && (
+                <div className="absolute right-0 top-full mt-2 w-[calc(100vw-1.5rem)] sm:w-96 max-w-sm bg-white rounded-xl border border-slate-200 shadow-xl overflow-hidden">
+                  <div className="p-3 border-b border-slate-100 flex justify-between items-center">
+                    <div>
+                      <div className="font-semibold text-sm">Cart Yako</div>
+                      <div className="text-xs text-slate-500">
+                        {cart.count} bidhaa - Tsh {cart.total.toLocaleString()}
+                      </div>
+                    </div>
+                    {cart.detailed.length > 0 && (
+                      <button
+                        onClick={cart.clear}
+                        className="text-xs text-red-600 hover:underline"
+                      >
+                        Ondoa zote
+                      </button>
+                    )}
+                  </div>
+
+                  <div className="max-h-80 overflow-auto divide-y divide-slate-100">
+                    {cart.detailed.length === 0 ? (
+                      <div className="p-8 text-center text-sm text-slate-500">
+                        <ShoppingCart size={32} className="mx-auto mb-2 text-slate-300" />
+                        Cart yako ni tupu
+                      </div>
+                    ) : (
+                      cart.detailed.map((l) => {
+                        const Icon = iconForKundi(l.iconKey)
+                        return (
+                          <div key={l.id} className="p-3 flex gap-3">
+                            <div className="w-10 h-10 rounded-lg bg-slate-100 text-slate-600 grid place-items-center shrink-0">
+                              <Icon size={18} />
+                            </div>
+                            <div className="flex-1 min-w-0">
+                              <div className="text-sm font-medium truncate">{l.jina}</div>
+                              <div className="text-xs text-slate-500">
+                                Tsh {l.bei.toLocaleString()} / {l.uom}
+                              </div>
+                              <div className="flex items-center gap-1.5 mt-2">
+                                <button
+                                  onClick={() => cart.dec(l.id)}
+                                  className="w-6 h-6 rounded-md bg-slate-100 hover:bg-slate-200 grid place-items-center"
+                                  aria-label="Punguza"
+                                >
+                                  <Minus size={12} />
+                                </button>
+                                <span className="text-sm font-semibold w-6 text-center">
+                                  {l.wingi}
+                                </span>
+                                <button
+                                  onClick={() => cart.inc(l.id)}
+                                  className="w-6 h-6 rounded-md bg-slate-100 hover:bg-slate-200 grid place-items-center"
+                                  aria-label="Ongeza"
+                                >
+                                  <Plus size={12} />
+                                </button>
+                                <button
+                                  onClick={() => cart.remove(l.id)}
+                                  className="ml-auto p-1 rounded-md text-red-500 hover:bg-red-50"
+                                  aria-label="Ondoa"
+                                >
+                                  <Trash2 size={14} />
+                                </button>
+                              </div>
+                            </div>
+                            <div className="text-sm font-semibold self-start whitespace-nowrap">
+                              Tsh {l.jumla.toLocaleString()}
+                            </div>
+                          </div>
+                        )
+                      })
+                    )}
+                  </div>
+
+                  <div className="p-3 border-t border-slate-100 space-y-2">
+                    <div className="flex justify-between text-sm">
+                      <span>Jumla</span>
+                      <span className="font-bold">Tsh {cart.total.toLocaleString()}</span>
+                    </div>
+                    <div className="grid grid-cols-2 gap-2">
+                      <button
+                        onClick={goToBidhaa}
+                        className="px-3 py-2 rounded-lg bg-slate-100 text-sm hover:bg-slate-200"
+                      >
+                        Endelea Kununua
+                      </button>
+                      <button
+                        onClick={goToQuotation}
+                        disabled={cart.detailed.length === 0}
+                        className="px-3 py-2 rounded-lg bg-brand-600 text-white text-sm font-semibold hover:bg-brand-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                      >
+                        Nenda Quotation
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* NOTIFICATIONS */}
+          <div ref={notifRef} className="relative">
+            <button
+              onClick={toggleNotif}
+              className="relative p-2 rounded-lg hover:bg-slate-100"
+              aria-label="Taarifa"
+            >
+              <Bell size={20} />
+              {unreadCount > 0 && (
+                <span className="absolute top-1 right-1 min-w-4 h-4 px-1 bg-red-500 text-white text-[10px] rounded-full grid place-items-center font-bold">
+                  {unreadCount > 99 ? '99+' : unreadCount}
+                </span>
+              )}
+            </button>
+
+            {notifOpen && (
+              <div className="absolute right-0 top-full mt-2 w-[calc(100vw-1.5rem)] sm:w-96 max-w-sm bg-white rounded-xl border border-slate-200 shadow-xl overflow-hidden">
+                <div className="p-3 border-b border-slate-100 flex justify-between items-center">
+                  <div className="font-semibold text-sm">Taarifa</div>
+                  {unreadCount > 0 && (
+                    <button
+                      onClick={markAllRead}
+                      className="text-xs text-brand-600 hover:underline"
+                    >
+                      Weka zote kama zimesomwa
+                    </button>
+                  )}
+                </div>
+                <div className="max-h-96 overflow-auto divide-y divide-slate-100">
+                  {notifList.length === 0 ? (
+                    <div className="p-8 text-center text-sm text-slate-500">
+                      <Bell size={32} className="mx-auto mb-2 text-slate-300" />
+                      Hakuna taarifa
+                    </div>
+                  ) : (
+                    notifList.map((n) => (
+                      <button
+                        key={n.id}
+                        onClick={() => handleNotifClick(n)}
+                        className={`w-full text-left p-3 hover:bg-slate-50 transition ${
+                          !n.read ? 'bg-brand-50/40' : ''
+                        }`}
+                      >
+                        <div className="flex gap-2">
+                          <div className="mt-0.5 shrink-0">{notifIcon(n.type)}</div>
+                          <div className="flex-1 min-w-0">
+                            <div className="text-sm font-medium flex items-center gap-2">
+                              <span className="truncate">{n.title}</span>
+                              {!n.read && (
+                                <span className="w-1.5 h-1.5 rounded-full bg-brand-600 shrink-0" />
+                              )}
+                            </div>
+                            <div className="text-xs text-slate-500 mt-0.5">{n.message}</div>
+                            <div className="text-[10px] text-slate-400 mt-1">{n.time}</div>
+                          </div>
+                          <ArrowRight size={14} className="text-slate-300 shrink-0 mt-1" />
+                        </div>
+                      </button>
+                    ))
+                  )}
+                </div>
+                <div className="p-2 border-t border-slate-100 text-center">
+                  <button
+                    onClick={handleOnaZote}
+                    className="text-xs text-brand-600 hover:underline"
+                  >
+                    Ona taarifa zote
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* PROFILE */}
+          <div ref={profileRef} className="relative">
+            <button
+              onClick={toggleProfile}
+              className="flex items-center gap-2 p-1.5 rounded-lg hover:bg-slate-100"
+              aria-label="Wasifu"
+            >
+              <div className="w-8 h-8 rounded-full bg-brand-600 text-white grid place-items-center text-xs font-bold">
+                {user.initials}
+              </div>
+              <div className="hidden md:block text-left">
+                <div className="text-xs font-semibold leading-tight">{user.name}</div>
+                <div className="text-[10px] text-slate-500 leading-tight">
+                  {ROLE_LABEL[role]}
+                </div>
+              </div>
+              <ChevronDown size={14} className="hidden md:block text-slate-400" />
+            </button>
+
+            {profileOpen && (
+              <div className="absolute right-0 top-full mt-2 w-60 bg-white rounded-xl border border-slate-200 shadow-xl overflow-hidden">
+                <div className="p-3 border-b border-slate-100">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-full bg-brand-600 text-white grid place-items-center text-sm font-bold">
+                      {user.initials}
+                    </div>
+                    <div className="min-w-0">
+                      <div className="text-sm font-semibold truncate">{user.name}</div>
+                      <div className="text-xs text-slate-500 truncate">{user.email}</div>
+                    </div>
+                  </div>
+                </div>
+                <div className="p-1">
+                  <button className="w-full px-3 py-2 flex items-center gap-2 text-sm rounded-lg hover:bg-slate-100">
+                    <User size={16} className="text-slate-500" /> Wasifu Wangu
+                  </button>
+                  <button className="w-full px-3 py-2 flex items-center gap-2 text-sm rounded-lg hover:bg-slate-100">
+                    <Settings size={16} className="text-slate-500" /> Mipangilio
+                  </button>
+                  <div className="border-t border-slate-100 my-1" />
+                  <button
+                    onClick={() => navigate('/')}
+                    className="w-full px-3 py-2 flex items-center gap-2 text-sm rounded-lg hover:bg-red-50 text-red-600"
+                  >
+                    <LogOut size={16} /> Toka (Logout)
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    </header>
+  )
+}
+
+export default function StatCard({
+  label, value, sub, color = 'brand',
+}: { label: string; value: string; sub?: string; color?: 'brand' | 'green' | 'amber' | 'red' }) {
+  const colors = {
+    brand: 'bg-brand-50 text-brand-700',
+    green: 'bg-emerald-50 text-emerald-700',
+    amber: 'bg-amber-50 text-amber-700',
+    red: 'bg-red-50 text-red-700',
+  }
+  return (
+    <div className="bg-white rounded-xl border border-slate-200 p-5">
+      <div className={`inline-flex px-2 py-1 rounded-md text-xs font-medium ${colors[color]}`}>{label}</div>
+      <div className="text-2xl font-bold mt-2">{value}</div>
+      {sub && <div className="text-xs text-slate-500 mt-1">{sub}</div>}
+    </div>
+  )
+}
+
+import { NavLink, useNavigate } from 'react-router-dom'
+import { Home, Package, ShoppingCart, Users, Store, Wallet, TrendingUp, HandCoins, Receipt, FileText, X, ShoppingBag, TruckIcon, UserPlus, Bell, BarChart3, Truck, PackagePlus, LogOutIcon, ArrowBigLeft, BellCheckIcon, StopCircle, HouseCog, HouseCogIcon, PackageX, DollarSign, CircleDollarSign, Banknote } from 'lucide-react'
+
+const navByRole: Record<string, { to: string; label: string; icon: React.ElementType }[]> = {
+  mteja: [
+    { to: '/mteja', label: 'Nyumbani', icon: Home },
+    { to: '/mteja/bidhaa', label: 'Bidhaa', icon: Package },
+    { to: '/mteja/quotation', label: 'Quotation', icon: FileText },
+    { to: '/mteja/deni', label: 'Deni Langu', icon: Wallet },
+    { to: '/mteja/orders', label: 'Order Zangu', icon: ShoppingBag }, 
+  ],
+  muuzaji: [
+    { to: '/muuzaji', label: 'POS', icon: ShoppingCart },
+    { to: '/muuzaji/risiti', label: 'Risiti za Leo', icon: Receipt },
+    { to: '/muuzaji/pokea', label: 'Pokea Bidhaa', icon: Truck },
+    { to: '/muuzaji/wateja', label: 'Wateja', icon: UserPlus },
+    { to: '/muuzaji/store-manage', label: 'ripoti za stoo', icon: UserPlus },
+    { to: '/muuzaji/ripoti-bidhaa', label: 'hali ya bidhaa', icon: HouseCogIcon },
+    { to: '/muuzaji/mshahara', label: 'Mshahara Wangu', icon: CircleDollarSign },
+    { to: '/muuzaji/carts', label: 'Carts Zinazosubiri', icon: Bell },
+    { to: '/muuzaji/matumizi', label: 'Maombi ya Matumizi', icon: Wallet }, // MPYA
+    { to: '/muuzaji/ripoti', label: 'Ripoti za Duka', icon: BarChart3 },
+  ],
+mmiliki: [
+  { to: '/mmiliki', label: 'Dashboard', icon: Home },
+  { to: '/mmiliki/maduka', label: 'Maduka', icon: Store },
+  { to: '/mmiliki/wafanyakazi', label: 'Wafanyakazi', icon: Users },
+  { to: '/mmiliki/faida', label: 'Faida/Hasara', icon: TrendingUp },
+  { to: '/mmiliki/mauzo', label: 'Mauzo na Faida', icon: TrendingUp }, 
+  { to: '/mmiliki/ripoti-bidhaa', label: 'Ripoti za Bidhaa', icon: PackageX },
+   { to: '/mmiliki/mishahara', label: 'Mishahara', icon: Banknote },
+  { to: '/mmiliki/zaka', label: 'Zaka & Sadaka', icon: HandCoins },
+   { to: '/mmiliki/uingiza', label: 'Ingiza Vifaa', icon: PackagePlus },
+   { to: '/mmiliki/wateja', label: 'Wateja', icon: UserPlus },
+    { to: '/mmiliki/orders', label: 'Order Zote', icon: ShoppingBag }, 
+    { to: '/mmiliki/matumizi', label: 'Maombi ya Matumizi', icon: Wallet },
+      { to: '/mmiliki/store', label: 'store', icon: HouseCog },
+    { to: '/mmiliki/notifications', label: 'notifications', icon: BellCheckIcon },
+     { to: '/', label: 'toka', icon: LogOutIcon }, 
+   
+
+],
+}
+
+const roleLabels = {
+  mteja: 'Mteja Portal',
+  muuzaji: 'Muuzaji Duka',
+  mmiliki: 'Mmiliki Dashboard',
+}
+
+interface SidebarProps {
+  role: 'mteja' | 'muuzaji' | 'mmiliki'
+  open: boolean
+  onClose: () => void
+}
+
+export default function Sidebar({ role, open, onClose }: SidebarProps) {
+  const navigate = useNavigate()
+
+  const content = (
+    <>
+      <div className="p-5 border-b border-slate-200 flex items-center justify-between shrink-0">
+        <div className="flex items-center gap-2">
+          <div className="w-9 h-9 rounded-lg bg-brand-600 text-white grid place-items-center font-bold">S</div>
+          <div>
+            <div className="font-semibold text-sm">SMART HARDWARE</div>
+            <div className="text-xs text-slate-500">{roleLabels[role]}</div>
+          </div>
+        </div>
+        <button onClick={onClose} className="lg:hidden p-1.5 rounded-lg hover:bg-slate-100">
+          <X size={18} />
+        </button>
+      </div>
+
+      {/* Nav — scrollable */}
+      <nav className="flex-1 overflow-y-auto p-3 space-y-1">
+        {navByRole[role].map((n) => (
+          <NavLink
+            key={n.to}
+            to={n.to}
+            end={n.to === `/${role}`}
+            onClick={onClose}
+            className={({ isActive }) =>
+              `flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition ${
+                isActive ? 'bg-brand-600 text-white' : 'text-slate-700 hover:bg-slate-100'
+              }`
+            }
+          >
+            <n.icon size={18} />
+            {n.label}
+          </NavLink>
+        ))}
+      </nav>
+
+      <div className="p-3 border-t border-slate-200 shrink-0">
+        <button
+          onClick={() => navigate('/')}
+          className="w-full text-sm text-slate-600 hover:text-brand-600 px-3 py-2 rounded-lg hover:bg-slate-100 text-left"
+        >
+          <ArrowBigLeft/>Badilisha Mtumiaji
+        </button>
+      </div>
+    </>
+  )
+
+  return (
+    <>
+      {/* Desktop sidebar */}
+      <aside className="hidden lg:flex w-64 bg-white border-r border-slate-200 flex-col h-screen sticky top-0">
+        {content}
+      </aside>
+
+      {/* Mobile drawer */}
+      {open && (
+        <div className="lg:hidden fixed inset-0 z-50">
+          <div className="absolute inset-0 bg-black/40" onClick={onClose} />
+          <aside className="absolute left-0 top-0 bottom-0 w-72 bg-white flex flex-col shadow-2xl">
+            {content}
+          </aside>
+        </div>
+      )}
+    </>
+  )
+}
+
+import { useState } from 'react'
+import {
+  X,
+  Smartphone,
+  Banknote,
+  Building2,
+  Check,
+  AlertCircle,
+  Loader2,
+} from 'lucide-react'
+import type { Malipo, NjiaMalipo } from '../types'
+import { NJIA_MALIPO } from '../data/demo'
+
+interface PaymentModalProps {
+  open: boolean
+  jumla: number
+  onClose: () => void
+  onSuccess: (malipo: Malipo) => void
+}
+
+const NJIA_ICONS: Record<NjiaMalipo, React.ElementType> = {
+  mpesa: Smartphone,
+  tigopesa: Smartphone,
+  airtel: Smartphone,
+  halopesa: Smartphone,
+  cash: Banknote,
+  benki: Building2,
+}
+
+export default function PaymentModal({
+  open,
+  jumla,
+  onClose,
+  onSuccess,
+}: PaymentModalProps) {
+  const [njia, setNjia] = useState<NjiaMalipo>('mpesa')
+  const [simu, setSimu] = useState('')
+  const [kumbukumbu, setKumbukumbu] = useState('')
+  const [kiasi, setKiasi] = useState(jumla)
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState('')
+
+  if (!open) return null
+
+  const isMobile = njia !== 'cash' && njia !== 'benki'
+
+  const validate = (): string => {
+    if (kiasi <= 0) return 'Kiasi kinapaswa kuwa zaidi ya sifuri'
+    if (kiasi > jumla) return 'Kiasi hakiwezi kuzidi jumla'
+    if (isMobile) {
+      if (!/^0[67]\d{2}-?\d{3}-?\d{3}$/.test(simu.replace(/\s/g, ''))) {
+        return 'Weka namba sahihi ya simu (mfano: 0754-123-456)'
+      }
+      if (kumbukumbu.trim().length < 6) {
+        return 'Kumbukumbu namba iwe angalau herufi/namba 6'
+      }
+    }
+    return ''
+  }
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault()
+    const err = validate()
+    if (err) {
+      setError(err)
+      return
+    }
+    setError('')
+    setLoading(true)
+
+    setTimeout(() => {
+      const malipo: Malipo = {
+        id: `M-${Date.now()}`,
+        njia,
+        simu: isMobile ? simu : 'Cash / Benki',
+        kumbukumbu: isMobile ? kumbukumbu.trim().toUpperCase() : 'CASH',
+        kiasi,
+        tarehe: new Date().toLocaleString('sw-TZ'),
+        hali: 'imethibitishwa',
+      }
+      onSuccess(malipo)
+      setLoading(false)
+      setSimu('')
+      setKumbukumbu('')
+      setKiasi(jumla)
+      onClose()
+    }, 1200)
+  }
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4">
+      <div className="absolute inset-0 bg-black/40" onClick={onClose} />
+
+      <div className="relative bg-white w-full sm:max-w-lg rounded-t-2xl sm:rounded-2xl shadow-2xl max-h-[92vh] overflow-y-auto">
+        <div className="sticky top-0 bg-white border-b border-slate-200 px-4 py-3 flex justify-between items-center">
+          <div>
+            <div className="font-semibold">Lipa kwa Namba ya Simu</div>
+            <div className="text-xs text-slate-500">
+              Jumla: Tsh {jumla.toLocaleString()}
+            </div>
+          </div>
+          <button
+            onClick={onClose}
+            className="p-1.5 rounded-lg hover:bg-slate-100"
+            aria-label="Funga"
+          >
+            <X size={18} />
+          </button>
+        </div>
+
+        <form onSubmit={handleSubmit} className="p-4 space-y-4">
+          <div>
+            <label className="text-sm font-medium text-slate-700">
+              Njia ya Malipo
+            </label>
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 mt-2">
+              {NJIA_MALIPO.map((n) => {
+                const Icon = NJIA_ICONS[n.key]
+                const active = njia === n.key
+                return (
+                  <button
+                    key={n.key}
+                    type="button"
+                    onClick={() => setNjia(n.key)}
+                    className={`flex items-center gap-2 px-3 py-2.5 rounded-lg border text-sm transition ${
+                      active
+                        ? 'border-brand-500 bg-brand-50 text-brand-700 font-semibold'
+                        : 'border-slate-200 text-slate-700 hover:bg-slate-50'
+                    }`}
+                  >
+                    <Icon size={16} />
+                    {n.label}
+                  </button>
+                )
+              })}
+            </div>
+          </div>
+
+          {isMobile && (
+            <>
+              <div>
+                <label className="text-sm font-medium text-slate-700">
+                  Namba ya Simu ya Mlipaji
+                </label>
+                <input
+                  value={simu}
+                  onChange={(e) => setSimu(e.target.value)}
+                  placeholder="0754-123-456"
+                  inputMode="tel"
+                  className="mt-1 w-full px-3 py-2.5 rounded-lg border border-slate-200 focus:border-brand-500 outline-none text-sm"
+                />
+              </div>
+
+              <div>
+                <label className="text-sm font-medium text-slate-700">
+                  Kumbukumbu Namba (Transaction ID)
+                </label>
+                <input
+                  value={kumbukumbu}
+                  onChange={(e) => setKumbukumbu(e.target.value.toUpperCase())}
+                  placeholder="Mfano: QGR7XK2P9L"
+                  className="mt-1 w-full px-3 py-2.5 rounded-lg border border-slate-200 focus:border-brand-500 outline-none text-sm font-mono tracking-wide"
+                />
+                <div className="text-xs text-slate-500 mt-1 flex items-start gap-1">
+                  <AlertCircle size={12} className="mt-0.5 shrink-0" />
+                  Utapata kumbukumbu hii kwenye SMS ya malipo kutoka kwa mtandao wako.
+                </div>
+              </div>
+            </>
+          )}
+
+          <div>
+            <label className="text-sm font-medium text-slate-700">
+              Kiasi Unacholipa (Tsh)
+            </label>
+            <input
+              type="number"
+              value={kiasi}
+              onChange={(e) => setKiasi(Number(e.target.value))}
+              max={jumla}
+              min={1}
+              className="mt-1 w-full px-3 py-2.5 rounded-lg border border-slate-200 focus:border-brand-500 outline-none text-sm"
+            />
+            <div className="flex gap-2 mt-2">
+              <button
+                type="button"
+                onClick={() => setKiasi(jumla)}
+                className="text-xs px-2 py-1 rounded-md bg-slate-100 hover:bg-slate-200"
+              >
+                Lipa Zote
+              </button>
+              <button
+                type="button"
+                onClick={() => setKiasi(Math.floor(jumla / 2))}
+                className="text-xs px-2 py-1 rounded-md bg-slate-100 hover:bg-slate-200"
+              >
+                Nusu
+              </button>
+            </div>
+          </div>
+
+          {error && (
+            <div className="flex items-start gap-2 p-3 rounded-lg bg-red-50 text-red-700 text-sm">
+              <AlertCircle size={16} className="mt-0.5 shrink-0" />
+              {error}
+            </div>
+          )}
+
+          <div className="border-t border-slate-200 pt-3 flex flex-col sm:flex-row gap-2">
+            <button
+              type="button"
+              onClick={onClose}
+              className="px-4 py-2.5 rounded-lg bg-slate-100 text-sm hover:bg-slate-200 order-2 sm:order-1"
+            >
+              Ghairi
+            </button>
+            <button
+              type="submit"
+              disabled={loading}
+              className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-emerald-600 text-white text-sm font-semibold hover:bg-emerald-700 disabled:opacity-60 order-1 sm:order-2"
+            >
+              {loading ? (
+                <>
+                  <Loader2 size={16} className="animate-spin" />
+                  Inathibitisha...
+                </>
+              ) : (
+                <>
+                  <Check size={16} />
+                  Thibitisha Malipo
+                </>
+              )}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  )
+}
+
+
+import { useState } from 'react'
+import { Outlet } from 'react-router-dom'
+import Sidebar from './Sidebar'
+import TopBar from './TopBar'
+import Footer from './Footer'
+
+export default function Layout({ role }: { role: 'mteja' | 'muuzaji' | 'mmiliki' }) {
+  const [sidebarOpen, setSidebarOpen] = useState(false)
+
+  return (
+    <div className="min-h-screen flex bg-slate-50">
+      <Sidebar role={role} open={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+
+      <div className="flex-1 flex flex-col min-w-0 min-h-screen">
+        <TopBar role={role} onMenuClick={() => setSidebarOpen(true)} />
+
+        <main className="flex-1 p-4 md:p-6 lg:p-8 overflow-x-hidden">
+          <Outlet />
+        </main>
+
+        <Footer />
+      </div>
+    </div>
+  )
+}
+
+import { useEffect, useState } from 'react'
+import { Wifi, WifiOff, Heart } from 'lucide-react'
+
+export default function Footer() {
+  const [online, setOnline] = useState(navigator.onLine)
+  const [now, setNow] = useState(new Date())
+
+  useEffect(() => {
+    const onOnline = () => setOnline(true)
+    const onOffline = () => setOnline(false)
+    window.addEventListener('online', onOnline)
+    window.addEventListener('offline', onOffline)
+
+    const timer = setInterval(() => setNow(new Date()), 1000)
+
+    return () => {
+      window.removeEventListener('online', onOnline)
+      window.removeEventListener('offline', onOffline)
+      clearInterval(timer)
+    }
+  }, [])
+
+  const time = now.toLocaleTimeString('sw-TZ', {
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+  })
+  const date = now.toLocaleDateString('sw-TZ', {
+    day: '2-digit',
+    month: 'short',
+    year: 'numeric',
+  })
+
+  return (
+    <footer className="border-t border-slate-200 bg-white">
+      <div className="px-4 md:px-6 py-3 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-slate-500">
+        <div className="flex items-center gap-1.5">
+          <span className="font-semibold text-slate-700">SMART HARDWARE</span>
+          <span className="text-slate-300">|</span>
+          <span>v1.0.0</span>
+          <span className="text-slate-300">|</span>
+          <span className="hidden sm:inline">
+            {date} - {time}
+          </span>
+        </div>
+
+        <div className="flex items-center gap-4">
+          <button className="hover:text-brand-600">Msaada</button>
+          <button className="hover:text-brand-600">Sheria</button>
+          <span className="flex items-center gap-1">
+            {online ? (
+              <>
+                <Wifi size={12} className="text-emerald-500" />
+                <span className="text-emerald-600 font-medium">Online</span>
+              </>
+            ) : (
+              <>
+                <WifiOff size={12} className="text-red-500" />
+                <span className="text-red-600 font-medium">Offline</span>
+              </>
+            )}
+          </span>
+        </div>
+
+        <div className="flex items-center gap-1">
+          <span className="hidden md:inline">Imetengenezwa kwa</span>
+          <Heart size={12} className="text-red-500 fill-red-500" />
+          <span className="hidden md:inline">Tanzania</span>
+          <span className="md:hidden">2026</span>
+        </div>
+      </div>
+    </footer>
+  )
+}
+
+import { useState, useRef, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { ShoppingCart, Plus, Minus, Trash2, X } from 'lucide-react'
+import { useCart } from '../context/CartContext'
+
+export default function CartButton() {
+  const navigate = useNavigate()
+  const { detailed, count, total, inc, dec, remove, clear } = useCart()
+  const [open, setOpen] = useState(false)
+  const ref = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    function onClick(e: MouseEvent) {
+      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false)
+    }
+    document.addEventListener('mousedown', onClick)
+    return () => document.removeEventListener('mousedown', onClick)
+  }, [])
+
+  return (
+    <div ref={ref} className="relative">
+      <button
+        onClick={() => setOpen((v) => !v)}
+        className="relative flex items-center gap-2 px-2.5 py-2 rounded-lg hover:bg-slate-100"
+        aria-label="Cart"
+      >
+        <div className="relative">
+          <ShoppingCart size={20} />
+          {count > 0 && (
+            <span className="absolute -top-2 -right-2 min-w-4 h-4 px-1 bg-brand-600 text-white text-[10px] rounded-full grid place-items-center font-bold">
+              {count}
+            </span>
+          )}
+        </div>
+        {total > 0 && (
+          <span className="hidden md:inline text-xs font-semibold text-brand-700 bg-brand-50 px-2 py-1 rounded-md">
+            Tsh {total.toLocaleString()}
+          </span>
+        )}
+      </button>
+
+      {open && (
+        <div className="absolute right-0 top-full mt-2 w-[320px] sm:w-96 bg-white rounded-xl border border-slate-200 shadow-xl overflow-hidden z-40">
+          <div className="p-3 border-b border-slate-100 flex justify-between items-center">
+            <div>
+              <div className="font-semibold text-sm">Cart Yako</div>
+              <div className="text-xs text-slate-500">{count} bidhaa • Tsh {total.toLocaleString()}</div>
+            </div>
+            {detailed.length > 0 && (
+              <button onClick={clear} className="text-xs text-red-600 hover:underline">Ondoa zote</button>
+            )}
+          </div>
+
+          <div className="max-h-80 overflow-auto divide-y divide-slate-100">
+            {detailed.length === 0 ? (
+              <div className="p-8 text-center text-sm text-slate-500">
+                <ShoppingCart size={32} className="mx-auto mb-2 text-slate-300" />
+                Cart yako ni tupu
+              </div>
+            ) : (
+              detailed.map((l) => (
+                <div key={l.id} className="p-3 flex gap-3">
+                  <div className="text-2xl">{l.picha}</div>
+                  <div className="flex-1 min-w-0">
+                    <div className="text-sm font-medium truncate">{l.jina}</div>
+                    <div className="text-xs text-slate-500">Tsh {l.bei.toLocaleString()} / {l.uom}</div>
+                    <div className="flex items-center gap-2 mt-2">
+                      <button
+                        onClick={() => dec(l.id)}
+                        className="w-6 h-6 rounded-md bg-slate-100 hover:bg-slate-200 grid place-items-center"
+                      >
+                        <Minus size={12} />
+                      </button>
+                      <span className="text-sm font-semibold w-6 text-center">{l.wingi}</span>
+                      <button
+                        onClick={() => inc(l.id)}
+                        className="w-6 h-6 rounded-md bg-slate-100 hover:bg-slate-200 grid place-items-center"
+                      >
+                        <Plus size={12} />
+                      </button>
+                      <button
+                        onClick={() => remove(l.id)}
+                        className="ml-auto p-1 rounded-md text-red-500 hover:bg-red-50"
+                        aria-label="Ondoa"
+                      >
+                        <Trash2 size={14} />
+                      </button>
+                    </div>
+                  </div>
+                  <div className="text-sm font-semibold self-start">Tsh {l.jumla.toLocaleString()}</div>
+                </div>
+              ))
+            )}
+          </div>
+
+          <div className="p-3 border-t border-slate-100 space-y-2">
+            <div className="flex justify-between text-sm">
+              <span>Jumla</span>
+              <span className="font-bold">Tsh {total.toLocaleString()}</span>
+            </div>
+            <div className="grid grid-cols-2 gap-2">
+              <button
+                onClick={() => { setOpen(false); navigate('/mteja') }}
+                className="px-3 py-2 rounded-lg bg-slate-100 text-sm hover:bg-slate-200"
+              >
+                Endelea Kununua
+              </button>
+              <button
+                onClick={() => { setOpen(false); navigate('/mteja/quotation') }}
+                disabled={detailed.length === 0}
+                className="px-3 py-2 rounded-lg bg-brand-600 text-white text-sm font-semibold hover:bg-brand-700 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                Nenda Quotation
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  )
+}
+
+export default function Badge({ children, color = 'slate' }: { children: React.ReactNode; color?: 'slate' | 'green' | 'red' | 'amber' }) {
+  const map = {
+    slate: 'bg-slate-100 text-slate-700',
+    green: 'bg-emerald-100 text-emerald-700',
+    red: 'bg-red-100 text-red-700',
+    amber: 'bg-amber-100 text-amber-700',
+  }
+  return <span className={`px-2 py-0.5 rounded-md text-xs font-medium ${map[color]}`}>{children}</span>
+}
+
+
+
+import {
+  ShoppingBag, AlertTriangle, Calendar, PackageX, RotateCcw,
+  RefreshCcw, Clock, CheckCircle2, XCircle, TrendingDown,
+} from 'lucide-react'
+import type {
+  AinaMarekebishoStoki,
+  HaliMarekebisho,
+} from '../../types'
+
+// ============================================================
+// AINA META
+// ============================================================
+export const AINA_META: Record<
+  AinaMarekebishoStoki,
+  { label: string; color: string; Icon: React.ElementType; desc: string }
+> = {
+  mauzo: {
+    label: 'Mauzo',
+    color: 'text-brand-700 border-brand-200',
+    Icon: ShoppingBag,
+    desc: 'Bidhaa imeuzwa',
+  },
+  uharibifu: {
+    label: 'Uharibifu',
+    color: 'text-red-700 border-red-200',
+    Icon: AlertTriangle,
+    desc: 'Bidhaa imeharibika (mfano: saruji imekauka)',
+  },
+  expiry: {
+    label: 'Expiry',
+    color: 'text-amber-700 border-amber-200',
+    Icon: Calendar,
+    desc: 'Bidhaa imeisha muda (mfano: rangi imeganda)',
+  },
+  upotevu: {
+    label: 'Upotevu',
+    color: 'text-orange-700 border-orange-200',
+    Icon: PackageX,
+    desc: 'Bidhaa imepotea (wizi, hesabu mbaya)',
+  },
+  kurudisha_msambazaji: {
+    label: 'Kurudisha',
+    color: 'text-purple-700 border-purple-200',
+    Icon: RotateCcw,
+    desc: 'Bidhaa inarudishwa kwa msambazaji',
+  },
+  marekebisho: {
+    label: 'Marekebisho',
+    color: 'text-slate-700 border-slate-200',
+    Icon: RefreshCcw,
+    desc: 'Marekebisho ya stoki',
+  },
+}
+
+// ============================================================
+// HALI META
+// ============================================================
+export const HALI_META: Record<
+  HaliMarekebisho,
+  { label: string; Icon: React.ElementType; color: string }
+> = {
+  inasubiri: { label: 'Inasubiri', Icon: Clock, color: 'text-amber-700' },
+  imethibitishwa: { label: 'Imethibitishwa', Icon: CheckCircle2, color: 'text-emerald-700' },
+  imekataliwa: { label: 'Imekataliwa', Icon: XCircle, color: 'text-red-700' },
+}
+
+// ============================================================
+// STAT CARD (nyeupe + accent border-l)
+// ============================================================
+type Accent = 'brand' | 'emerald' | 'amber' | 'red'
+const ACCENT_BORDER: Record<Accent, string> = {
+  brand: 'border-l-brand-500',
+  emerald: 'border-l-emerald-500',
+  amber: 'border-l-amber-500',
+  red: 'border-l-red-500',
+}
+const ACCENT_TEXT: Record<Accent, string> = {
+  brand: 'text-brand-700',
+  emerald: 'text-emerald-700',
+  amber: 'text-amber-700',
+  red: 'text-red-700',
+}
+
+export function StokiStat({
+  label,
+  value,
+  Icon,
+  accent,
+  sub,
+}: {
+  label: string
+  value: string
+  Icon: React.ElementType
+  accent: Accent
+  sub?: string
+}) {
+  return (
+    <div
+      className={`bg-white rounded-xl border border-slate-200 border-l-4 ${ACCENT_BORDER[accent]} p-4`}
+    >
+      <div className="flex items-center gap-2">
+        <Icon size={16} className={ACCENT_TEXT[accent]} />
+        <div className="text-xs text-slate-500">{label}</div>
+      </div>
+      <div className="text-base md:text-lg font-bold mt-2 truncate text-slate-900">
+        {value}
+      </div>
+      {sub && <div className="text-[10px] text-slate-500 truncate">{sub}</div>}
+    </div>
+  )
+}
+
+export { TrendingDown }
+
 
 basing  on  this  one  document  fanya   data  ziwe  kwenye  mahusiano na
   zitumie local storage kwenye  kuhifadhi data, pia   ziwepo data  chache za demo, ila kusiwe mambo ya 
