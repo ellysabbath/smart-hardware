@@ -3,7 +3,7 @@ import {
   ArrowRight, LogIn, KeyRound, ShieldCheck, Sparkles,
   Smartphone, CheckCircle2, Package, Receipt, Users,
   TrendingUp, Wallet, HandCoins, Building2, Lock,
-  Phone, Store, ChevronRight,
+  Phone, Store, ChevronRight, ShoppingCart, Briefcase, Crown,
 } from 'lucide-react'
 
 export default function Landing() {
@@ -80,6 +80,51 @@ export default function Landing() {
                 Umesahau Nywila?
               </Link>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ============================================================ */}
+      {/* DEMO PORTALS SECTION — MPYA */}
+      {/* ============================================================ */}
+      <section className="border-b border-slate-100 bg-slate-50/50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-20">
+          <div className="text-center mb-10">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-slate-200 bg-white text-slate-600 text-xs font-semibold mb-3">
+              <Sparkles size={12} />
+              Demo Portals
+            </div>
+            <h2 className="text-2xl md:text-3xl font-bold text-slate-900">
+              Ingia Kama
+            </h2>
+            <p className="text-slate-500 mt-2 max-w-2xl mx-auto text-sm">
+              Chagua jukumu lako ili kuona dashibodi inayokufaa. Kila portal ina
+              vipengele maalum kwa ajili ya kazi zako.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-5">
+            <PortalCard
+              to="/mteja"
+              Icon={ShoppingCart}
+              title="Mteja"
+              desc="Nunua bidhaa, angalia quotation, orders, na deni lako"
+              badge="Mteja Portal"
+            />
+            <PortalCard
+              to="/muuzaji"
+              Icon={Briefcase}
+              title="Muuzaji"
+              desc="POS, risiti, pokea bidhaa, wateja, na ripoti za duka"
+              badge="Muuzaji Duka"
+            />
+            <PortalCard
+              to="/mmiliki"
+              Icon={Crown}
+              title="Mmiliki"
+              desc="Dashboard, maduka, faida, mishahara, zaka, na ripoti zote"
+              badge="Mmiliki Dashboard"
+            />
           </div>
         </div>
       </section>
@@ -190,7 +235,7 @@ export default function Landing() {
       {/* ============================================================ */}
       <footer className="bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-10">
             <div>
               <div className="flex items-center gap-2">
                 <div className="w-9 h-9 rounded-lg bg-brand-600 text-white grid place-items-center text-sm font-bold">
@@ -205,6 +250,30 @@ export default function Landing() {
                 Mfumo wa kisasa wa usimamizi wa duka la vifaa vya ujenzi.
                 Mauzo, stoki, wateja, wafanyakazi, faida, zaka — vyote mahali pamoja.
               </p>
+            </div>
+
+            <div>
+              <div className="font-semibold text-sm text-slate-900 mb-3">Portals</div>
+              <ul className="space-y-2 text-xs text-slate-500">
+                <li>
+                  <Link to="/mteja" className="hover:text-brand-600 inline-flex items-center gap-1.5 transition">
+                    <ShoppingCart size={12} />
+                    Mteja Portal
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/muuzaji" className="hover:text-brand-600 inline-flex items-center gap-1.5 transition">
+                    <Briefcase size={12} />
+                    Muuzaji Duka
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/mmiliki" className="hover:text-brand-600 inline-flex items-center gap-1.5 transition">
+                    <Crown size={12} />
+                    Mmiliki Dashboard
+                  </Link>
+                </li>
+              </ul>
             </div>
 
             <div>
@@ -226,12 +295,6 @@ export default function Landing() {
                   <Link to="/reset-password" className="hover:text-brand-600 inline-flex items-center gap-1.5 transition">
                     <Lock size={12} />
                     Weka Nywila Mpya
-                  </Link>
-                </li>
-                <li>
-                  <Link to="/reset-complete" className="hover:text-brand-600 inline-flex items-center gap-1.5 transition">
-                    <CheckCircle2 size={12} />
-                    Reset Imekamilika
                   </Link>
                 </li>
               </ul>
@@ -267,7 +330,53 @@ export default function Landing() {
 }
 
 // ============================================================
-// Feature Card (nyeupe, bila rangi ya background)
+// Portal Card — MPYA
+// ============================================================
+function PortalCard({
+  to,
+  Icon,
+  title,
+  desc,
+  badge,
+}: {
+  to: string
+  Icon: React.ElementType
+  title: string
+  desc: string
+  badge: string
+}) {
+  return (
+    <Link
+      to={to}
+      className="group bg-white rounded-2xl border border-slate-200 p-5 hover:border-brand-500 hover:shadow-md transition-all"
+    >
+      <div className="flex items-start justify-between">
+        <div className="w-12 h-12 rounded-xl bg-slate-50 text-slate-700 grid place-items-center">
+          <Icon size={22} />
+        </div>
+        <span className="text-[10px] uppercase font-semibold px-2 py-0.5 rounded bg-slate-100 text-slate-600">
+          {badge}
+        </span>
+      </div>
+      <div className="font-semibold text-base mt-4 text-slate-900">
+        {title}
+      </div>
+      <div className="text-xs text-slate-500 mt-1 leading-relaxed">
+        {desc}
+      </div>
+      <div className="mt-4 flex items-center text-sm text-brand-600 font-semibold">
+        Ingia
+        <ChevronRight
+          size={14}
+          className="ml-1 transition group-hover:translate-x-1"
+        />
+      </div>
+    </Link>
+  )
+}
+
+// ============================================================
+// Feature Card
 // ============================================================
 function FeatureCard({
   Icon,
@@ -290,7 +399,7 @@ function FeatureCard({
 }
 
 // ============================================================
-// Auth Link (nyeupe, bila rangi ya background)
+// Auth Link
 // ============================================================
 function AuthLink({
   to,
