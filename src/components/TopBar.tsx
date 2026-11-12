@@ -18,6 +18,7 @@ import {
   Info,
   XCircle,
   ArrowRight,
+  LogOutIcon,
 } from 'lucide-react'
 import { searchEverything, type SearchType } from '../utils/search'
 import { useCart } from '../context/CartContext'
@@ -38,9 +39,9 @@ interface UserProfile {
 }
 
 const USERS: Record<Role, UserProfile> = {
-  mteja: { name: 'Mjenzi Mwakyusa', email: 'mwakyusa@email.com', initials: 'MM' },
-  muuzaji: { name: 'Juma Hassan', email: 'juma@smarthardware.co.tz', initials: 'JH' },
-  mmiliki: { name: 'Moses Kimaro', email: 'moses@smarthardware.co.tz', initials: 'MK' },
+  mteja: { name: 'Dan Ndusiro', email: 'dan@email.com', initials: 'MM' },
+  muuzaji: { name: 'Dan Ndusiro', email: 'dan@smarthardware.co.tz', initials: 'JH' },
+  mmiliki: { name: 'Dan Ndusiro', email: 'dan@smarthardware.co.tz', initials: 'MK' },
 }
 
 const ROLE_LABEL: Record<Role, string> = {
@@ -67,6 +68,7 @@ export default function TopBar({ role, onMenuClick }: TopBarProps) {
   const [notifOpen, setNotifOpen] = useState(false)
   const [cartOpen, setCartOpen] = useState(false)
   const [profileOpen, setProfileOpen] = useState(false)
+  const [logoutOpen, setLogoutOpen] = useState(false)
 
   const cart = useCart()
   const showCart = role === 'mteja' || role === 'muuzaji'
@@ -104,6 +106,7 @@ export default function TopBar({ role, onMenuClick }: TopBarProps) {
         setNotifOpen(false)
         setCartOpen(false)
         setProfileOpen(false)
+        setLogoutOpen(false)
       }
     }
     document.addEventListener('keydown', onKey)
@@ -157,6 +160,29 @@ export default function TopBar({ role, onMenuClick }: TopBarProps) {
   const goToBidhaa = () => {
     setCartOpen(false)
     navigate(role === 'muuzaji' ? '/muuzaji' : '/mteja/bidhaa')
+  }
+
+  const goToProfile = () => {
+    setProfileOpen(false)
+    navigate(`/${role}/profile`)
+  }
+
+  const goToSettings = () => {
+    setProfileOpen(false)
+    navigate(`/${role}/settings`)
+  }
+
+  // ============================================================
+  // Logout — fungua modal ya uthibitisho (sio window.confirm)
+  // ============================================================
+  const handleLogout = () => {
+    setProfileOpen(false)
+    setLogoutOpen(true)
+  }
+
+  const confirmLogout = () => {
+    setLogoutOpen(false)
+    navigate('/')
   }
 
   const notifIcon = (type: string) => {
@@ -249,7 +275,7 @@ export default function TopBar({ role, onMenuClick }: TopBarProps) {
 
         {/* ===== RIGHT ACTIONS ===== */}
         <div className="flex items-center gap-0.5 md:gap-1 shrink-0">
-          {/* CART — mteja + muuzaji */}
+          {/* CART */}
           {showCart && (
             <div ref={cartRef} className="relative">
               <button
@@ -274,7 +300,6 @@ export default function TopBar({ role, onMenuClick }: TopBarProps) {
 
               {cartOpen && (
                 <div className="absolute right-0 top-full mt-2 w-[calc(100vw-1.5rem)] sm:w-96 max-w-sm bg-white rounded-xl border border-slate-200 shadow-xl overflow-hidden">
-                  {/* Header */}
                   <div className="p-3 border-b border-slate-100 flex justify-between items-center">
                     <div>
                       <div className="font-semibold text-sm flex items-center gap-1.5">
@@ -300,7 +325,6 @@ export default function TopBar({ role, onMenuClick }: TopBarProps) {
                     )}
                   </div>
 
-                  {/* Items */}
                   <div className="max-h-80 overflow-auto divide-y divide-slate-100">
                     {cart.detailed.length === 0 ? (
                       <div className="p-8 text-center text-sm text-slate-500">
@@ -318,7 +342,6 @@ export default function TopBar({ role, onMenuClick }: TopBarProps) {
                         const Icon = iconForKundi(l.iconKey)
                         return (
                           <div key={l.id} className="p-3 flex gap-3">
-                            {/* ✅ Picha au icon */}
                             <div className="w-12 h-12 rounded-lg bg-slate-50 border border-slate-200 overflow-hidden grid place-items-center shrink-0 text-slate-600">
                               {l.pichaUrl ? (
                                 <img
@@ -373,7 +396,6 @@ export default function TopBar({ role, onMenuClick }: TopBarProps) {
                     )}
                   </div>
 
-                  {/* Footer */}
                   <div className="p-3 border-t border-slate-100 space-y-2">
                     <div className="flex justify-between text-sm">
                       <span className="font-medium">Jumla</span>
@@ -513,15 +535,21 @@ export default function TopBar({ role, onMenuClick }: TopBarProps) {
                   </div>
                 </div>
                 <div className="p-1">
-                  <button className="w-full px-3 py-2 flex items-center gap-2 text-sm rounded-lg hover:bg-slate-100">
+                  <button
+                    onClick={goToProfile}
+                    className="w-full px-3 py-2 flex items-center gap-2 text-sm rounded-lg hover:bg-slate-100"
+                  >
                     <User size={16} className="text-slate-500" /> Wasifu Wangu
                   </button>
-                  <button className="w-full px-3 py-2 flex items-center gap-2 text-sm rounded-lg hover:bg-slate-100">
+                  <button
+                    onClick={goToSettings}
+                    className="w-full px-3 py-2 flex items-center gap-2 text-sm rounded-lg hover:bg-slate-100"
+                  >
                     <Settings size={16} className="text-slate-500" /> Mipangilio
                   </button>
                   <div className="border-t border-slate-100 my-1" />
                   <button
-                    onClick={() => navigate('/')}
+                    onClick={handleLogout}
                     className="w-full px-3 py-2 flex items-center gap-2 text-sm rounded-lg hover:bg-red-50 text-red-600"
                   >
                     <LogOut size={16} /> Toka (Logout)
@@ -532,6 +560,42 @@ export default function TopBar({ role, onMenuClick }: TopBarProps) {
           </div>
         </div>
       </div>
+
+      {/* ============ MODAL YA KUTOKA ============ */}
+      {logoutOpen && (
+        <div className="fixed inset-0 z-[60] flex items-center justify-center p-4">
+          <div
+            className="absolute inset-0 bg-slate-900/50 backdrop-blur-sm"
+            onClick={() => setLogoutOpen(false)}
+          />
+          <div className="relative bg-white w-full max-w-sm rounded-2xl shadow-2xl overflow-hidden">
+            <div className="p-5 text-center">
+              <div className="w-14 h-14 rounded-full bg-red-50 border border-red-200 grid place-items-center mx-auto">
+                <LogOutIcon size={26} className="text-red-600" />
+              </div>
+              <h3 className="font-semibold text-slate-900 mt-3">Toka Kwenye Akaunti?</h3>
+              <p className="text-sm text-slate-500 mt-1 leading-relaxed">
+                Una uhakika unataka kutoka kwenye akaunti yako? Utahitaji kuingia tena.
+              </p>
+              <div className="mt-5 grid grid-cols-2 gap-2">
+                <button
+                  onClick={() => setLogoutOpen(false)}
+                  className="px-4 py-2.5 rounded-lg bg-slate-100 text-slate-700 text-sm font-semibold hover:bg-slate-200"
+                >
+                  Ghairi
+                </button>
+                <button
+                  onClick={confirmLogout}
+                  className="px-4 py-2.5 rounded-lg bg-red-600 text-white text-sm font-semibold hover:bg-red-700 inline-flex items-center justify-center gap-1.5"
+                >
+                  <LogOut size={14} />
+                  Ndiyo, Toka
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </header>
   )
 }

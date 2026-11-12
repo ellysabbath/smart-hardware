@@ -44,6 +44,8 @@ import Login from './pages/auth/Login'
 import ForgotPassword from './pages/auth/ForgotPassword'
 import ResetPassword from './pages/auth/ResetPassword'
 import ResetComplete from './pages/auth/ResetComplete'
+import MyProfile from './pages/shared/MyProfile'
+import MySettings from './pages/shared/MySettings'
 
 export default function App() {
   return (
@@ -58,7 +60,9 @@ export default function App() {
         {/* ================= MTEJA ================= */}
         <Route path="/mteja" element={<Layout role="mteja" />}>
           <Route index element={<MtejaHome />} />
+          <Route path="settings" element={<MySettings role="mteja" />} />
           <Route path="bidhaa" element={<MtejaBidhaa />} />
+          <Route path="profile" element={<MyProfile role="mteja" />} />
           <Route path="quotation" element={<MtejaQuotation />} />
           <Route path="orders" element={<MtejaOrders />} />
           <Route path="order/:id" element={<MtejaOrder />} />
@@ -74,8 +78,10 @@ export default function App() {
           <Route path="ripoti-bidhaa" element={<MuuzajiStoreManage />} />
           <Route path="risiti" element={<MuuzajiRisiti />} />
           <Route path="pokea" element={<MuuzajiPokeaBidhaa />} />
+          <Route path="profile" element={<MyProfile role="muuzaji" />} />
           <Route path="wateja" element={<MuuzajiWateja />} />
           <Route path="mshahara" element={<MuuzajiMshahara />} />
+          <Route path="settings" element={<MySettings role="muuzaji" />} />
 
           <Route path="carts" element={<MuuzajiCarts />} />
           <Route path="ripoti" element={<MuuzajiRipoti />} />
@@ -92,6 +98,7 @@ export default function App() {
         <Route path="/mmiliki" element={<Layout role="mmiliki" />}>
           <Route index element={<MmilikiDashboard />} />
           <Route path="maduka" element={<MmilikiMaduka />} />
+          <Route path="profile" element={<MyProfile role="mmiliki" />} />
           <Route path="mishahara" element={<MmilikiMishahara />} />
           <Route path="wafanyakazi" element={<MmilikiWafanyakazi />} />
           <Route path="ripoti-bidhaa" element={<MmilikiRipotiBidhaa />} />
@@ -101,6 +108,7 @@ export default function App() {
           <Route path="mauzo" element={<MmilikiMauzo />} />
           <Route path="matumizi" element={<MmilikiMatumizi />} />
           <Route path="uingiza" element={<UingizaVifaa role="mmiliki" />} />
+          <Route path="settings" element={<MySettings role="mmiliki" />} />
           <Route path="orders" element={<MmilikiOrders />} />
           <Route path="wateja" element={<MmilikiWateja />} />
           {/* Notifications za Mmiliki */}

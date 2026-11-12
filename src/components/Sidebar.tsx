@@ -1,5 +1,5 @@
 import { NavLink, useNavigate } from 'react-router-dom'
-import { Home, Package, ShoppingCart, Users, Store, Wallet, TrendingUp, HandCoins, Receipt, FileText, X, ShoppingBag,  UserPlus, Bell, BarChart3, Truck, PackagePlus, LogOutIcon, ArrowBigLeft, BellCheckIcon, HouseCog, HouseCogIcon, PackageX, CircleDollarSign, Banknote } from 'lucide-react'
+import { Home, Package, ShoppingCart, Users, Store, Wallet, TrendingUp, HandCoins, Receipt, FileText, X, ShoppingBag,  UserPlus, Bell, BarChart3, Truck, PackagePlus, LogOutIcon, ArrowBigLeft, BellCheckIcon, HouseCog, HouseCogIcon, PackageX, CircleDollarSign, Banknote, PersonStanding, CogIcon } from 'lucide-react'
 
 const navByRole: Record<string, { to: string; label: string; icon: React.ElementType }[]> = {
   mteja: [
@@ -8,6 +8,8 @@ const navByRole: Record<string, { to: string; label: string; icon: React.Element
     { to: '/mteja/quotation', label: 'Quotation', icon: FileText },
     { to: '/mteja/deni', label: 'Deni Langu', icon: Wallet },
     { to: '/mteja/orders', label: 'Order Zangu', icon: ShoppingBag }, 
+    { to: '/mteja/profile', label: 'wasifu', icon: PersonStanding }, 
+    { to: '/mteja/settings', label: 'mipangilio', icon: CogIcon }, 
   ],
   muuzaji: [
     { to: '/muuzaji', label: 'POS', icon: ShoppingCart },
@@ -20,6 +22,8 @@ const navByRole: Record<string, { to: string; label: string; icon: React.Element
     { to: '/muuzaji/carts', label: 'Carts Zinazosubiri', icon: Bell },
     { to: '/muuzaji/matumizi', label: 'Maombi ya Matumizi', icon: Wallet }, // MPYA
     { to: '/muuzaji/ripoti', label: 'Ripoti za Duka', icon: BarChart3 },
+    { to: '/muuzaji/profile', label: 'wasifu', icon: PersonStanding }, 
+    { to: '/muuzaji/settings', label: 'mipangilio', icon: CogIcon }, 
   ],
 mmiliki: [
   { to: '/mmiliki', label: 'Dashboard', icon: Home },
@@ -36,6 +40,8 @@ mmiliki: [
     { to: '/mmiliki/matumizi', label: 'Maombi ya Matumizi', icon: Wallet },
       { to: '/mmiliki/store-manage', label: 'store', icon: HouseCog },
     { to: '/mmiliki/notifications', label: 'notifications', icon: BellCheckIcon },
+    { to: '/mmiliki/profile', label: 'wasifu', icon: PersonStanding }, 
+    { to: '/mmiliki/settings', label: 'mipangilio', icon: CogIcon }, 
      { to: '/', label: 'toka', icon: LogOutIcon }, 
    
 
@@ -63,7 +69,7 @@ export default function Sidebar({ role, open, onClose }: SidebarProps) {
         <div className="flex items-center gap-2">
           <div className="w-9 h-9 rounded-lg bg-brand-600 text-white grid place-items-center font-bold">S</div>
           <div>
-            <div className="font-semibold text-sm">SUNRISE SMARTSHOP</div>
+            <div className="font-semibold text-sm">SUNRISE GLASSES& ALUMINIUM PROFILES</div>
             <div className="text-xs text-slate-500">{roleLabels[role]}</div>
           </div>
         </div>
