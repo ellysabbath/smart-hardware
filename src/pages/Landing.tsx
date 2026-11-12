@@ -20,7 +20,10 @@ export default function Landing() {
             </div>
             <div className="min-w-0">
               <div className="font-bold text-xs sm:text-sm leading-tight truncate">
-                SUNRISE GLASSES & ALUMINIUM PROFILES
+                SUNRISE GLASSES & 
+              </div>
+                <div className="font-bold text-xs sm:text-sm leading-tight truncate">
+                 ALUMINIUM PROFILES
               </div>
               <div className="text-[10px] text-slate-500 leading-tight truncate">
                 Duka la Vifaa vya Ujenzi
@@ -59,7 +62,10 @@ export default function Landing() {
             <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-slate-900 leading-tight tracking-tight">
               Karibu{' '}
               <span className="text-brand-600">
-                SUNRISE GLASSES & ALUMINIUM PROFILES
+                SUNRISE GLASSES & 
+              </span>
+              <span className="text-brand-600">
+                 ALUMINIUM PROFILES
               </span>
             </h1>
             <p className="text-slate-600 mt-4 sm:mt-6 text-sm sm:text-base md:text-lg leading-relaxed px-2">
@@ -247,7 +253,10 @@ export default function Landing() {
                 </div>
                 <div className="min-w-0">
                   <div className="font-bold text-xs sm:text-sm truncate">
-                    SUNRISE GLASSES & ALUMINIUM PROFILES
+                    SUNRISE GLASSES & 
+                  </div>
+                  <div className="font-bold text-xs sm:text-sm truncate">
+                     ALUMINIUM PROFILES
                   </div>
                   <div className="text-[10px] sm:text-xs text-slate-500 truncate">
                     Duka la Vifaa vya Ujenzi
