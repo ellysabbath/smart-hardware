@@ -62,10 +62,10 @@ export default function Landing() {
             <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-slate-900 leading-tight tracking-tight">
               Karibu{' '}
               <span className="text-brand-600">
-                SUNRISE GLASSES & 
+                SUNRISE GLASSES 
               </span>
               <span className="text-brand-600">
-                 ALUMINIUM PROFILES
+                &  ALUMINIUM PROFILES
               </span>
             </h1>
             <p className="text-slate-600 mt-4 sm:mt-6 text-sm sm:text-base md:text-lg leading-relaxed px-2">
