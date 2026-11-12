@@ -63,7 +63,7 @@ export default function Sidebar({ role, open, onClose }: SidebarProps) {
         <div className="flex items-center gap-2">
           <div className="w-9 h-9 rounded-lg bg-brand-600 text-white grid place-items-center font-bold">S</div>
           <div>
-            <div className="font-semibold text-sm">SMART HARDWARE</div>
+            <div className="font-semibold text-sm">SUNRISE SMARTSHOP</div>
             <div className="text-xs text-slate-500">{roleLabels[role]}</div>
           </div>
         </div>

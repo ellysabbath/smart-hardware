@@ -19,7 +19,7 @@ export default function Landing() {
               S
             </div>
             <div>
-              <div className="font-bold text-sm leading-tight">SMART HARDWARE</div>
+              <div className="font-bold text-sm leading-tight">SUNRISE SMARTSHOP</div>
               <div className="text-[10px] text-slate-500 leading-tight">
                 Duka la Vifaa vya Ujenzi
               </div>
@@ -56,7 +56,7 @@ export default function Landing() {
             </div>
             <h1 className="text-4xl md:text-6xl font-bold text-slate-900 leading-tight tracking-tight">
               Karibu{' '}
-              <span className="text-brand-600">SMART HARDWARE</span>
+              <span className="text-brand-600">SUNRISE SMARTSHOP</span>
             </h1>
             <p className="text-slate-600 mt-6 text-base md:text-lg leading-relaxed">
               Mfumo kamili wa kusimamia duka la vifaa vya ujenzi.
@@ -242,7 +242,7 @@ export default function Landing() {
                   S
                 </div>
                 <div>
-                  <div className="font-bold text-sm">SMART HARDWARE</div>
+                  <div className="font-bold text-sm">SUNRISE SMARTSHOP</div>
                   <div className="text-xs text-slate-500">Duka la Vifaa vya Ujenzi</div>
                 </div>
               </div>
@@ -319,8 +319,8 @@ export default function Landing() {
             </div>
           </div>
 
-          <div className="mt-10 pt-6 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-slate-500">
-            <div>© 2026 SMART HARDWARE. Haki zote zimehifadhiwa.</div>
+          <div className="mt-8 pt-4 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-slate-500">
+            <div>© 2026 SUNRISE SMARTSHOP. Haki zote zimehifadhiwa.</div>
             <div>v1.0.0 - Demo</div>
           </div>
         </div>
