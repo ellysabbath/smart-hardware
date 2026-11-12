@@ -64,8 +64,8 @@ export default function Landing() {
               Karibu{' '}
               <span className="text-brand-600">
                 SUNRISE GLASSES  
-              </span><br></br>
-                <span className="text-brand-600">
+              </span><br/>
+                <span className="text-brand-500">
                  &  ALUMINIUM PROFILES
               </span>
             </h1>
