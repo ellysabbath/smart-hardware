@@ -1,14 +1,15 @@
 import { Link } from 'react-router-dom'
 import {
   ArrowRight, LogIn, KeyRound, ShieldCheck, Sparkles,
-  Smartphone, CheckCircle2, Package, Receipt, Users,
+  CheckCircle2, Package, Receipt, Users,
   TrendingUp, Wallet, HandCoins, Building2, Lock,
-  Phone, Store, ChevronRight, ShoppingCart, Briefcase, Crown,
+  ChevronRight, ShoppingCart, Briefcase, Crown,
 } from 'lucide-react'
+import Footer from '../components/Footer'
 
 export default function Landing() {
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-white flex flex-col">
       {/* ============================================================ */}
       {/* NAVBAR */}
       {/* ============================================================ */}
@@ -20,10 +21,10 @@ export default function Landing() {
             </div>
             <div className="min-w-0">
               <div className="font-bold text-xs sm:text-sm leading-tight truncate">
-                SUNRISE GLASSES & 
+                SUNRISE GLASSES 
               </div>
-                <div className="font-bold text-xs sm:text-sm leading-tight truncate">
-                 ALUMINIUM PROFILES
+              <div className="font-bold text-xs sm:text-sm leading-tight truncate">
+                 &  ALUMINIUM
               </div>
               <div className="text-[10px] text-slate-500 leading-tight truncate">
                 Duka la Vifaa vya Ujenzi
@@ -62,10 +63,10 @@ export default function Landing() {
             <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-slate-900 leading-tight tracking-tight">
               Karibu{' '}
               <span className="text-brand-600">
-                SUNRISE GLASSES 
-              </span>
-              <span className="text-brand-600">
-                &  ALUMINIUM PROFILES
+                SUNRISE GLASSES  
+              </span><br></br>
+                <span className="text-brand-600">
+                 &  ALUMINIUM PROFILES
               </span>
             </h1>
             <p className="text-slate-600 mt-4 sm:mt-6 text-sm sm:text-base md:text-lg leading-relaxed px-2">
@@ -100,9 +101,9 @@ export default function Landing() {
       <section className="border-b border-slate-100 bg-slate-50/50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 md:py-20">
           <div className="text-center mb-8 sm:mb-10">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-slate-200 bg-white text-slate-600 text-[10px] sm:text-xs font-semibold mb-3">
+            <div className="inline-flex items-center gap-2 px-3 py-1  rounded-full border border-slate-200 bg-white text-slate-600 text-[10px] sm:text-xs font-semibold mb-3">
               <Sparkles size={12} />
-              Demo Portals
+              Sunrise Portals
             </div>
             <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-slate-900">
               Ingia Kama
@@ -241,107 +242,9 @@ export default function Landing() {
       </section>
 
       {/* ============================================================ */}
-      {/* FOOTER */}
+      {/* FOOTER — inatumia component ile ile ya Footer */}
       {/* ============================================================ */}
-      <footer className="bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10 md:py-12">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 sm:gap-10">
-            <div>
-              <div className="flex items-center gap-2">
-                <div className="w-9 h-9 rounded-lg bg-brand-600 text-white grid place-items-center text-sm font-bold shrink-0">
-                  S
-                </div>
-                <div className="min-w-0">
-                  <div className="font-bold text-xs sm:text-sm truncate">
-                    SUNRISE GLASSES & 
-                  </div>
-                  <div className="font-bold text-xs sm:text-sm truncate">
-                     ALUMINIUM PROFILES
-                  </div>
-                  <div className="text-[10px] sm:text-xs text-slate-500 truncate">
-                    Duka la Vifaa vya Ujenzi
-                  </div>
-                </div>
-              </div>
-              <p className="text-xs text-slate-500 mt-3 leading-relaxed">
-                Mfumo wa kisasa wa usimamizi wa duka la vifaa vya ujenzi.
-                Mauzo, stoki, wateja, wafanyakazi, faida, zaka — vyote mahali pamoja.
-              </p>
-            </div>
-
-            <div>
-              <div className="font-semibold text-sm text-slate-900 mb-3">Portals</div>
-              <ul className="space-y-2 text-xs text-slate-500">
-                <li>
-                  <Link to="/mteja" className="hover:text-brand-600 inline-flex items-center gap-1.5 transition">
-                    <ShoppingCart size={12} />
-                    Mteja Portal
-                  </Link>
-                </li>
-                <li>
-                  <Link to="/muuzaji" className="hover:text-brand-600 inline-flex items-center gap-1.5 transition">
-                    <Briefcase size={12} />
-                    Muuzaji Duka
-                  </Link>
-                </li>
-                <li>
-                  <Link to="/mmiliki" className="hover:text-brand-600 inline-flex items-center gap-1.5 transition">
-                    <Crown size={12} />
-                    Mmiliki Dashboard
-                  </Link>
-                </li>
-              </ul>
-            </div>
-
-            <div>
-              <div className="font-semibold text-sm text-slate-900 mb-3">Mipangilio</div>
-              <ul className="space-y-2 text-xs text-slate-500">
-                <li>
-                  <Link to="/login" className="hover:text-brand-600 inline-flex items-center gap-1.5 transition">
-                    <LogIn size={12} />
-                    Ingia
-                  </Link>
-                </li>
-                <li>
-                  <Link to="/forgot-password" className="hover:text-brand-600 inline-flex items-center gap-1.5 transition">
-                    <KeyRound size={12} />
-                    Umesahau Nywila
-                  </Link>
-                </li>
-                <li>
-                  <Link to="/reset-password" className="hover:text-brand-600 inline-flex items-center gap-1.5 transition">
-                    <Lock size={12} />
-                    Weka Nywila Mpya
-                  </Link>
-                </li>
-              </ul>
-            </div>
-
-            <div>
-              <div className="font-semibold text-sm text-slate-900 mb-3">Mawasiliano</div>
-              <ul className="space-y-2 text-xs text-slate-500">
-                <li className="inline-flex items-center gap-1.5">
-                  <Phone size={12} />
-                  0754-000-111
-                </li>
-                <li className="inline-flex items-center gap-1.5">
-                  <Smartphone size={12} />
-                  0712-000-222
-                </li>
-                <li className="inline-flex items-center gap-1.5">
-                  <Store size={12} />
-                  Mpemba, Tunduma , TAZARA
-                </li>
-              </ul>
-            </div>
-          </div>
-
-          <div className="mt-8 pt-4 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-slate-500 text-center sm:text-left">
-            <div>© 2026 SUNRISE GLASSES & ALUMINIUM PROFILES. Haki zote zimehifadhiwa.</div>
-            <div>v1.0.0 - Demo</div>
-          </div>
-        </div>
-      </footer>
+      <Footer />
     </div>
   )
 }

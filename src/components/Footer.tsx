@@ -42,7 +42,7 @@ export default function Footer() {
         {/* BRAND + VERSION + TIME */}
         <div className="flex items-center gap-1.5 flex-wrap justify-center sm:justify-start">
           <span className="font-semibold text-slate-700 truncate max-w-[180px] sm:max-w-none">
-            SUNRISE GLASSES & ALUMINIUM
+            SUNRISE GLASSES & ALUMINIUM  PROFILES
           </span>
           <span className="text-slate-300">|</span>
           <span>v1.0.0</span>
