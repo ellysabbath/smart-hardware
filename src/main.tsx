@@ -19,44 +19,48 @@ import { RipotiBidhaaProvider } from './context/RipotiBidhaaContext'
 import { StokiProvider } from './context/StokiContext'
 import { DocumentProvider } from './context/DocumentContext'
 import { MshaharaProvider } from './context/MshaharaContext'
+import { LanguageProvider } from './i18n/LanguageContext'
 
 createRoot(document.getElementById('root')!).render(
   // ✅ StoreProvider NJE ya StrictMode — inasimamia localStorage
   <StoreProvider>
     <StrictMode>
-      <CustomerProvider>
-        <CartProvider>
-          <OrderProvider>
-            <GRNProvider>
-              <PendingCartProvider>
-                <OmbiProvider>
-                  <DukaProvider>
-                    <UingizajiProvider>
-                      <MauzoProvider>
-                        <ZakaProvider>
-                          <NotificationProvider>
-                            <OrderAdminProvider>
-                              <RipotiBidhaaProvider>
-                                <StokiProvider>
-                                  <DocumentProvider>
-                                    <MshaharaProvider>
-                                      <App />
-                                    </MshaharaProvider>
-                                  </DocumentProvider>
-                                </StokiProvider>
-                              </RipotiBidhaaProvider>
-                            </OrderAdminProvider>
-                          </NotificationProvider>
-                        </ZakaProvider>
-                      </MauzoProvider>
-                    </UingizajiProvider>
-                  </DukaProvider>
-                </OmbiProvider>
-              </PendingCartProvider>
-            </GRNProvider>
-          </OrderProvider>
-        </CartProvider>
-      </CustomerProvider>
+      {/* ✅ LanguageProvider — inasimamia lugha (sw/en) na localStorage */}
+      <LanguageProvider>
+        <CustomerProvider>
+          <CartProvider>
+            <OrderProvider>
+              <GRNProvider>
+                <PendingCartProvider>
+                  <OmbiProvider>
+                    <DukaProvider>
+                      <UingizajiProvider>
+                        <MauzoProvider>
+                          <ZakaProvider>
+                            <NotificationProvider>
+                              <OrderAdminProvider>
+                                <RipotiBidhaaProvider>
+                                  <StokiProvider>
+                                    <DocumentProvider>
+                                      <MshaharaProvider>
+                                        <App />
+                                      </MshaharaProvider>
+                                    </DocumentProvider>
+                                  </StokiProvider>
+                                </RipotiBidhaaProvider>
+                              </OrderAdminProvider>
+                            </NotificationProvider>
+                          </ZakaProvider>
+                        </MauzoProvider>
+                      </UingizajiProvider>
+                    </DukaProvider>
+                  </OmbiProvider>
+                </PendingCartProvider>
+              </GRNProvider>
+            </OrderProvider>
+          </CartProvider>
+        </CustomerProvider>
+      </LanguageProvider>
     </StrictMode>
   </StoreProvider>
 )

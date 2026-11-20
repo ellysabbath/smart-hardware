@@ -6,8 +6,12 @@ import {
   ChevronRight, ShoppingCart, Briefcase, Crown,
 } from 'lucide-react'
 import Footer from '../components/Footer'
+import LanguageSwitcher from '../components/LanguageSwitcher'
+import { useLanguage } from '../i18n/LanguageContext'
 
 export default function Landing() {
+  const { t } = useLanguage()
+
   return (
     <div className="min-h-screen bg-white flex flex-col">
       {/* ============================================================ */}
@@ -21,30 +25,33 @@ export default function Landing() {
             </div>
             <div className="min-w-0">
               <div className="font-bold text-xs sm:text-sm leading-tight truncate">
-                SUNRISE GLASSES 
+                {t('landing.brandLine1')}
               </div>
               <div className="font-bold text-xs sm:text-sm leading-tight truncate">
-                 &  ALUMINIUM
+                {t('landing.brandLine2')}
               </div>
               <div className="text-[10px] text-slate-500 leading-tight truncate">
-                Duka la Vifaa vya Ujenzi
+                {t('landing.brandTagline')}
               </div>
             </div>
           </div>
           <div className="flex items-center gap-2 shrink-0">
+            {/* LANGUAGE SWITCHER */}
+            <LanguageSwitcher />
+
             <Link
               to="/forgot-password"
               className="hidden md:inline-flex items-center gap-1.5 px-3 py-2 text-sm text-slate-600 hover:text-brand-600 rounded-lg hover:bg-slate-50 transition"
             >
               <KeyRound size={14} />
-              Umesahau Nywila?
+              {t('landing.forgotPassword')}
             </Link>
             <Link
               to="/login"
               className="inline-flex items-center gap-1.5 px-3 sm:px-4 py-2 bg-brand-600 text-white rounded-lg text-xs sm:text-sm font-semibold hover:bg-brand-700 transition"
             >
               <LogIn size={14} />
-              Ingia
+              {t('landing.login')}
             </Link>
           </div>
         </div>
@@ -58,21 +65,19 @@ export default function Landing() {
           <div className="text-center max-w-3xl mx-auto">
             <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-slate-200 text-slate-600 text-[10px] sm:text-xs font-semibold mb-4 sm:mb-6">
               <Sparkles size={12} />
-              Mfumo wa Kisasa wa Usimamizi wa Duka
+              {t('landing.badge')}
             </div>
             <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-slate-900 leading-tight tracking-tight">
-              Karibu{' '}
+              {t('landing.heroWelcome')}{' '}
               <span className="text-brand-600">
-                SUNRISE GLASSES  
+                SUNRISE GLASSES
               </span><br/>
-                <span className="text-brand-500">
-                 &  ALUMINIUM PROFILES
+              <span className="text-brand-500">
+                & ALUMINIUM PROFILES
               </span>
             </h1>
             <p className="text-slate-600 mt-4 sm:mt-6 text-sm sm:text-base md:text-lg leading-relaxed px-2">
-              Mfumo kamili wa kusimamia duka la vifaa vya ujenzi.
-              Mauzo, stoki, wateja, wafanyakazi, mishahara, faida, na zaka —
-              vyote mahali pamoja.
+              {t('landing.heroDesc')}
             </p>
             <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-2 sm:gap-3 mt-6 sm:mt-10 px-2 sm:px-0">
               <Link
@@ -80,7 +85,7 @@ export default function Landing() {
                 className="inline-flex items-center justify-center gap-2 px-4 sm:px-6 py-2.5 sm:py-3 bg-brand-600 text-white rounded-xl text-sm sm:text-base font-semibold hover:bg-brand-700 transition"
               >
                 <LogIn size={16} className="sm:w-[18px] sm:h-[18px]" />
-                Ingia Kwenye Akaunti
+                {t('landing.loginAccount')}
                 <ArrowRight size={14} className="sm:w-4 sm:h-4" />
               </Link>
               <Link
@@ -88,7 +93,7 @@ export default function Landing() {
                 className="inline-flex items-center justify-center gap-2 px-4 sm:px-6 py-2.5 sm:py-3 bg-white text-slate-700 rounded-xl text-sm sm:text-base font-semibold border border-slate-200 hover:border-slate-300 hover:bg-slate-50 transition"
               >
                 <KeyRound size={16} />
-                Umesahau Nywila?
+                {t('landing.forgotPassword')}
               </Link>
             </div>
           </div>
@@ -101,16 +106,15 @@ export default function Landing() {
       <section className="border-b border-slate-100 bg-slate-50/50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 md:py-20">
           <div className="text-center mb-8 sm:mb-10">
-            <div className="inline-flex items-center gap-2 px-3 py-1  rounded-full border border-slate-200 bg-white text-slate-600 text-[10px] sm:text-xs font-semibold mb-3">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-slate-200 bg-white text-slate-600 text-[10px] sm:text-xs font-semibold mb-3">
               <Sparkles size={12} />
-              Sunrise Portals
+              {t('landing.portalsBadge')}
             </div>
             <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-slate-900">
-              Ingia Kama
+              {t('landing.portalsTitle')}
             </h2>
             <p className="text-slate-500 mt-2 max-w-2xl mx-auto text-xs sm:text-sm px-2">
-              Chagua jukumu lako ili kuona dashibodi inayokufaa. Kila portal ina
-              vipengele maalum kwa ajili ya kazi zako.
+              {t('landing.portalsDesc')}
             </p>
           </div>
 
@@ -118,23 +122,26 @@ export default function Landing() {
             <PortalCard
               to="/mteja"
               Icon={ShoppingCart}
-              title="Mteja"
-              desc="Nunua bidhaa, angalia quotation, orders, na deni lako"
-              badge="Mteja Portal"
+              title={t('landing.portal.mteja.title')}
+              desc={t('landing.portal.mteja.desc')}
+              badge={t('landing.portal.mteja.badge')}
+              enterLabel={t('landing.portal.enter')}
             />
             <PortalCard
               to="/muuzaji"
               Icon={Briefcase}
-              title="Muuzaji"
-              desc="POS, risiti, pokea bidhaa, wateja, na ripoti za duka"
-              badge="Muuzaji Duka"
+              title={t('landing.portal.muuzaji.title')}
+              desc={t('landing.portal.muuzaji.desc')}
+              badge={t('landing.portal.muuzaji.badge')}
+              enterLabel={t('landing.portal.enter')}
             />
             <PortalCard
               to="/mmiliki"
               Icon={Crown}
-              title="Mmiliki"
-              desc="Dashboard, maduka, faida, mishahara, zaka, na ripoti zote"
-              badge="Mmiliki Dashboard"
+              title={t('landing.portal.mmiliki.title')}
+              desc={t('landing.portal.mmiliki.desc')}
+              badge={t('landing.portal.mmiliki.badge')}
+              enterLabel={t('landing.portal.enter')}
             />
           </div>
         </div>
@@ -147,25 +154,57 @@ export default function Landing() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 md:py-20 lg:py-24">
           <div className="text-center mb-10 sm:mb-14">
             <div className="text-[10px] sm:text-xs uppercase tracking-wider text-brand-600 font-semibold mb-2">
-              Vipengele
+              {t('landing.featuresLabel')}
             </div>
             <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-slate-900">
-              Kila Kitu Unachohitaji
+              {t('landing.featuresTitle')}
             </h2>
             <p className="text-slate-500 mt-2 max-w-2xl mx-auto text-xs sm:text-sm px-2">
-              Mfumo mmoja unaojumuisha kila kitu kwa ajili ya biashara yako ya vifaa vya ujenzi
+              {t('landing.featuresDesc')}
             </p>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-5">
-            <FeatureCard Icon={Package} title="Stoki" desc="Fuatilia bidhaa kwa wakati halisi" />
-            <FeatureCard Icon={Receipt} title="Mauzo & Risiti" desc="POS ya haraka na risiti za dijitali" />
-            <FeatureCard Icon={Users} title="Wateja & Madeni" desc="Historia na madeni ya wateja" />
-            <FeatureCard Icon={TrendingUp} title="Faida & Ripoti" desc="Ripoti kamili za biashara" />
-            <FeatureCard Icon={Wallet} title="Mishahara" desc="Malipo kwa M-Pesa au benki" />
-            <FeatureCard Icon={HandCoins} title="Zaka & Sadaka" desc="Hesabu ya kiotomatiki 10% + 10%" />
-            <FeatureCard Icon={Building2} title="Maduka Mengi" desc="Simamia maduka yote kwa pamoja" />
-            <FeatureCard Icon={ShieldCheck} title="Usalama" desc="Audit trail na backup ya kila siku" />
+            <FeatureCard
+              Icon={Package}
+              title={t('landing.feature.stoki.title')}
+              desc={t('landing.feature.stoki.desc')}
+            />
+            <FeatureCard
+              Icon={Receipt}
+              title={t('landing.feature.mauzo.title')}
+              desc={t('landing.feature.mauzo.desc')}
+            />
+            <FeatureCard
+              Icon={Users}
+              title={t('landing.feature.wateja.title')}
+              desc={t('landing.feature.wateja.desc')}
+            />
+            <FeatureCard
+              Icon={TrendingUp}
+              title={t('landing.feature.faida.title')}
+              desc={t('landing.feature.faida.desc')}
+            />
+            <FeatureCard
+              Icon={Wallet}
+              title={t('landing.feature.mishahara.title')}
+              desc={t('landing.feature.mishahara.desc')}
+            />
+            <FeatureCard
+              Icon={HandCoins}
+              title={t('landing.feature.zaka.title')}
+              desc={t('landing.feature.zaka.desc')}
+            />
+            <FeatureCard
+              Icon={Building2}
+              title={t('landing.feature.maduka.title')}
+              desc={t('landing.feature.maduka.desc')}
+            />
+            <FeatureCard
+              Icon={ShieldCheck}
+              title={t('landing.feature.usalaama.title')}
+              desc={t('landing.feature.usalaama.desc')}
+            />
           </div>
         </div>
       </section>
@@ -180,15 +219,13 @@ export default function Landing() {
             <div>
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-slate-200 text-slate-600 text-[10px] sm:text-xs font-semibold mb-4">
                 <ShieldCheck size={12} />
-                Usalama wa Akaunti
+                {t('landing.authBadge')}
               </div>
               <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-slate-900 leading-tight">
-                Tayari Kuanza?
+                {t('landing.authTitle')}
               </h2>
               <p className="text-slate-600 mt-3 text-sm md:text-base leading-relaxed">
-                Ingia kwenye akaunti yako au tengeneza mpya. Kama umesahau nywila,
-                tunaweza kukusaidia kwa OTP kwa simu yako. Usalama wa akaunti
-                yako ni kipaumbele chetu.
+                {t('landing.authDesc')}
               </p>
 
               <div className="mt-6 sm:mt-8 flex flex-col sm:flex-row flex-wrap gap-2 sm:gap-3">
@@ -197,7 +234,7 @@ export default function Landing() {
                   className="inline-flex items-center justify-center gap-2 px-4 sm:px-5 py-2.5 bg-brand-600 text-white rounded-xl text-sm font-semibold hover:bg-brand-700 transition"
                 >
                   <LogIn size={16} />
-                  Ingia Sasa
+                  {t('landing.authLoginNow')}
                   <ArrowRight size={14} />
                 </Link>
                 <Link
@@ -205,7 +242,7 @@ export default function Landing() {
                   className="inline-flex items-center justify-center gap-2 px-4 sm:px-5 py-2.5 bg-white text-slate-700 rounded-xl text-sm font-semibold border border-slate-200 hover:border-slate-300 hover:bg-slate-50 transition"
                 >
                   <KeyRound size={16} />
-                  Umesahau Nywila?
+                  {t('landing.forgotPassword')}
                 </Link>
               </div>
             </div>
@@ -215,26 +252,26 @@ export default function Landing() {
               <AuthLink
                 to="/login"
                 Icon={LogIn}
-                title="Ingia (Login)"
-                desc="Namba ya simu + nywila"
+                title={t('landing.authLink.login.title')}
+                desc={t('landing.authLink.login.desc')}
               />
               <AuthLink
                 to="/forgot-password"
                 Icon={KeyRound}
-                title="Umesahau Nywila?"
-                desc="Pata OTP kwa namba yako ya simu"
+                title={t('landing.authLink.forgot.title')}
+                desc={t('landing.authLink.forgot.desc')}
               />
               <AuthLink
                 to="/reset-password"
                 Icon={Lock}
-                title="Weka Nywila Mpya"
-                desc="Baada ya OTP kuthibitishwa"
+                title={t('landing.authLink.reset.title')}
+                desc={t('landing.authLink.reset.desc')}
               />
               <AuthLink
                 to="/reset-complete"
                 Icon={CheckCircle2}
-                title="Reset Imekamilika"
-                desc="Rudi kuingia kwa akaunti yako"
+                title={t('landing.authLink.complete.title')}
+                desc={t('landing.authLink.complete.desc')}
               />
             </div>
           </div>
@@ -258,12 +295,14 @@ function PortalCard({
   title,
   desc,
   badge,
+  enterLabel,
 }: {
   to: string
   Icon: React.ElementType
   title: string
   desc: string
   badge: string
+  enterLabel: string
 }) {
   return (
     <Link
@@ -285,7 +324,7 @@ function PortalCard({
         {desc}
       </div>
       <div className="mt-3 sm:mt-4 flex items-center text-sm text-brand-600 font-semibold">
-        Ingia
+        {enterLabel}
         <ChevronRight
           size={14}
           className="ml-1 transition group-hover:translate-x-1"

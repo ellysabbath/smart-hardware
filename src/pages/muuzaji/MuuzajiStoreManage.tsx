@@ -1,3 +1,4 @@
+
 import { useMemo, useState } from 'react'
 import {
   Package, AlertTriangle, Calendar, RotateCcw, PackageX, RefreshCcw,
@@ -7,51 +8,48 @@ import {
 import { useStore } from '../../store/StoreContext'
 import { formatTsh } from '../../utils/faida'
 import { iconForKundi } from '../../utils/icons'
+import { useLanguage } from '../../i18n/LanguageContext'
 import type {
   AinaMarekebishoStoki,
   HaliMarekebisho,
   HaliUingizaji,
 } from '../../types'
 
-// ============================================================
-// Meta
-// ============================================================
-const AINA_ADJ_META: Record<
-  AinaMarekebishoStoki,
-  { label: string; tone: string; Icon: React.ElementType }
-> = {
-  mauzo: { label: 'Mauzo', tone: 'text-blue-700', Icon: Package },
-  uharibifu: { label: 'Uharibifu', tone: 'text-red-700', Icon: AlertTriangle },
-  expiry: { label: 'Expiry', tone: 'text-amber-700', Icon: Calendar },
-  upotevu: { label: 'Upotevu', tone: 'text-orange-700', Icon: PackageX },
-  kurudisha_msambazaji: { label: 'Kurudisha', tone: 'text-purple-700', Icon: RotateCcw },
-  marekebisho: { label: 'Marekebisho', tone: 'text-slate-700', Icon: RefreshCcw },
+type MetaLabel = {
+  sw: string
+  en: string
+  tone: string
+  Icon: React.ElementType
 }
 
-const HALI_ADJ_META: Record<
-  HaliMarekebisho,
-  { label: string; tone: string; Icon: React.ElementType }
-> = {
-  inasubiri: { label: 'Inasubiri', tone: 'text-amber-600', Icon: Clock },
-  imethibitishwa: { label: 'Imethibitishwa', tone: 'text-emerald-600', Icon: CheckCircle2 },
-  imekataliwa: { label: 'Imekataliwa', tone: 'text-red-600', Icon: XCircle },
+const AINA_ADJ_META: Record<AinaMarekebishoStoki, MetaLabel> = {
+  mauzo: { sw: 'Mauzo', en: 'Sales', tone: 'text-blue-700', Icon: Package },
+  uharibifu: { sw: 'Uharibifu', en: 'Damage', tone: 'text-red-700', Icon: AlertTriangle },
+  expiry: { sw: 'Muda kuisha', en: 'Expiry', tone: 'text-amber-700', Icon: Calendar },
+  upotevu: { sw: 'Upotevu', en: 'Loss', tone: 'text-orange-700', Icon: PackageX },
+  kurudisha_msambazaji: { sw: 'Kurudisha', en: 'Return', tone: 'text-purple-700', Icon: RotateCcw },
+  marekebisho: { sw: 'Marekebisho', en: 'Adjustment', tone: 'text-slate-700', Icon: RefreshCcw },
 }
 
-const HALI_UING_META: Record<
-  HaliUingizaji,
-  { label: string; tone: string; Icon: React.ElementType }
-> = {
-  inasubiri: { label: 'Inasubiri', tone: 'text-amber-600', Icon: Clock },
-  imepokelewa: { label: 'Imepokelewa', tone: 'text-emerald-600', Icon: CheckCircle2 },
-  imekataliwa: { label: 'Imekataliwa', tone: 'text-red-600', Icon: XCircle },
+const HALI_ADJ_META: Record<HaliMarekebisho, MetaLabel> = {
+  inasubiri: { sw: 'Inasubiri', en: 'Pending', tone: 'text-amber-600', Icon: Clock },
+  imethibitishwa: { sw: 'Imethibitishwa', en: 'Approved', tone: 'text-emerald-600', Icon: CheckCircle2 },
+  imekataliwa: { sw: 'Imekataliwa', en: 'Rejected', tone: 'text-red-600', Icon: XCircle },
+}
+
+const HALI_UING_META: Record<HaliUingizaji, MetaLabel> = {
+  inasubiri: { sw: 'Inasubiri', en: 'Pending', tone: 'text-amber-600', Icon: Clock },
+  imepokelewa: { sw: 'Imepokelewa', en: 'Received', tone: 'text-emerald-600', Icon: CheckCircle2 },
+  imekataliwa: { sw: 'Imekataliwa', en: 'Rejected', tone: 'text-red-600', Icon: XCircle },
 }
 
 const DUKA_JINA = 'Kwembe'
 
 export default function MuuzajiStoreManage() {
   const { bidhaa, marekebishoStoki, thibitishaMarekebisho, uingizaji } = useStore()
+  const { language } = useLanguage()
+  const isSwahili = language === 'sw'
 
-  // Bidhaa za duka
   const bidhaaZaDuka = useMemo(
     () => bidhaa.filter((b) => b.duka === DUKA_JINA),
     [bidhaa]
@@ -67,7 +65,6 @@ export default function MuuzajiStoreManage() {
     [uingizaji]
   )
 
-  // Stats
   const stats = useMemo(() => {
     const jumla = bidhaaZaDuka.length
     const jumlaStoki = bidhaaZaDuka.reduce((s, b) => s + b.stoki, 0)
@@ -79,69 +76,76 @@ export default function MuuzajiStoreManage() {
 
   return (
     <div className="space-y-5">
-      {/* HEADER */}
       <div>
         <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-slate-900 flex items-center gap-2">
-          <Store size={26} className="text-brand-600" /> Usimamizi wa Stoki
+          <Store size={26} className="text-brand-600" />
+          {isSwahili ? 'Usimamizi wa Stoki' : 'Inventory Management'}
         </h1>
         <p className="text-sm text-slate-500 mt-1">
-          Duka la {DUKA_JINA} — bidhaa, marekebisho, na uingizaji
+          {isSwahili ? 'Duka la' : 'Store'} {DUKA_JINA} —{' '}
+          {isSwahili ? 'bidhaa, marekebisho, na uingizaji' : 'products, adjustments, and stock receipts'}
         </p>
       </div>
 
-      {/* STATS */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
-        <MiniStat label="Bidhaa" value={String(stats.jumla)} Icon={Package} tone="text-blue-600" />
-        <MiniStat label="Stoki Jumla" value={`${stats.jumlaStoki} pcs`} Icon={Layers} tone="text-emerald-600" />
-        <MiniStat label="Thamani" value={formatTsh(stats.thamani)} Icon={PackageX} tone="text-purple-600" />
         <MiniStat
-          label="Chini / Imeisha"
+          label={isSwahili ? 'Bidhaa' : 'Products'}
+          value={String(stats.jumla)}
+          Icon={Package}
+          tone="text-blue-600"
+        />
+        <MiniStat
+          label={isSwahili ? 'Jumla ya Stoki' : 'Total Stock'}
+          value={`${stats.jumlaStoki} pcs`}
+          Icon={Layers}
+          tone="text-emerald-600"
+        />
+        <MiniStat
+          label={isSwahili ? 'Thamani' : 'Value'}
+          value={formatTsh(stats.thamani)}
+          Icon={PackageX}
+          tone="text-purple-600"
+        />
+        <MiniStat
+          label={isSwahili ? 'Chini / Imeisha' : 'Low / Out of Stock'}
           value={`${stats.chini} / ${stats.imeisha}`}
           Icon={AlertTriangle}
           tone={stats.imeisha > 0 ? 'text-red-600' : 'text-amber-600'}
         />
       </div>
 
-      {/* ============================================================ */}
-      {/* SEHEMU 1: STOKI */}
-      {/* ============================================================ */}
       <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden">
         <div className="p-4 border-b border-slate-100 flex items-center justify-between gap-3">
           <h2 className="font-semibold flex items-center gap-2">
             <Layers size={18} className="text-brand-600" />
-            Stoki ({bidhaaZaDuka.length})
+            {isSwahili ? 'Stoki' : 'Stock'} ({bidhaaZaDuka.length})
           </h2>
         </div>
-        <StokiTable bidhaa={bidhaaZaDuka} />
+        <StokiTable bidhaa={bidhaaZaDuka} isSwahili={isSwahili} />
       </div>
 
-      {/* ============================================================ */}
-      {/* SEHEMU 2: MAREKEBISHO */}
-      {/* ============================================================ */}
       <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden">
         <div className="p-4 border-b border-slate-100">
           <h2 className="font-semibold flex items-center gap-2">
             <RefreshCcw size={18} className="text-brand-600" />
-            Marekebisho ya Stoki ({marekebishoYaDuka.length})
+            {isSwahili ? 'Marekebisho ya Stoki' : 'Stock Adjustments'} ({marekebishoYaDuka.length})
           </h2>
         </div>
         <MarekebishoTable
           marekebisho={marekebishoYaDuka}
           onThibitisha={thibitishaMarekebisho}
+          isSwahili={isSwahili}
         />
       </div>
 
-      {/* ============================================================ */}
-      {/* SEHEMU 3: UINGIZAJI */}
-      {/* ============================================================ */}
       <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden">
         <div className="p-4 border-b border-slate-100">
           <h2 className="font-semibold flex items-center gap-2">
             <Truck size={18} className="text-brand-600" />
-            Uingizaji wa Vifaa ({uingizajiWaDuka.length})
+            {isSwahili ? 'Uingizaji wa Vifaa' : 'Stock Receipts'} ({uingizajiWaDuka.length})
           </h2>
         </div>
-        <UingizajiTable uingizaji={uingizajiWaDuka} />
+        <UingizajiTable uingizaji={uingizajiWaDuka} isSwahili={isSwahili} />
       </div>
     </div>
   )
@@ -150,12 +154,19 @@ export default function MuuzajiStoreManage() {
 // ============================================================
 // TABLE 1: Stoki
 // ============================================================
-function StokiTable({ bidhaa }: { bidhaa: ReturnType<typeof useStore>['bidhaa'] }) {
+function StokiTable({
+  bidhaa,
+  isSwahili,
+}: {
+  bidhaa: ReturnType<typeof useStore>['bidhaa']
+  isSwahili: boolean
+}) {
   const [q, setQ] = useState('')
 
   const filtered = useMemo(() => {
     const query = q.toLowerCase().trim()
     if (!query) return bidhaa
+
     return bidhaa.filter(
       (b) =>
         b.jina.toLowerCase().includes(query) ||
@@ -172,7 +183,7 @@ function StokiTable({ bidhaa }: { bidhaa: ReturnType<typeof useStore>['bidhaa'] 
           <input
             value={q}
             onChange={(e) => setQ(e.target.value)}
-            placeholder="Tafuta bidhaa..."
+            placeholder={isSwahili ? 'Tafuta bidhaa...' : 'Search products...'}
             className="w-full pl-9 pr-3 py-2 rounded-lg border border-slate-200 focus:border-brand-500 outline-none text-sm"
           />
         </div>
@@ -181,27 +192,30 @@ function StokiTable({ bidhaa }: { bidhaa: ReturnType<typeof useStore>['bidhaa'] 
       {filtered.length === 0 ? (
         <div className="p-10 text-center">
           <Package size={32} className="mx-auto text-slate-300 mb-2" />
-          <div className="text-sm text-slate-500">Hakuna bidhaa</div>
+          <div className="text-sm text-slate-500">
+            {isSwahili ? 'Hakuna bidhaa' : 'No products found'}
+          </div>
         </div>
       ) : (
         <div className="overflow-x-auto">
           <table className="w-full text-sm min-w-[760px]">
             <thead className="bg-slate-50 text-left text-slate-500">
               <tr>
-                <th className="p-3 font-medium text-xs uppercase tracking-wide">Bidhaa</th>
-                <th className="p-3 font-medium text-xs uppercase tracking-wide">Kundi</th>
-                <th className="p-3 text-right font-medium text-xs uppercase tracking-wide">Stoki</th>
-                <th className="p-3 text-right font-medium text-xs uppercase tracking-wide">Bei Mauzo</th>
-                <th className="p-3 text-right font-medium text-xs uppercase tracking-wide">Bei Ununuzi</th>
-                <th className="p-3 text-right font-medium text-xs uppercase tracking-wide">Thamani</th>
+                <th className="p-3 font-medium text-xs uppercase tracking-wide">{isSwahili ? 'Bidhaa' : 'Product'}</th>
+                <th className="p-3 font-medium text-xs uppercase tracking-wide">{isSwahili ? 'Kundi' : 'Category'}</th>
+                <th className="p-3 text-right font-medium text-xs uppercase tracking-wide">{isSwahili ? 'Stoki' : 'Stock'}</th>
+                <th className="p-3 text-right font-medium text-xs uppercase tracking-wide">{isSwahili ? 'Bei ya Mauzo' : 'Selling Price'}</th>
+                <th className="p-3 text-right font-medium text-xs uppercase tracking-wide">{isSwahili ? 'Bei ya Ununuzi' : 'Buying Price'}</th>
+                <th className="p-3 text-right font-medium text-xs uppercase tracking-wide">{isSwahili ? 'Thamani' : 'Value'}</th>
                 <th className="p-3 font-medium text-xs uppercase tracking-wide">Expiry</th>
-                <th className="p-3 font-medium text-xs uppercase tracking-wide">Hali</th>
+                <th className="p-3 font-medium text-xs uppercase tracking-wide">{isSwahili ? 'Hali' : 'Status'}</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100">
               {filtered.map((b) => {
                 const Icon = iconForKundi(b.iconKey)
                 const hali = b.stoki <= 0 ? 'imeisha' : b.stoki <= 20 ? 'inaribia' : 'sawa'
+
                 return (
                   <tr key={b.id} className="hover:bg-slate-50/50">
                     <td className="p-3">
@@ -249,7 +263,11 @@ function StokiTable({ bidhaa }: { bidhaa: ReturnType<typeof useStore>['bidhaa'] 
                             : 'text-red-700 bg-red-50'
                         }`}
                       >
-                        {hali === 'sawa' ? 'Sawa' : hali === 'inaribia' ? 'Inaribia' : 'Imeisha'}
+                        {hali === 'sawa'
+                          ? isSwahili ? 'Sawa' : 'Good'
+                          : hali === 'inaribia'
+                          ? isSwahili ? 'Inaribia kuisha' : 'Low Stock'
+                          : isSwahili ? 'Imeisha' : 'Out of Stock'}
                       </span>
                     </td>
                   </tr>
@@ -267,10 +285,13 @@ function StokiTable({ bidhaa }: { bidhaa: ReturnType<typeof useStore>['bidhaa'] 
 // TABLE 2: Marekebisho
 // ============================================================
 function MarekebishoTable({
-  marekebisho, onThibitisha,
+  marekebisho,
+  onThibitisha,
+  isSwahili,
 }: {
   marekebisho: ReturnType<typeof useStore>['marekebishoStoki']
   onThibitisha: (id: string) => void
+  isSwahili: boolean
 }) {
   const [q, setQ] = useState('')
   const [filter, setFilter] = useState<HaliMarekebisho | 'zote'>('zote')
@@ -278,8 +299,10 @@ function MarekebishoTable({
   const filtered = useMemo(() => {
     return marekebisho.filter((m) => {
       if (filter !== 'zote' && m.hali !== filter) return false
+
       const query = q.toLowerCase().trim()
       if (!query) return true
+
       return (
         m.id.toLowerCase().includes(query) ||
         m.jina.toLowerCase().includes(query) ||
@@ -297,10 +320,11 @@ function MarekebishoTable({
           <input
             value={q}
             onChange={(e) => setQ(e.target.value)}
-            placeholder="Tafuta kwa ID, bidhaa, au sababu..."
+            placeholder={isSwahili ? 'Tafuta kwa ID, bidhaa, au sababu...' : 'Search by ID, product, or reason...'}
             className="w-full pl-9 pr-3 py-2 rounded-lg border border-slate-200 focus:border-brand-500 outline-none text-sm"
           />
         </div>
+
         <div className="flex flex-wrap gap-1.5 items-center">
           <ListFilter size={14} className="text-slate-400" />
           {(['zote', 'inasubiri', 'imethibitishwa', 'imekataliwa'] as const).map((k) => (
@@ -313,7 +337,9 @@ function MarekebishoTable({
                   : 'bg-white border-slate-200 hover:bg-slate-50'
               }`}
             >
-              {k === 'zote' ? 'Zote' : HALI_ADJ_META[k].label}
+              {k === 'zote'
+                ? isSwahili ? 'Zote' : 'All'
+                : isSwahili ? HALI_ADJ_META[k].sw : HALI_ADJ_META[k].en}
             </button>
           ))}
         </div>
@@ -324,8 +350,8 @@ function MarekebishoTable({
           <RefreshCcw size={32} className="mx-auto text-slate-300 mb-2" />
           <div className="text-sm text-slate-500">
             {marekebisho.length === 0
-              ? 'Hakuna marekebisho'
-              : 'Hakuna marekebisho yanayolingana'}
+              ? isSwahili ? 'Hakuna marekebisho' : 'No adjustments found'
+              : isSwahili ? 'Hakuna marekebisho yanayolingana' : 'No matching adjustments'}
           </div>
         </div>
       ) : (
@@ -334,13 +360,13 @@ function MarekebishoTable({
             <thead className="bg-slate-50 text-left text-slate-500">
               <tr>
                 <th className="p-3 font-medium text-xs uppercase tracking-wide">ID</th>
-                <th className="p-3 font-medium text-xs uppercase tracking-wide">Bidhaa</th>
-                <th className="p-3 font-medium text-xs uppercase tracking-wide">Aina</th>
-                <th className="p-3 font-medium text-xs uppercase tracking-wide">Sababu</th>
-                <th className="p-3 text-right font-medium text-xs uppercase tracking-wide">Wingi</th>
-                <th className="p-3 text-right font-medium text-xs uppercase tracking-wide">Thamani</th>
-                <th className="p-3 font-medium text-xs uppercase tracking-wide">Tarehe</th>
-                <th className="p-3 font-medium text-xs uppercase tracking-wide">Hali</th>
+                <th className="p-3 font-medium text-xs uppercase tracking-wide">{isSwahili ? 'Bidhaa' : 'Product'}</th>
+                <th className="p-3 font-medium text-xs uppercase tracking-wide">{isSwahili ? 'Aina' : 'Type'}</th>
+                <th className="p-3 font-medium text-xs uppercase tracking-wide">{isSwahili ? 'Sababu' : 'Reason'}</th>
+                <th className="p-3 text-right font-medium text-xs uppercase tracking-wide">{isSwahili ? 'Wingi' : 'Quantity'}</th>
+                <th className="p-3 text-right font-medium text-xs uppercase tracking-wide">{isSwahili ? 'Thamani' : 'Value'}</th>
+                <th className="p-3 font-medium text-xs uppercase tracking-wide">{isSwahili ? 'Tarehe' : 'Date'}</th>
+                <th className="p-3 font-medium text-xs uppercase tracking-wide">{isSwahili ? 'Hali' : 'Status'}</th>
                 <th className="p-3"></th>
               </tr>
             </thead>
@@ -348,6 +374,7 @@ function MarekebishoTable({
               {filtered.map((m) => {
                 const aina = AINA_ADJ_META[m.aina]
                 const hali = HALI_ADJ_META[m.hali]
+
                 return (
                   <tr key={m.id} className="hover:bg-slate-50/50">
                     <td className="p-3 font-mono text-xs">{m.id}</td>
@@ -358,7 +385,7 @@ function MarekebishoTable({
                     <td className="p-3">
                       <span className={`inline-flex items-center gap-1 text-xs ${aina.tone}`}>
                         <aina.Icon size={12} />
-                        {aina.label}
+                        {isSwahili ? aina.sw : aina.en}
                       </span>
                     </td>
                     <td className="p-3 text-slate-600 text-xs max-w-[160px] truncate">
@@ -372,7 +399,7 @@ function MarekebishoTable({
                     <td className="p-3">
                       <span className={`inline-flex items-center gap-1 text-xs font-semibold ${hali.tone}`}>
                         <hali.Icon size={12} />
-                        {hali.label}
+                        {isSwahili ? hali.sw : hali.en}
                       </span>
                     </td>
                     <td className="p-3 text-right">
@@ -382,7 +409,7 @@ function MarekebishoTable({
                           className="inline-flex items-center gap-1 px-2 py-1 rounded-md bg-emerald-600 text-white text-xs font-semibold hover:bg-emerald-700"
                         >
                           <CheckCircle2 size={12} />
-                          Thibitisha
+                          {isSwahili ? 'Thibitisha' : 'Approve'}
                         </button>
                       )}
                     </td>
@@ -400,7 +427,13 @@ function MarekebishoTable({
 // ============================================================
 // TABLE 3: Uingizaji
 // ============================================================
-function UingizajiTable({ uingizaji }: { uingizaji: ReturnType<typeof useStore>['uingizaji'] }) {
+function UingizajiTable({
+  uingizaji,
+  isSwahili,
+}: {
+  uingizaji: ReturnType<typeof useStore>['uingizaji']
+  isSwahili: boolean
+}) {
   const [q, setQ] = useState('')
   const [filter, setFilter] = useState<HaliUingizaji | 'zote'>('zote')
   const [selected, setSelected] = useState<ReturnType<typeof useStore>['uingizaji'][0] | null>(null)
@@ -408,8 +441,10 @@ function UingizajiTable({ uingizaji }: { uingizaji: ReturnType<typeof useStore>[
   const filtered = useMemo(() => {
     return uingizaji.filter((u) => {
       if (filter !== 'zote' && u.hali !== filter) return false
+
       const query = q.toLowerCase().trim()
       if (!query) return true
+
       return (
         u.id.toLowerCase().includes(query) ||
         u.aliyeingiza.toLowerCase().includes(query) ||
@@ -426,10 +461,11 @@ function UingizajiTable({ uingizaji }: { uingizaji: ReturnType<typeof useStore>[
           <input
             value={q}
             onChange={(e) => setQ(e.target.value)}
-            placeholder="Tafuta kwa ID, supplier, au bidhaa..."
+            placeholder={isSwahili ? 'Tafuta kwa ID, msambazaji, au bidhaa...' : 'Search by ID, supplier, or product...'}
             className="w-full pl-9 pr-3 py-2 rounded-lg border border-slate-200 focus:border-brand-500 outline-none text-sm"
           />
         </div>
+
         <div className="flex flex-wrap gap-1.5 items-center">
           <ListFilter size={14} className="text-slate-400" />
           {(['zote', 'inasubiri', 'imepokelewa', 'imekataliwa'] as const).map((k) => (
@@ -442,7 +478,9 @@ function UingizajiTable({ uingizaji }: { uingizaji: ReturnType<typeof useStore>[
                   : 'bg-white border-slate-200 hover:bg-slate-50'
               }`}
             >
-              {k === 'zote' ? 'Zote' : HALI_UING_META[k].label}
+              {k === 'zote'
+                ? isSwahili ? 'Zote' : 'All'
+                : isSwahili ? HALI_UING_META[k].sw : HALI_UING_META[k].en}
             </button>
           ))}
         </div>
@@ -453,8 +491,8 @@ function UingizajiTable({ uingizaji }: { uingizaji: ReturnType<typeof useStore>[
           <Truck size={32} className="mx-auto text-slate-300 mb-2" />
           <div className="text-sm text-slate-500">
             {uingizaji.length === 0
-              ? 'Hakuna uingizaji bado'
-              : 'Hakuna uingizaji unaolingana'}
+              ? isSwahili ? 'Hakuna uingizaji bado' : 'No stock receipts yet'
+              : isSwahili ? 'Hakuna uingizaji unaolingana' : 'No matching stock receipts'}
           </div>
         </div>
       ) : (
@@ -463,19 +501,20 @@ function UingizajiTable({ uingizaji }: { uingizaji: ReturnType<typeof useStore>[
             <thead className="bg-slate-50 text-left text-slate-500">
               <tr>
                 <th className="p-3 font-medium text-xs uppercase tracking-wide">ID</th>
-                <th className="p-3 font-medium text-xs uppercase tracking-wide">Supplier</th>
-                <th className="p-3 font-medium text-xs uppercase tracking-wide">Nafasi</th>
-                <th className="p-3 font-medium text-xs uppercase tracking-wide">Aina</th>
-                <th className="p-3 text-right font-medium text-xs uppercase tracking-wide">Bidhaa</th>
-                <th className="p-3 text-right font-medium text-xs uppercase tracking-wide">Thamani</th>
-                <th className="p-3 font-medium text-xs uppercase tracking-wide">Tarehe</th>
-                <th className="p-3 font-medium text-xs uppercase tracking-wide">Hali</th>
+                <th className="p-3 font-medium text-xs uppercase tracking-wide">{isSwahili ? 'Msambazaji' : 'Supplier'}</th>
+                <th className="p-3 font-medium text-xs uppercase tracking-wide">{isSwahili ? 'Nafasi' : 'Role'}</th>
+                <th className="p-3 font-medium text-xs uppercase tracking-wide">{isSwahili ? 'Aina' : 'Type'}</th>
+                <th className="p-3 text-right font-medium text-xs uppercase tracking-wide">{isSwahili ? 'Bidhaa' : 'Products'}</th>
+                <th className="p-3 text-right font-medium text-xs uppercase tracking-wide">{isSwahili ? 'Thamani' : 'Value'}</th>
+                <th className="p-3 font-medium text-xs uppercase tracking-wide">{isSwahili ? 'Tarehe' : 'Date'}</th>
+                <th className="p-3 font-medium text-xs uppercase tracking-wide">{isSwahili ? 'Hali' : 'Status'}</th>
                 <th className="p-3"></th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100">
               {filtered.map((u) => {
                 const meta = HALI_UING_META[u.hali]
+
                 return (
                   <tr key={u.id} className="hover:bg-slate-50/50">
                     <td className="p-3 font-mono text-xs">{u.id}</td>
@@ -487,7 +526,7 @@ function UingizajiTable({ uingizaji }: { uingizaji: ReturnType<typeof useStore>[
                         <div className="min-w-0">
                           <div className="font-medium truncate">{u.aliyeingiza}</div>
                           <div className="text-xs text-slate-500">
-                            {u.bidhaa.length} bidhaa
+                            {u.bidhaa.length} {isSwahili ? 'bidhaa' : 'products'}
                           </div>
                         </div>
                       </div>
@@ -502,7 +541,7 @@ function UingizajiTable({ uingizaji }: { uingizaji: ReturnType<typeof useStore>[
                     <td className="p-3">
                       <span className={`inline-flex items-center gap-1 text-xs font-semibold ${meta.tone}`}>
                         <meta.Icon size={12} />
-                        {meta.label}
+                        {isSwahili ? meta.sw : meta.en}
                       </span>
                     </td>
                     <td className="p-3 text-right">
@@ -511,7 +550,7 @@ function UingizajiTable({ uingizaji }: { uingizaji: ReturnType<typeof useStore>[
                         className="inline-flex items-center gap-1 px-2 py-1 rounded-md bg-slate-100 text-slate-700 text-xs font-semibold hover:bg-slate-200"
                       >
                         <Eye size={12} />
-                        Ona
+                        {isSwahili ? 'Ona' : 'View'}
                       </button>
                     </td>
                   </tr>
@@ -522,7 +561,13 @@ function UingizajiTable({ uingizaji }: { uingizaji: ReturnType<typeof useStore>[
         </div>
       )}
 
-      {selected && <UingizajiDetail uingizaji={selected} onClose={() => setSelected(null)} />}
+      {selected && (
+        <UingizajiDetail
+          uingizaji={selected}
+          onClose={() => setSelected(null)}
+          isSwahili={isSwahili}
+        />
+      )}
     </div>
   )
 }
@@ -531,22 +576,31 @@ function UingizajiTable({ uingizaji }: { uingizaji: ReturnType<typeof useStore>[
 // Uingizaji Detail Modal
 // ============================================================
 function UingizajiDetail({
-  uingizaji, onClose,
+  uingizaji,
+  onClose,
+  isSwahili,
 }: {
   uingizaji: ReturnType<typeof useStore>['uingizaji'][0]
   onClose: () => void
+  isSwahili: boolean
 }) {
   const meta = HALI_UING_META[uingizaji.hali]
+
   return (
     <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4">
       <div className="absolute inset-0 bg-black/40" onClick={onClose} />
+
       <div className="relative bg-white w-full sm:max-w-lg rounded-t-2xl sm:rounded-2xl shadow-2xl max-h-[92vh] overflow-y-auto">
         <div className="sticky top-0 bg-white border-b border-slate-200 px-4 py-3 flex justify-between items-center">
           <div>
             <div className="font-semibold">{uingizaji.id}</div>
             <div className="text-xs text-slate-500">{uingizaji.tarehe}</div>
           </div>
-          <button onClick={onClose} className="p-1.5 rounded-lg hover:bg-slate-100">
+          <button
+            onClick={onClose}
+            className="p-1.5 rounded-lg hover:bg-slate-100"
+            aria-label={isSwahili ? 'Funga' : 'Close'}
+          >
             <X size={18} />
           </button>
         </div>
@@ -554,26 +608,33 @@ function UingizajiDetail({
         <div className="p-4 space-y-3 text-sm">
           <div className={`inline-flex items-center gap-1 px-2 py-1 rounded-md text-xs font-semibold ${meta.tone} bg-slate-50 border border-slate-200`}>
             <meta.Icon size={12} />
-            {meta.label}
+            {isSwahili ? meta.sw : meta.en}
           </div>
 
           <div className="p-3 rounded-lg bg-slate-50 space-y-1">
-            <div className="text-xs text-slate-500">Supplier</div>
+            <div className="text-xs text-slate-500">
+              {isSwahili ? 'Msambazaji' : 'Supplier'}
+            </div>
             <div className="font-medium flex items-center gap-1.5">
               <User size={14} /> {uingizaji.aliyeingiza}
             </div>
             <div className="text-xs text-slate-500 capitalize">
-              Nafasi: {uingizaji.nafasi} — Aina: {uingizaji.aina}
+              {isSwahili ? 'Nafasi' : 'Role'}: {uingizaji.nafasi} —{' '}
+              {isSwahili ? 'Aina' : 'Type'}: {uingizaji.aina}
             </div>
           </div>
 
           <div className="grid grid-cols-2 gap-2">
             <div className="p-3 rounded-lg bg-slate-50">
-              <div className="text-xs text-slate-500">Jumla Bidhaa</div>
+              <div className="text-xs text-slate-500">
+                {isSwahili ? 'Jumla ya Bidhaa' : 'Total Products'}
+              </div>
               <div className="font-bold">{uingizaji.jumlaBidhaa} pcs</div>
             </div>
             <div className="p-3 rounded-lg bg-slate-50">
-              <div className="text-xs text-slate-500">Thamani</div>
+              <div className="text-xs text-slate-500">
+                {isSwahili ? 'Thamani' : 'Value'}
+              </div>
               <div className="font-bold text-brand-700">
                 {formatTsh(uingizaji.jumlaThamani)}
               </div>
@@ -582,11 +643,14 @@ function UingizajiDetail({
 
           <div>
             <div className="font-semibold mb-2 flex items-center gap-2">
-              <Package size={14} className="text-brand-600" /> Bidhaa ({uingizaji.bidhaa.length})
+              <Package size={14} className="text-brand-600" />
+              {isSwahili ? 'Bidhaa' : 'Products'} ({uingizaji.bidhaa.length})
             </div>
+
             <div className="space-y-1.5">
               {uingizaji.bidhaa.map((b, i) => {
                 const Icon = iconForKundi(b.iconKey)
+
                 return (
                   <div key={i} className="flex items-center gap-2 p-2 rounded-lg bg-slate-50">
                     <div className="w-9 h-9 rounded-lg bg-white border border-slate-200 overflow-hidden grid place-items-center text-slate-600 shrink-0">
@@ -614,7 +678,7 @@ function UingizajiDetail({
           {uingizaji.hali === 'imepokelewa' && uingizaji.aliyepokea && (
             <div className="p-3 rounded-lg bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs flex items-center gap-1.5">
               <CheckCircle2 size={14} />
-              Imepokelewa na {uingizaji.aliyepokea} ({uingizaji.tareheKupokea})
+              {isSwahili ? 'Imepokelewa na' : 'Received by'} {uingizaji.aliyepokea} ({uingizaji.tareheKupokea})
             </div>
           )}
         </div>
@@ -627,7 +691,10 @@ function UingizajiDetail({
 // MiniStat
 // ============================================================
 function MiniStat({
-  label, value, Icon, tone,
+  label,
+  value,
+  Icon,
+  tone,
 }: {
   label: string
   value: string

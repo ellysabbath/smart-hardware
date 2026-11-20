@@ -1,57 +1,176 @@
+
 import { useMemo } from 'react'
 import { TrendingUp, TrendingDown, Wallet } from 'lucide-react'
 import { useStore } from '../../store/StoreContext'
 import { formatTsh } from '../../utils/faida'
+import { useLanguage } from '../../i18n/LanguageContext'
 
 export default function MmilikiFaida() {
   const { mauzo, opex, mishahara, faida } = useStore()
+  const { language } = useLanguage()
+  const isSwahili = language === 'sw'
+
+  const t = {
+    title: isSwahili ? 'Faida / Hasara' : 'Profit / Loss',
+    sales: isSwahili ? 'Mauzo' : 'Sales',
+    grossProfit: isSwahili ? 'Faida Ghafi' : 'Gross Profit',
+    totalExpenses: isSwahili ? 'Gharama Zote' : 'Total Expenses',
+    netProfit: isSwahili ? 'Faida Safi' : 'Net Profit',
+    cogs: 'COGS',
+    opex: isSwahili ? 'Opex (bila mishahara)' : 'Opex (excluding salaries)',
+    salaries: isSwahili ? 'Mishahara' : 'Salaries',
+    tithe: isSwahili ? 'Zaka (10%)' : 'Tithe (10%)',
+    offering: isSwahili ? 'Sadaka (10%)' : 'Offering (10%)',
+    remaining: isSwahili ? 'Inayobaki' : 'Remaining',
+  }
+
   const f = useMemo(() => faida(), [mauzo, opex, mishahara])
 
   return (
     <div className="space-y-5">
-      <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-slate-900">Faida / Hasara</h1>
+      <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-slate-900">
+        {t.title}
+      </h1>
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-        <Box label="Mauzo" value={formatTsh(f.mauzo)} tone="text-blue-600" Icon={TrendingUp} />
-        <Box label="Faida Ghafi" value={formatTsh(f.faidaGhafi)} tone="text-emerald-600" Icon={TrendingUp} />
-        <Box label="Gharama Zote" value={formatTsh(f.jumlaGharama)} tone="text-red-600" Icon={Wallet} />
-        <Box label="Faida Safi" value={formatTsh(f.faidaSafi)} tone={f.hasara ? 'text-red-600' : 'text-emerald-700'} Icon={f.hasara ? TrendingDown : TrendingUp} />
+        <Box
+          label={t.sales}
+          value={formatTsh(f.mauzo)}
+          tone="text-blue-600"
+          Icon={TrendingUp}
+        />
+
+        <Box
+          label={t.grossProfit}
+          value={formatTsh(f.faidaGhafi)}
+          tone="text-emerald-600"
+          Icon={TrendingUp}
+        />
+
+        <Box
+          label={t.totalExpenses}
+          value={formatTsh(f.jumlaGharama)}
+          tone="text-red-600"
+          Icon={Wallet}
+        />
+
+        <Box
+          label={t.netProfit}
+          value={formatTsh(f.faidaSafi)}
+          tone={f.hasara ? 'text-red-600' : 'text-emerald-700'}
+          Icon={f.hasara ? TrendingDown : TrendingUp}
+        />
       </div>
 
       <div className="bg-white rounded-2xl border border-slate-200 p-5 space-y-2">
-        <Row label="Mauzo" value={formatTsh(f.mauzo)} />
-        <Row label="COGS" value={formatTsh(f.cogs)} tone="text-amber-700" />
-        <Row label="Faida Ghafi" value={formatTsh(f.faidaGhafi)} tone="text-brand-700" bold />
-        <Row label="Opex (bila mishahara)" value={formatTsh(f.jumlaOpex)} tone="text-orange-700" />
-        <Row label="Mishahara" value={formatTsh(f.jumlaMishahara)} tone="text-purple-700" />
-        <Row label="Gharama Zote" value={formatTsh(f.jumlaGharama)} tone="text-red-600" bold />
+        <Row label={t.sales} value={formatTsh(f.mauzo)} />
+
+        <Row
+          label={t.cogs}
+          value={formatTsh(f.cogs)}
+          tone="text-amber-700"
+        />
+
+        <Row
+          label={t.grossProfit}
+          value={formatTsh(f.faidaGhafi)}
+          tone="text-brand-700"
+          bold
+        />
+
+        <Row
+          label={t.opex}
+          value={formatTsh(f.jumlaOpex)}
+          tone="text-orange-700"
+        />
+
+        <Row
+          label={t.salaries}
+          value={formatTsh(f.jumlaMishahara)}
+          tone="text-purple-700"
+        />
+
+        <Row
+          label={t.totalExpenses}
+          value={formatTsh(f.jumlaGharama)}
+          tone="text-red-600"
+          bold
+        />
+
         <div className="pt-2 mt-2 border-t border-slate-200" />
-        <Row label="Faida Safi" value={formatTsh(f.faidaSafi)} tone={f.hasara ? 'text-red-700' : 'text-emerald-700'} bold />
-        <Row label="Zaka (10%)" value={formatTsh(f.zaka)} />
-        <Row label="Sadaka (10%)" value={formatTsh(f.sadaka)} />
-        <Row label="Inayobaki" value={formatTsh(f.inayobaki)} tone="text-emerald-700" bold />
+
+        <Row
+          label={t.netProfit}
+          value={formatTsh(f.faidaSafi)}
+          tone={f.hasara ? 'text-red-700' : 'text-emerald-700'}
+          bold
+        />
+
+        <Row label={t.tithe} value={formatTsh(f.zaka)} />
+
+        <Row label={t.offering} value={formatTsh(f.sadaka)} />
+
+        <Row
+          label={t.remaining}
+          value={formatTsh(f.inayobaki)}
+          tone="text-emerald-700"
+          bold
+        />
       </div>
     </div>
   )
 }
 
-function Box({ label, value, tone, Icon }: { label: string; value: string; tone: string; Icon: React.ElementType }) {
+function Box({
+  label,
+  value,
+  tone,
+  Icon,
+}: {
+  label: string
+  value: string
+  tone: string
+  Icon: React.ElementType
+}) {
   return (
     <div className="bg-white rounded-2xl border border-slate-200 p-4">
-      <div className={`w-10 h-10 rounded-lg bg-slate-50 border border-slate-200 grid place-items-center ${tone}`}>
+      <div
+        className={`w-10 h-10 rounded-lg bg-slate-50 border border-slate-200 grid place-items-center ${tone}`}
+      >
         <Icon size={18} />
       </div>
+
       <div className="text-xs text-slate-500 mt-3">{label}</div>
-      <div className="text-base md:text-lg font-bold text-slate-900 mt-0.5 truncate">{value}</div>
+
+      <div className="text-base md:text-lg font-bold text-slate-900 mt-0.5 truncate">
+        {value}
+      </div>
     </div>
   )
 }
 
-function Row({ label, value, tone, bold }: { label: string; value: string; tone?: string; bold?: boolean }) {
+function Row({
+  label,
+  value,
+  tone,
+  bold,
+}: {
+  label: string
+  value: string
+  tone?: string
+  bold?: boolean
+}) {
   return (
     <div className="flex justify-between">
       <span className="text-slate-600">{label}</span>
-      <span className={`${bold ? 'font-bold' : 'font-semibold'} ${tone ?? 'text-slate-900'}`}>{value}</span>
+
+      <span
+        className={`${bold ? 'font-bold' : 'font-semibold'} ${
+          tone ?? 'text-slate-900'
+        }`}
+      >
+        {value}
+      </span>
     </div>
   )
 }

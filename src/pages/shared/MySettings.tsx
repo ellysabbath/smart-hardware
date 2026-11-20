@@ -1,3 +1,4 @@
+
 import { useEffect, useMemo, useState } from 'react'
 import {
   Settings, Bell, Globe, Lock, Shield, Smartphone, Save,
@@ -6,6 +7,7 @@ import {
   FileText, Users, MoreHorizontal, Moon, Sun, Info,
 } from 'lucide-react'
 import { useStore } from '../../store/StoreContext'
+import { useLanguage } from '../../i18n/LanguageContext'
 
 type Role = 'mteja' | 'muuzaji' | 'mmiliki'
 
@@ -17,7 +19,6 @@ type Lugha = 'sw' | 'en'
 type Muonekano = 'light' | 'dark'
 
 interface Settings {
-  // Notifications kwa kundi
   notifMauzo: boolean
   notifStoki: boolean
   notifDeni: boolean
@@ -26,13 +27,10 @@ interface Settings {
   notifGharama: boolean
   notifMtumiaji: boolean
   notifMengine: boolean
-  // Lugha & Muonekano
   lugha: Lugha
   muonekano: Muonekano
-  // Faragha
   onyeshaSimu: boolean
   onyeshaBaruaPepe: boolean
-  // Usalama
   otpKwaSimu: boolean
 }
 
@@ -64,64 +62,82 @@ const NOTIF_KUNDI: {
     | 'notifMtumiaji'
     | 'notifMengine'
   >
-  label: string
-  desc: string
+  labelSw: string
+  labelEn: string
+  descSw: string
+  descEn: string
   Icon: React.ElementType
   tone: string
 }[] = [
   {
     key: 'notifMauzo',
-    label: 'Mauzo',
-    desc: 'Taarifa za mauzo mapya',
+    labelSw: 'Mauzo',
+    labelEn: 'Sales',
+    descSw: 'Taarifa za mauzo mapya',
+    descEn: 'Notifications about new sales',
     Icon: ShoppingBag,
     tone: 'text-blue-600',
   },
   {
     key: 'notifStoki',
-    label: 'Stoki',
-    desc: 'Bidhaa zinazoisha au kuisha',
+    labelSw: 'Stoki',
+    labelEn: 'Stock',
+    descSw: 'Bidhaa zinazoisha au kuisha',
+    descEn: 'Low or out-of-stock products',
     Icon: Package,
     tone: 'text-emerald-600',
   },
   {
     key: 'notifDeni',
-    label: 'Deni',
-    desc: 'Madeni yanayochelewa',
+    labelSw: 'Deni',
+    labelEn: 'Debt',
+    descSw: 'Madeni yanayochelewa',
+    descEn: 'Overdue debts',
     Icon: Wallet,
     tone: 'text-red-600',
   },
   {
     key: 'notifMalipo',
-    label: 'Malipo',
-    desc: 'Malipo yaliyopokelewa au kuthibitishwa',
+    labelSw: 'Malipo',
+    labelEn: 'Payments',
+    descSw: 'Malipo yaliyopokelewa au kuthibitishwa',
+    descEn: 'Payments received or confirmed',
     Icon: CreditCard,
     tone: 'text-amber-600',
   },
   {
     key: 'notifOrder',
-    label: 'Order',
-    desc: 'Orders mpya na zilizokamilika',
+    labelSw: 'Order',
+    labelEn: 'Orders',
+    descSw: 'Orders mpya na zilizokamilika',
+    descEn: 'New and completed orders',
     Icon: FileText,
     tone: 'text-purple-600',
   },
   {
     key: 'notifGharama',
-    label: 'Gharama',
-    desc: 'Maombi ya matumizi',
+    labelSw: 'Gharama',
+    labelEn: 'Expenses',
+    descSw: 'Maombi ya matumizi',
+    descEn: 'Expense requests',
     Icon: Wallet,
     tone: 'text-orange-600',
   },
   {
     key: 'notifMtumiaji',
-    label: 'Mtumiaji',
-    desc: 'Wafanyakazi wapya au mabadiliko',
+    labelSw: 'Mtumiaji',
+    labelEn: 'Users',
+    descSw: 'Wafanyakazi wapya au mabadiliko',
+    descEn: 'New employees or account changes',
     Icon: Users,
     tone: 'text-slate-600',
   },
   {
     key: 'notifMengine',
-    label: 'Mengine',
-    desc: 'Taarifa zingine',
+    labelSw: 'Mengine',
+    labelEn: 'Other',
+    descSw: 'Taarifa zingine',
+    descEn: 'Other notifications',
     Icon: MoreHorizontal,
     tone: 'text-slate-600',
   },
@@ -148,33 +164,104 @@ function saveSettings(role: Role, settings: Settings) {
 
 export default function MySettings({ role }: MySettingsProps) {
   const { sendSms } = useStore()
-  const [settings, setSettings] = useState<Settings>(() => loadSettings(role))
+  const { language, setLanguage } = useLanguage()
+  const isSwahili = language === 'sw'
+
+  const [settings, setSettings] = useState<Settings>(() => ({
+    ...loadSettings(role),
+    lugha: language,
+  }))
+
   const [changePassOpen, setChangePassOpen] = useState(false)
   const [toast, setToast] = useState<{ msg: string; ok: boolean } | null>(null)
 
-  // Reload settings when role changes
+  const t = {
+    title: isSwahili ? 'Mipangilio' : 'Settings',
+    subtitle: isSwahili
+      ? 'Simamia arifa, lugha, usalama, na faragha ya akaunti yako'
+      : 'Manage your notifications, language, security and account privacy',
+    notifications: isSwahili ? 'Arifa' : 'Notifications',
+    enabled: isSwahili ? 'zimewashwa' : 'enabled',
+    languageAppearance: isSwahili ? 'Lugha na Muonekano' : 'Language & Appearance',
+    language: isSwahili ? 'Lugha' : 'Language',
+    appearance: isSwahili ? 'Muonekano' : 'Appearance',
+    darkComingSoon: isSwahili
+      ? 'Muonekano wa dark utakuja hivi karibuni'
+      : 'Dark mode will be available soon',
+    privacy: isSwahili ? 'Faragha' : 'Privacy',
+    showPhone: isSwahili ? 'Onyesha namba yangu ya simu' : 'Show my phone number',
+    phoneDescription: isSwahili
+      ? 'Wateja wengine wanaweza kuona namba yako'
+      : 'Other customers can see your phone number',
+    showEmail: isSwahili ? 'Onyesha barua pepe yangu' : 'Show my email address',
+    emailDescription: isSwahili
+      ? 'Wengine wanaweza kuona email yako'
+      : 'Other people can see your email address',
+    security: isSwahili ? 'Usalama' : 'Security',
+    otp: isSwahili ? 'OTP kwa kila kuingia' : 'OTP on every login',
+    otpDescription: isSwahili
+      ? 'Pata OTP kwa SMS kila unapoingia'
+      : 'Receive an OTP by SMS whenever you log in',
+    changePassword: isSwahili ? 'Badilisha Nywila' : 'Change Password',
+    passwordDescription: isSwahili
+      ? 'Tumia nywila imara yenye herufi na namba'
+      : 'Use a strong password with letters and numbers',
+    change: isSwahili ? 'Badilisha' : 'Change',
+    saveSettings: isSwahili ? 'Hifadhi Mipangilio' : 'Save Settings',
+    saved: isSwahili ? 'Mipangilio imehifadhiwa' : 'Settings saved successfully',
+    saveFailed: isSwahili
+      ? 'Imeshindwa kuhifadhi mipangilio'
+      : 'Failed to save settings',
+    passwordChanged: isSwahili
+      ? 'Nywila imebadilishwa (demo)'
+      : 'Password changed (demo)',
+    cancel: isSwahili ? 'Ghairi' : 'Cancel',
+    save: isSwahili ? 'Hifadhi' : 'Save',
+    saving: isSwahili ? 'Inahifadhi...' : 'Saving...',
+    passwordModalTitle: isSwahili ? 'Badilisha Nywila' : 'Change Password',
+    passwordModalSubtitle: isSwahili
+      ? 'Weka nywila mpya imara'
+      : 'Set a new strong password',
+  }
+
+  // Reload settings when role changes.
   useEffect(() => {
-    setSettings(loadSettings(role))
-  }, [role])
+    setSettings({
+      ...loadSettings(role),
+      lugha: language,
+    })
+  }, [role, language])
 
   const handleToggle = <K extends keyof Settings>(key: K) => {
     setSettings((prev) => ({ ...prev, [key]: !prev[key] }))
   }
 
+  const handleLanguageChange = (lang: Lugha) => {
+    setSettings((prev) => ({ ...prev, lugha: lang }))
+    setLanguage(lang)
+  }
+
   const handleSave = () => {
-    const ok = saveSettings(role, settings)
-    if (ok) {
-      setToast({ msg: 'Mipangilio imehifadhiwa', ok: true })
-    } else {
-      setToast({ msg: 'Imeshindwa kuhifadhi mipangilio', ok: false })
+    const settingsToSave = {
+      ...settings,
+      lugha: language,
     }
+
+    const ok = saveSettings(role, settingsToSave)
+
+    if (ok) {
+      setToast({ msg: t.saved, ok: true })
+    } else {
+      setToast({ msg: t.saveFailed, ok: false })
+    }
+
     setTimeout(() => setToast(null), 4000)
   }
 
   const jumlahNotifZilizowashwa = useMemo(
     () =>
       NOTIF_KUNDI.reduce(
-        (s, k) => s + (settings[k.key as keyof Settings] ? 1 : 0),
+        (s, k) => s + (settings[k.key] ? 1 : 0),
         0
       ),
     [settings]
@@ -182,66 +269,74 @@ export default function MySettings({ role }: MySettingsProps) {
 
   return (
     <div className="max-w-3xl mx-auto space-y-5">
+      {/* Header */}
       <div>
         <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-slate-900 flex items-center gap-2">
-          <Settings size={26} className="text-brand-600" /> Mipangilio
+          <Settings size={26} className="text-brand-600" />
+          {t.title}
         </h1>
         <p className="text-sm text-slate-500 mt-1">
-          Simamia arifa, lugha, usalama, na faragha ya akaunti yako
+          {t.subtitle}
         </p>
       </div>
 
-      {/* ============ NOTIFICATIONS ============ */}
+      {/* Notifications */}
       <div className="bg-white rounded-2xl border border-slate-200 p-4 md:p-5">
         <div className="flex items-center justify-between gap-2 mb-4">
           <h2 className="font-semibold flex items-center gap-2">
             <Bell size={18} className="text-brand-600" />
-            Arifa
+            {t.notifications}
           </h2>
+
           <span className="text-xs text-slate-500">
-            {jumlahNotifZilizowashwa} / {NOTIF_KUNDI.length} zimewashwa
+            {jumlahNotifZilizowashwa} / {NOTIF_KUNDI.length} {t.enabled}
           </span>
         </div>
+
         <div className="space-y-2">
           {NOTIF_KUNDI.map((k) => (
             <ToggleRow
               key={k.key}
               Icon={k.Icon}
               tone={k.tone}
-              label={k.label}
-              desc={k.desc}
-              value={settings[k.key] as boolean}
+              label={isSwahili ? k.labelSw : k.labelEn}
+              desc={isSwahili ? k.descSw : k.descEn}
+              value={settings[k.key]}
               onToggle={() => handleToggle(k.key)}
             />
           ))}
         </div>
       </div>
 
-      {/* ============ LUGHA & MUONEKANO ============ */}
+      {/* Language & Appearance */}
       <div className="bg-white rounded-2xl border border-slate-200 p-4 md:p-5">
         <h2 className="font-semibold flex items-center gap-2 mb-4">
           <Globe size={18} className="text-brand-600" />
-          Lugha na Muonekano
+          {t.languageAppearance}
         </h2>
 
         <div className="space-y-4">
           <div>
-            <div className="text-xs text-slate-500 mb-2">Lugha</div>
+            <div className="text-xs text-slate-500 mb-2">
+              {t.language}
+            </div>
+
             <div className="grid grid-cols-2 gap-2">
               <button
-                onClick={() => setSettings({ ...settings, lugha: 'sw' })}
+                onClick={() => handleLanguageChange('sw')}
                 className={`px-3 py-2.5 rounded-xl border text-sm font-medium transition ${
-                  settings.lugha === 'sw'
+                  language === 'sw'
                     ? 'bg-brand-50 border-brand-500 text-brand-700'
                     : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-50'
                 }`}
               >
                 Kiswahili
               </button>
+
               <button
-                onClick={() => setSettings({ ...settings, lugha: 'en' })}
+                onClick={() => handleLanguageChange('en')}
                 className={`px-3 py-2.5 rounded-xl border text-sm font-medium transition ${
-                  settings.lugha === 'en'
+                  language === 'en'
                     ? 'bg-brand-50 border-brand-500 text-brand-700'
                     : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-50'
                 }`}
@@ -252,74 +347,89 @@ export default function MySettings({ role }: MySettingsProps) {
           </div>
 
           <div>
-            <div className="text-xs text-slate-500 mb-2">Muonekano</div>
+            <div className="text-xs text-slate-500 mb-2">
+              {t.appearance}
+            </div>
+
             <div className="grid grid-cols-2 gap-2">
               <button
-                onClick={() => setSettings({ ...settings, muonekano: 'light' })}
+                onClick={() =>
+                  setSettings({ ...settings, muonekano: 'light' })
+                }
                 className={`flex items-center justify-center gap-1.5 px-3 py-2.5 rounded-xl border text-sm font-medium transition ${
                   settings.muonekano === 'light'
                     ? 'bg-brand-50 border-brand-500 text-brand-700'
                     : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-50'
                 }`}
               >
-                <Sun size={14} /> Light
+                <Sun size={14} />
+                Light
               </button>
+
               <button
-                onClick={() => setSettings({ ...settings, muonekano: 'dark' })}
+                onClick={() =>
+                  setSettings({ ...settings, muonekano: 'dark' })
+                }
                 className={`flex items-center justify-center gap-1.5 px-3 py-2.5 rounded-xl border text-sm font-medium transition ${
                   settings.muonekano === 'dark'
                     ? 'bg-brand-50 border-brand-500 text-brand-700'
                     : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-50'
                 }`}
               >
-                <Moon size={14} /> Dark
+                <Moon size={14} />
+                Dark
               </button>
             </div>
+
             <div className="text-[10px] text-slate-400 mt-1 flex items-center gap-1">
-              <Info size={10} /> Muonekano wa dark utakuja hivi karibuni
+              <Info size={10} />
+              {t.darkComingSoon}
             </div>
           </div>
         </div>
       </div>
 
-      {/* ============ FARAGHA ============ */}
+      {/* Privacy */}
       <div className="bg-white rounded-2xl border border-slate-200 p-4 md:p-5">
         <h2 className="font-semibold flex items-center gap-2 mb-4">
           <Shield size={18} className="text-brand-600" />
-          Faragha
+          {t.privacy}
         </h2>
+
         <div className="space-y-2">
           <ToggleRow
             Icon={Smartphone}
             tone="text-emerald-600"
-            label="Onyesha namba yangu ya simu"
-            desc="Wateja wengine wanaweza kuona namba yako"
+            label={t.showPhone}
+            desc={t.phoneDescription}
             value={settings.onyeshaSimu}
             onToggle={() => handleToggle('onyeshaSimu')}
           />
+
           <ToggleRow
             Icon={MessageSquare}
             tone="text-blue-600"
-            label="Onyesha barua pepe yangu"
-            desc="Wengine wanaweza kuona email yako"
+            label={t.showEmail}
+            desc={t.emailDescription}
             value={settings.onyeshaBaruaPepe}
             onToggle={() => handleToggle('onyeshaBaruaPepe')}
           />
         </div>
       </div>
 
-      {/* ============ USALAMA ============ */}
+      {/* Security */}
       <div className="bg-white rounded-2xl border border-slate-200 p-4 md:p-5">
         <h2 className="font-semibold flex items-center gap-2 mb-4">
           <Lock size={18} className="text-brand-600" />
-          Usalama
+          {t.security}
         </h2>
+
         <div className="space-y-2">
           <ToggleRow
             Icon={Smartphone}
             tone="text-amber-600"
-            label="OTP kwa kila kuingia"
-            desc="Pata OTP kwa SMS kila unapoingia"
+            label={t.otp}
+            desc={t.otpDescription}
             value={settings.otpKwaSimu}
             onToggle={() => handleToggle('otpKwaSimu')}
           />
@@ -332,54 +442,65 @@ export default function MySettings({ role }: MySettingsProps) {
               <div className="w-9 h-9 rounded-lg bg-slate-50 border border-slate-200 grid place-items-center text-slate-700 shrink-0">
                 <KeyRound size={16} />
               </div>
+
               <div className="min-w-0">
                 <div className="text-sm font-medium text-slate-900">
-                  Badilisha Nywila
+                  {t.changePassword}
                 </div>
                 <div className="text-xs text-slate-500">
-                  Tumia nywila imara yenye herufi na namba
+                  {t.passwordDescription}
                 </div>
               </div>
             </div>
+
             <span className="text-xs text-brand-600 font-semibold shrink-0">
-              Badilisha
+              {t.change}
             </span>
           </button>
         </div>
       </div>
 
-      {/* ============ SAVE BUTTON ============ */}
+      {/* Save Button */}
       <div className="sticky bottom-4 flex gap-2">
         <button
           onClick={handleSave}
           className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-brand-600 text-white text-sm font-semibold hover:bg-brand-700 shadow-lg shadow-brand-600/20"
         >
           <Save size={16} />
-          Hifadhi Mipangilio
+          {t.saveSettings}
         </button>
       </div>
 
-      {/* ============ MODAL YA KUBADILISHA NYWILA ============ */}
+      {/* Change Password Modal */}
       {changePassOpen && (
         <ChangePasswordModal
+          isSwahili={isSwahili}
           onClose={() => setChangePassOpen(false)}
           onSuccess={() => {
             setChangePassOpen(false)
-            setToast({ msg: 'Nywila imebadilishwa (demo)', ok: true })
+            setToast({ msg: t.passwordChanged, ok: true })
             setTimeout(() => setToast(null), 4000)
-            sendSms('—', 'Nywila yako imebadilishwa. Kama si wewe, wasiliana na msaada.')
+
+            sendSms(
+              '—',
+              isSwahili
+                ? 'Nywila yako imebadilishwa. Kama si wewe, wasiliana na msaada.'
+                : 'Your password has been changed. If this was not you, contact support.'
+            )
           }}
         />
       )}
 
-      {/* ============ TOAST ============ */}
+      {/* Toast */}
       {toast && (
         <div
           className={`fixed bottom-4 left-1/2 -translate-x-1/2 z-[60] text-white text-sm px-4 py-3 rounded-xl shadow-2xl flex items-center gap-2 max-w-md ${
             toast.ok ? 'bg-emerald-600' : 'bg-red-600'
           }`}
         >
-          {toast.ok ? <CheckCircle2 size={16} /> : <AlertTriangle size={16} />}
+          {toast.ok
+            ? <CheckCircle2 size={16} />
+            : <AlertTriangle size={16} />}
           {toast.msg}
         </div>
       )}
@@ -391,7 +512,12 @@ export default function MySettings({ role }: MySettingsProps) {
 // ToggleRow
 // ============================================================
 function ToggleRow({
-  Icon, tone, label, desc, value, onToggle,
+  Icon,
+  tone,
+  label,
+  desc,
+  value,
+  onToggle,
 }: {
   Icon: React.ElementType
   tone: string
@@ -403,17 +529,27 @@ function ToggleRow({
   return (
     <div className="flex items-center justify-between gap-3 p-3 rounded-xl border border-slate-200 hover:border-slate-300 transition">
       <div className="flex items-center gap-3 min-w-0">
-        <div className={`w-9 h-9 rounded-lg bg-slate-50 border border-slate-200 grid place-items-center shrink-0 ${tone}`}>
+        <div
+          className={`w-9 h-9 rounded-lg bg-slate-50 border border-slate-200 grid place-items-center shrink-0 ${tone}`}
+        >
           <Icon size={16} />
         </div>
+
         <div className="min-w-0">
-          <div className="text-sm font-medium text-slate-900 truncate">{label}</div>
-          <div className="text-xs text-slate-500 truncate">{desc}</div>
+          <div className="text-sm font-medium text-slate-900 truncate">
+            {label}
+          </div>
+          <div className="text-xs text-slate-500 truncate">
+            {desc}
+          </div>
         </div>
       </div>
+
       <button
+        type="button"
         onClick={onToggle}
         aria-pressed={value}
+        aria-label={label}
         className={`relative shrink-0 w-11 h-6 rounded-full transition ${
           value ? 'bg-brand-600' : 'bg-slate-300'
         }`}
@@ -434,9 +570,11 @@ function ToggleRow({
 function ChangePasswordModal({
   onClose,
   onSuccess,
+  isSwahili,
 }: {
   onClose: () => void
   onSuccess: () => void
+  isSwahili: boolean
 }) {
   const [current, setCurrent] = useState('')
   const [password, setPassword] = useState('')
@@ -445,14 +583,48 @@ function ChangePasswordModal({
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState('')
 
+  const t = {
+    title: isSwahili ? 'Badilisha Nywila' : 'Change Password',
+    subtitle: isSwahili
+      ? 'Weka nywila mpya imara'
+      : 'Set a new strong password',
+    current: isSwahili ? 'Nywila ya Sasa' : 'Current Password',
+    newPassword: isSwahili ? 'Nywila Mpya' : 'New Password',
+    confirmPassword: isSwahili ? 'Rudia Nywila Mpya' : 'Confirm New Password',
+    currentRequired: isSwahili
+      ? 'Nywila ya sasa inahitajika'
+      : 'Current password is required',
+    minLength: isSwahili
+      ? 'Nywila mpya iwe angalau herufi 6'
+      : 'New password must be at least 6 characters',
+    mismatch: isSwahili
+      ? 'Nywila hazifanani'
+      : 'Passwords do not match',
+    cancel: isSwahili ? 'Ghairi' : 'Cancel',
+    save: isSwahili ? 'Hifadhi Nywila' : 'Save Password',
+    saving: isSwahili ? 'Inahifadhi...' : 'Saving...',
+    show: isSwahili ? 'Onyesha nywila' : 'Show password',
+    hide: isSwahili ? 'Ficha nywila' : 'Hide password',
+  }
+
   const submit = (e: React.FormEvent) => {
     e.preventDefault()
-    if (!current.trim()) return setError('Nywila ya sasa inahitajika')
-    if (password.length < 6) return setError('Nywila mpya iwe angalau herufi 6')
-    if (password !== confirm) return setError('Nywila hazifanani')
+
+    if (!current.trim()) {
+      return setError(t.currentRequired)
+    }
+
+    if (password.length < 6) {
+      return setError(t.minLength)
+    }
+
+    if (password !== confirm) {
+      return setError(t.mismatch)
+    }
 
     setError('')
     setSaving(true)
+
     setTimeout(() => {
       setSaving(false)
       onSuccess()
@@ -461,22 +633,29 @@ function ChangePasswordModal({
 
   return (
     <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4">
-      <div className="absolute inset-0 bg-black/40" onClick={() => !saving && onClose()} />
+      <div
+        className="absolute inset-0 bg-black/40"
+        onClick={() => !saving && onClose()}
+      />
+
       <div className="relative bg-white w-full sm:max-w-md rounded-t-2xl sm:rounded-2xl shadow-2xl">
         <div className="sticky top-0 bg-white border-b border-slate-200 px-4 py-3 flex justify-between items-center">
           <div>
             <div className="font-semibold flex items-center gap-2">
               <KeyRound size={16} className="text-brand-600" />
-              Badilisha Nywila
+              {t.title}
             </div>
+
             <div className="text-xs text-slate-500">
-              Weka nywila mpya imara
+              {t.subtitle}
             </div>
           </div>
+
           <button
             onClick={() => !saving && onClose()}
             className="p-1.5 rounded-lg hover:bg-slate-100"
             disabled={saving}
+            aria-label={t.cancel}
           >
             <X size={18} />
           </button>
@@ -484,17 +663,25 @@ function ChangePasswordModal({
 
         <form onSubmit={submit} className="p-4 space-y-3">
           <div>
-            <label className="text-sm font-medium">Nywila ya Sasa</label>
+            <label className="text-sm font-medium">
+              {t.current}
+            </label>
+
             <input
               type={showPass ? 'text' : 'password'}
               value={current}
               onChange={(e) => setCurrent(e.target.value)}
               className="mt-1 w-full px-3 py-2.5 rounded-lg border border-slate-200 focus:border-brand-500 outline-none text-sm"
               placeholder="••••••••"
+              autoComplete="current-password"
             />
           </div>
+
           <div>
-            <label className="text-sm font-medium">Nywila Mpya</label>
+            <label className="text-sm font-medium">
+              {t.newPassword}
+            </label>
+
             <div className="relative mt-1">
               <input
                 type={showPass ? 'text' : 'password'}
@@ -502,24 +689,34 @@ function ChangePasswordModal({
                 onChange={(e) => setPassword(e.target.value)}
                 className="w-full px-3 py-2.5 pr-10 rounded-lg border border-slate-200 focus:border-brand-500 outline-none text-sm"
                 placeholder="••••••••"
+                autoComplete="new-password"
               />
+
               <button
                 type="button"
                 onClick={() => setShowPass((v) => !v)}
                 className="absolute right-2 top-1/2 -translate-y-1/2 p-1 rounded-md hover:bg-slate-100"
+                aria-label={showPass ? t.hide : t.show}
               >
-                {showPass ? <EyeOff size={14} /> : <Eye size={14} />}
+                {showPass
+                  ? <EyeOff size={14} />
+                  : <Eye size={14} />}
               </button>
             </div>
           </div>
+
           <div>
-            <label className="text-sm font-medium">Rudia Nywila Mpya</label>
+            <label className="text-sm font-medium">
+              {t.confirmPassword}
+            </label>
+
             <input
               type={showPass ? 'text' : 'password'}
               value={confirm}
               onChange={(e) => setConfirm(e.target.value)}
               className="mt-1 w-full px-3 py-2.5 rounded-lg border border-slate-200 focus:border-brand-500 outline-none text-sm"
               placeholder="••••••••"
+              autoComplete="new-password"
             />
           </div>
 
@@ -537,18 +734,20 @@ function ChangePasswordModal({
               disabled={saving}
               className="px-4 py-2.5 rounded-lg bg-slate-100 text-sm hover:bg-slate-200 disabled:opacity-50"
             >
-              Ghairi
+              {t.cancel}
             </button>
+
             <button
               type="submit"
               disabled={saving}
               className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-brand-600 text-white text-sm font-semibold hover:bg-brand-700 disabled:opacity-50"
             >
               {saving ? (
-                <>Inahifadhi...</>
+                <>{t.saving}</>
               ) : (
                 <>
-                  <Save size={16} /> Hifadhi Nywila
+                  <Save size={16} />
+                  {t.save}
                 </>
               )}
             </button>

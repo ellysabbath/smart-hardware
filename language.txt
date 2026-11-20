@@ -1,0 +1,1164 @@
+// ============================================================
+// TRANSLATIONS - Central language dictionary
+// ============================================================
+
+export type Language = 'sw' | 'en'
+
+export const LANGUAGES: { key: Language; label: string; flag: string }[] = [
+  { key: 'sw', label: 'Kiswahili', flag: '🇹🇿' },
+  { key: 'en', label: 'English', flag: '🇬🇧' },
+]
+
+// Flat dictionary keyed by dot-notation strings
+export const translations: Record<Language, Record<string, string>> = {
+  sw: {
+    // ---------- General ----------
+    'common.save': 'Hifadhi',
+    'common.cancel': 'Ghairi',
+    'common.close': 'Funga',
+    'common.delete': 'Futa',
+    'common.edit': 'Hariri',
+    'common.add': 'Ongeza',
+    'common.search': 'Tafuta',
+    'common.filter': 'Chuja',
+    'common.all': 'Zote',
+    'common.confirm': 'Thibitisha',
+    'common.back': 'Rudi',
+    'common.loading': 'Inapakia...',
+    'common.noData': 'Hakuna data',
+    'common.yes': 'Ndiyo',
+    'common.no': 'Hapana',
+    'common.actions': 'Vitendo',
+    'common.view': 'Angalia',
+    'common.download': 'Pakua',
+    'common.upload': 'Pakia',
+    'common.date': 'Tarehe',
+    'common.time': 'Muda',
+    'common.amount': 'Kiasi',
+    'common.total': 'Jumla',
+    'common.status': 'Hali',
+    'common.name': 'Jina',
+    'common.phone': 'Simu',
+    'common.shop': 'Duka',
+    'common.user': 'Mtumiaji',
+    'common.language': 'Lugha',
+
+    // ---------- Roles ----------
+    'role.mteja': 'Mteja',
+    'role.muuzaji': 'Muuzaji',
+    'role.mmiliki': 'Mmiliki',
+    'role.mhazini': 'Mhazini',
+    'role.admin': 'Admin',
+
+    // ---------- Notifications ----------
+    'notif.title': 'Taarifa',
+    'notif.count': '{count} taarifa - {unread} hazijasomwa',
+    'notif.markAllRead': 'Soma Zote',
+    'notif.deleteAll': 'Futa Zote',
+    'notif.searchPlaceholder': 'Tafuta taarifa...',
+    'notif.onlyUnread': 'Hazijasomwa ({count})',
+    'notif.empty': 'Hakuna taarifa',
+    'notif.emptyDesc': 'Ukipata taarifa mpya, zitaonekana hapa.',
+    'notif.noMatch': 'Hakuna taarifa inayolingana',
+    'notif.noMatchDesc': 'Badilisha kichujio au utafutaji.',
+    'notif.markRead': 'Weka Kama Imesomwa',
+    'notif.openPage': 'Fungua Ukurasa',
+    'notif.new': 'Mpya',
+    'notif.notFound': 'Taarifa haipo',
+    'notif.notFoundDesc': 'Taarifa uliyoitafuta haipatikani au ilifutwa.',
+    'notif.back': 'Rudi Taarifa',
+    'notif.info': 'Taarifa',
+    'notif.warning': 'Onyo',
+    'notif.success': 'Mafanikio',
+    'notif.danger': 'Hatari',
+
+    // ---------- Notification categories ----------
+    'kundi.mauzo': 'Mauzo',
+    'kundi.stoki': 'Stoki',
+    'kundi.deni': 'Deni',
+    'kundi.malipo': 'Malipo',
+    'kundi.order': 'Oda',
+    'kundi.gharama': 'Gharama',
+    'kundi.mtumiaji': 'Mtumiaji',
+    'kundi.mengine': 'Mengine',
+
+    // ---------- Carts ----------
+    'cart.title': 'Mikokoteni Inayosubiri',
+    'cart.subtitle': 'Orodha ya bei na oda zote zinazosubiri mteja kukamilisha',
+    'cart.stat.all': 'Zote',
+    'cart.stat.quotations': 'Orodha za Bei',
+    'cart.stat.orders': 'Oda',
+    'cart.stat.partial': 'Malipo ya Sehemu',
+    'cart.searchPlaceholder': 'Tafuta mteja, simu, au kitambulisho cha kikokoteni...',
+    'cart.empty': 'Hakuna kikokoteni kinacholingana',
+    'cart.emptyDesc': 'Badilisha kichujio au utafutaji.',
+    'cart.notify': 'Mjulishe Mteja',
+    'cart.notified': 'Imetumwa',
+    'cart.complete': 'Kamilisha',
+    'cart.whatsapp': 'WhatsApp',
+    'cart.balance': 'Salio',
+    'cart.toastNotify': 'SMS imetumwa kwa {mteja} ({simu}) ili kukamilisha kikokoteni',
+    'cart.toastComplete': 'Kikokoteni {id} kimekamilika',
+    'cart.hali.quotation': 'Orodha ya Bei',
+    'cart.hali.order': 'Oda',
+    'cart.hali.malipo_sehemu': 'Malipo ya Sehemu',
+    'cart.hali.imekamilika': 'Imekamilika',
+
+    // ---------- Maombi (Expense requests) ----------
+    'ombi.title': 'Maombi ya Matumizi',
+    'ombi.subtitle': 'Omba matumizi ya duka - Mmiliki ataidhinisha',
+    'ombi.request': 'Omba Matumizi',
+    'ombi.stat.all': 'Maombi Yote',
+    'ombi.stat.pending': 'Yanayosubiri',
+    'ombi.stat.approved': 'Yaliyoidhinishwa',
+    'ombi.stat.totalApproved': 'Jumla Iliyoidhinishwa',
+    'ombi.searchPlaceholder': 'Tafuta kwa ID, aina, maelezo, au sababu...',
+    'ombi.empty': 'Hakuna maombi',
+    'ombi.emptyDesc': 'Bonyeza "Omba Matumizi" kuanza kuomba.',
+    'ombi.filter.pending': 'Yanayosubiri',
+    'ombi.filter.approved': 'Yaliyoidhinishwa',
+    'ombi.filter.rejected': 'Yaliyokataliwa',
+    'ombi.hali.inasubiri': 'Inasubiri',
+    'ombi.hali.imekubaliwa': 'Imekubaliwa',
+    'ombi.hali.imekataliwa': 'Imekataliwa',
+    'ombi.form.title': 'Omba Matumizi',
+    'ombi.form.aina': 'Aina ya Gharama',
+    'ombi.form.kiasi': 'Kiasi (Tsh)',
+    'ombi.form.maelezo': 'Maelezo',
+    'ombi.form.simu': 'Namba ya Simu ya Mlipaji',
+    'ombi.form.sababu': 'Sababu',
+    'ombi.form.risiti': 'Risiti (hiari)',
+    'ombi.form.risitiUrl': 'URL ya picha ya risiti',
+    'ombi.form.submit': 'Tuma Ombi',
+    'ombi.form.errorMaelezo': 'Maelezo yanahitajika',
+    'ombi.form.errorKiasi': 'Kiasi lazima kiwe zaidi ya sifuri',
+    'ombi.form.errorSimu': 'Namba ya simu si sahihi (mfano: 0754-123-456)',
+    'ombi.form.errorSababu': 'Sababu inahitajika',
+    'ombi.detail.aina': 'Aina',
+    'ombi.detail.kiasi': 'Kiasi',
+    'ombi.detail.maelezo': 'Maelezo',
+    'ombi.detail.sababu': 'Sababu',
+    'ombi.detail.maoni': 'Maoni ya Mmiliki',
+
+    // ---------- Mshahara (Salary) ----------
+    'mshahara.title': 'Mshahara Wangu',
+    'mshahara.note': 'Kumbuka',
+    'mshahara.noteDesc': 'Mshahara wako unalipwa kwenye akaunti uliyowekewa na mmiliki. Kama unataka kubadilisha akaunti, wasiliana na mmiliki.',
+    'mshahara.stat.all': 'Mishahara Yote',
+    'mshahara.stat.paid': 'Iliyolipwa',
+    'mshahara.stat.pending': 'Inasubiri',
+    'mshahara.stat.last': 'Mshahara wa Mwisho',
+    'mshahara.stat.none': 'Hakuna',
+    'mshahara.noAccountTitle': 'Huna akaunti ya malipo bado',
+    'mshahara.noAccountDesc': 'Wasiliana na mmiliki ili aweke akaunti yako ya M-Pesa au benki. Bila akaunti, mshahara wako hautaweza kulipwa.',
+    'mshahara.myAccount': 'Akaunti Yangu ya Malipo',
+    'mshahara.noAccount': 'Hakuna akaunti bado. Wasiliana na mmiliki ili aweke akaunti yako.',
+    'mshahara.primary': 'Akaunti Kuu',
+    'mshahara.history': 'Historia ya Mishahara',
+    'mshahara.noHistory': 'Hakuna mishahara bado. Mshahara wako utaonekana hapa mmiliki akishaongeza.',
+    'mshahara.paidOn': 'Imelipwa',
+    'mshahara.awaitingPayment': 'Inasubiri malipo',
+    'mshahara.detail.base': 'Mshahara wa Msingi',
+    'mshahara.detail.allowance': 'Posho',
+    'mshahara.detail.overtime': 'Malipo ya Saa za Ziada',
+    'mshahara.detail.benefits': 'Mafao',
+    'mshahara.detail.deductions': 'Makato',
+    'mshahara.detail.total': 'JUMLA',
+    'mshahara.detail.payment': 'Malipo',
+    'mshahara.detail.account': 'Akaunti',
+    'mshahara.detail.date': 'Tarehe',
+    'mshahara.detail.payslip': 'Pakua Hati ya Mshahara',
+    'mshahara.hali.inasubiri': 'Inasubiri',
+    'mshahara.hali.imelipwa': 'Imelipwa',
+    'mshahara.hali.imeshindwa': 'Imeshindwa',
+    'mshahara.hali.imekataliwa': 'Imekataliwa',
+
+    // ---------- GRN ----------
+    'grn.title': 'Pokea Bidhaa (GRN)',
+    'grn.subtitle': 'Mizigo inayosubiri kupokelewa',
+    'grn.stat.pending': 'Inasubiri',
+    'grn.stat.received': 'Zimepokelewa',
+    'grn.stat.shortage': 'Upungufu',
+    'grn.ordered': 'Iliyoagizwa',
+    'grn.received': 'Iliyopokelewa',
+    'grn.totalOrdered': 'Jumla Iliyoagizwa',
+    'grn.totalReceived': 'Jumla Iliyopokelewa',
+    'grn.shortage': 'Upungufu',
+    'grn.confirm': 'Thibitisha Kupokea',
+    'grn.shortageWarning': 'Kuna upungufu wa bidhaa {count} - hakikisha umeandika sababu.',
+    'grn.itemsOrdered': 'Bidhaa Zilizoagizwa',
+    'grn.hali.imepokelewa': 'Imepokelewa',
+    'grn.hali.upungufu': 'Upungufu',
+    'grn.hali.inasubiri': 'Inasubiri',
+
+    // ---------- POS ----------
+    'pos.title': 'POS - Duka la Kwembe',
+    'pos.seller': 'Muuzaji: {name}',
+    'pos.searchPlaceholder': 'Scan barcode au tafuta bidhaa...',
+    'pos.cart': 'Kikokoteni ({count})',
+    'pos.emptyCart': 'Hakuna bidhaa bado',
+    'pos.remove': 'Ondoa',
+    'pos.total': 'Jumla',
+    'pos.cash': 'Pesa Taslimu',
+    'pos.debt': 'Deni',
+    'pos.completeSale': 'Kamilisha Mauzo',
+    'pos.stock': 'Stoki',
+
+    // ---------- Ripoti (Reports) ----------
+    'ripoti.title': 'Ripoti za Duka',
+    'ripoti.subtitle': 'Duka la Kwembe - Muuzaji: {name}',
+    'ripoti.tab.mauzo': 'Mauzo',
+    'ripoti.tab.stoki': 'Stoki',
+    'ripoti.tab.wateja': 'Wateja',
+    'ripoti.tab.documents': 'Nyaraka',
+
+    // ---------- Hali / Statuses ----------
+    'hali.sawa': 'Sawa',
+    'hali.inaribia': 'Inakaribia Kuisha',
+    'hali.imeisha': 'Imeisha',
+    'hali.hai': 'Hai',
+    'hali.imechelewa': 'Imechelewa',
+    'hali.imelipwa': 'Imelipwa',
+    'hali.tayari': 'Tayari',
+    'hali.inasindika': 'Inachakatwa',
+    'hali.imeshindwa': 'Imeshindwa',
+
+    // ---------- Landing ----------
+    'landing.brandLine1': 'SUNRISE GLASSES',
+    'landing.brandLine2': '& ALUMINIUM',
+    'landing.brandTagline': 'Duka la Vifaa vya Ujenzi',
+    'landing.forgotPassword': 'Umesahau Nenosiri?',
+    'landing.login': 'Ingia',
+    'landing.badge': 'Mfumo wa Kisasa wa Usimamizi wa Duka',
+    'landing.heroWelcome': 'Karibu',
+    'landing.heroDesc': 'Mfumo kamili wa kusimamia biashara yako ya vifaa vya ujenzi. Mauzo, stoki, wateja, wafanyakazi, mishahara, faida na zaka — vyote katika sehemu moja.',
+    'landing.loginAccount': 'Ingia kwenye Akaunti',
+    'landing.portalsBadge': 'Milango ya Sunrise',
+    'landing.portalsTitle': 'Ingia Kama',
+    'landing.portalsDesc': 'Chagua nafasi yako ili kuona dashibodi inayokufaa. Kila akaunti ina vipengele maalumu kwa ajili ya majukumu yako.',
+    'landing.portal.mteja.title': 'Mteja',
+    'landing.portal.mteja.desc': 'Nunua bidhaa, angalia orodha za bei, oda na madeni yako.',
+    'landing.portal.mteja.badge': 'Akaunti ya Mteja',
+    'landing.portal.muuzaji.title': 'Muuzaji',
+    'landing.portal.muuzaji.desc': 'POS, risiti, kupokea bidhaa, wateja na ripoti za duka.',
+    'landing.portal.muuzaji.badge': 'Duka la Muuzaji',
+    'landing.portal.mmiliki.title': 'Mmiliki',
+    'landing.portal.mmiliki.desc': 'Dashibodi, maduka, faida, mishahara, zaka na ripoti zote.',
+    'landing.portal.mmiliki.badge': 'Dashibodi ya Mmiliki',
+    'landing.portal.enter': 'Ingia',
+    'landing.featuresLabel': 'Vipengele',
+    'landing.featuresTitle': 'Kila Kitu Unachohitaji',
+    'landing.featuresDesc': 'Mfumo mmoja unaojumuisha kila kitu kwa biashara yako ya vifaa vya ujenzi.',
+    'landing.feature.stoki.title': 'Stoki',
+    'landing.feature.stoki.desc': 'Fuatilia bidhaa kwa wakati halisi.',
+    'landing.feature.mauzo.title': 'Mauzo na Risiti',
+    'landing.feature.mauzo.desc': 'Mfumo wa POS wa haraka na risiti za kidijitali.',
+    'landing.feature.wateja.title': 'Wateja na Madeni',
+    'landing.feature.wateja.desc': 'Historia ya wateja na madeni yao.',
+    'landing.feature.faida.title': 'Faida na Ripoti',
+    'landing.feature.faida.desc': 'Ripoti kamili za biashara.',
+    'landing.feature.mishahara.title': 'Mishahara',
+    'landing.feature.mishahara.desc': 'Malipo kupitia M-Pesa au benki.',
+    'landing.feature.zaka.title': 'Zaka na Misaada',
+    'landing.feature.zaka.desc': 'Hesabu ya kiotomatiki ya 10% + 10%.',
+    'landing.feature.maduka.title': 'Maduka Mengi',
+    'landing.feature.maduka.desc': 'Simamia maduka yote kwa pamoja.',
+    'landing.feature.usalaama.title': 'Usalama',
+    'landing.feature.usalaama.desc': 'Rekodi za shughuli na nakala rudufu za kila siku.',
+    'landing.authBadge': 'Usalama wa Akaunti',
+    'landing.authTitle': 'Uko Tayari Kuanza?',
+    'landing.authDesc': 'Ingia kwenye akaunti yako au fungua akaunti mpya. Ikiwa umesahau nenosiri lako, tunaweza kukusaidia kupitia OTP inayotumwa kwenye simu yako. Usalama wa akaunti yako ni kipaumbele chetu.',
+    'landing.authLoginNow': 'Ingia Sasa',
+    'landing.authLink.login.title': 'Ingia',
+    'landing.authLink.login.desc': 'Namba ya simu + nenosiri',
+    'landing.authLink.forgot.title': 'Umesahau Nenosiri?',
+    'landing.authLink.forgot.desc': 'Pata OTP kupitia namba yako ya simu',
+    'landing.authLink.reset.title': 'Weka Nenosiri Jipya',
+    'landing.authLink.reset.desc': 'Baada ya kuthibitisha OTP',
+    'landing.authLink.complete.title': 'Umefanikiwa Kubadilisha Nenosiri',
+    'landing.authLink.complete.desc': 'Rudi kuingia kwenye akaunti yako',
+
+    // ---------- Topbar ----------
+    'topbar.search': 'Tafuta bidhaa, duka, mtu...',
+    'topbar.noResults': 'Hakuna matokeo ya "{query}"',
+    'topbar.cartTitle': 'Kikokoteni Chako',
+    'topbar.removeAll': 'Ondoa zote',
+    'topbar.cartEmpty': 'Kikokoteni chako ni tupu',
+    'topbar.cartEmptyDesc': 'Ongeza bidhaa ili kuanza',
+    'topbar.continue': 'Endelea',
+    'topbar.decrease': 'Punguza',
+    'topbar.increase': 'Ongeza',
+    'topbar.remove': 'Ondoa',
+    'topbar.markAllRead': 'Weka zote kama zimesomwa',
+    'topbar.viewAllNotifications': 'Ona taarifa zote',
+    'topbar.myProfile': 'Wasifu Wangu',
+    'topbar.settings': 'Mipangilio',
+    'topbar.logout': 'Toka (Logout)',
+    'topbar.logoutTitle': 'Toka Kwenye Akaunti?',
+    'topbar.logoutDesc': 'Una uhakika unataka kutoka kwenye akaunti yako? Utahitaji kuingia tena.',
+    'topbar.logoutConfirm': 'Ndiyo, Toka',
+    'topbar.openMenu': 'Fungua menyu',
+    'topbar.profile': 'Wasifu',
+    'topbar.notifications': 'Taarifa',
+
+    // ---------- Search types ----------
+    'search.type.bidhaa': 'Bidhaa',
+    'search.type.duka': 'Duka',
+    'search.type.mtumiaji': 'Mtumiaji',
+    'search.type.deni': 'Deni',
+    'search.type.gharama': 'Gharama',
+  },
+
+  en: {
+    // ---------- General ----------
+    'common.save': 'Save',
+    'common.cancel': 'Cancel',
+    'common.close': 'Close',
+    'common.delete': 'Delete',
+    'common.edit': 'Edit',
+    'common.add': 'Add',
+    'common.search': 'Search',
+    'common.filter': 'Filter',
+    'common.all': 'All',
+    'common.confirm': 'Confirm',
+    'common.back': 'Back',
+    'common.loading': 'Loading...',
+    'common.noData': 'No data',
+    'common.yes': 'Yes',
+    'common.no': 'No',
+    'common.actions': 'Actions',
+    'common.view': 'View',
+    'common.download': 'Download',
+    'common.upload': 'Upload',
+    'common.date': 'Date',
+    'common.time': 'Time',
+    'common.amount': 'Amount',
+    'common.total': 'Total',
+    'common.status': 'Status',
+    'common.name': 'Name',
+    'common.phone': 'Phone',
+    'common.shop': 'Shop',
+    'common.user': 'User',
+    'common.language': 'Language',
+
+    // ---------- Roles ----------
+    'role.mteja': 'Customer',
+    'role.muuzaji': 'Seller',
+    'role.mmiliki': 'Owner',
+    'role.mhazini': 'Accountant',
+    'role.admin': 'Admin',
+
+    // ---------- Notifications ----------
+    'notif.title': 'Notifications',
+    'notif.count': '{count} notifications - {unread} unread',
+    'notif.markAllRead': 'Mark All Read',
+    'notif.deleteAll': 'Delete All',
+    'notif.searchPlaceholder': 'Search notifications...',
+    'notif.onlyUnread': 'Unread ({count})',
+    'notif.empty': 'No notifications',
+    'notif.emptyDesc': 'New notifications will appear here.',
+    'notif.noMatch': 'No matching notifications',
+    'notif.noMatchDesc': 'Change the filter or search.',
+    'notif.markRead': 'Mark as Read',
+    'notif.openPage': 'Open Page',
+    'notif.new': 'New',
+    'notif.notFound': 'Notification not found',
+    'notif.notFoundDesc': 'The notification you are looking for does not exist or was deleted.',
+    'notif.back': 'Back to Notifications',
+    'notif.info': 'Info',
+    'notif.warning': 'Warning',
+    'notif.success': 'Success',
+    'notif.danger': 'Danger',
+
+    // ---------- Notification categories ----------
+    'kundi.mauzo': 'Sales',
+    'kundi.stoki': 'Stock',
+    'kundi.deni': 'Debt',
+    'kundi.malipo': 'Payment',
+    'kundi.order': 'Order',
+    'kundi.gharama': 'Expense',
+    'kundi.mtumiaji': 'User',
+    'kundi.mengine': 'Other',
+
+    // ---------- Carts ----------
+    'cart.title': 'Pending Carts',
+    'cart.subtitle': 'All quotations and orders waiting for customer completion',
+    'cart.stat.all': 'All',
+    'cart.stat.quotations': 'Quotations',
+    'cart.stat.orders': 'Orders',
+    'cart.stat.partial': 'Partial Payment',
+    'cart.searchPlaceholder': 'Search customer, phone, cart ID...',
+    'cart.empty': 'No matching carts',
+    'cart.emptyDesc': 'Change the filter or search.',
+    'cart.notify': 'Notify Customer',
+    'cart.notified': 'Sent',
+    'cart.complete': 'Complete',
+    'cart.whatsapp': 'WhatsApp',
+    'cart.balance': 'Balance',
+    'cart.toastNotify': 'SMS sent to {mteja} ({simu}) to complete cart',
+    'cart.toastComplete': 'Cart {id} completed',
+    'cart.hali.quotation': 'Quotation',
+    'cart.hali.order': 'Order',
+    'cart.hali.malipo_sehemu': 'Partial Payment',
+    'cart.hali.imekamilika': 'Completed',
+
+    // ---------- Maombi (Expense requests) ----------
+    'ombi.title': 'Expense Requests',
+    'ombi.subtitle': 'Request shop expenses - Owner will approve',
+    'ombi.request': 'Request Expense',
+    'ombi.stat.all': 'All Requests',
+    'ombi.stat.pending': 'Pending',
+    'ombi.stat.approved': 'Approved',
+    'ombi.stat.totalApproved': 'Total Approved',
+    'ombi.searchPlaceholder': 'Search by ID, type, description, or reason...',
+    'ombi.empty': 'No requests',
+    'ombi.emptyDesc': 'Click "Request Expense" to start.',
+    'ombi.filter.pending': 'Pending',
+    'ombi.filter.approved': 'Approved',
+    'ombi.filter.rejected': 'Rejected',
+    'ombi.hali.inasubiri': 'Pending',
+    'ombi.hali.imekubaliwa': 'Approved',
+    'ombi.hali.imekataliwa': 'Rejected',
+    'ombi.form.title': 'Request Expense',
+    'ombi.form.aina': 'Expense Type',
+    'ombi.form.kiasi': 'Amount (Tsh)',
+    'ombi.form.maelezo': 'Description',
+    'ombi.form.simu': 'Payer Phone Number',
+    'ombi.form.sababu': 'Reason',
+    'ombi.form.risiti': 'Receipt (optional)',
+    'ombi.form.risitiUrl': 'Receipt image URL',
+    'ombi.form.submit': 'Submit Request',
+    'ombi.form.errorMaelezo': 'Description is required',
+    'ombi.form.errorKiasi': 'Amount must be greater than zero',
+    'ombi.form.errorSimu': 'Invalid phone number (e.g. 0754-123-456)',
+    'ombi.form.errorSababu': 'Reason is required',
+    'ombi.detail.aina': 'Type',
+    'ombi.detail.kiasi': 'Amount',
+    'ombi.detail.maelezo': 'Description',
+    'ombi.detail.sababu': 'Reason',
+    'ombi.detail.maoni': "Owner's Comment",
+
+    // ---------- Mshahara (Salary) ----------
+    'mshahara.title': 'My Salary',
+    'mshahara.note': 'Note',
+    'mshahara.noteDesc': 'Your salary is paid to the account set by the owner. To change accounts, contact the owner.',
+    'mshahara.stat.all': 'All Salaries',
+    'mshahara.stat.paid': 'Paid',
+    'mshahara.stat.pending': 'Pending',
+    'mshahara.stat.last': 'Last Salary',
+    'mshahara.stat.none': 'None',
+    'mshahara.noAccountTitle': 'You have no payment account yet',
+    'mshahara.noAccountDesc': 'Contact the owner to set up your M-Pesa or bank account. Without an account, your salary cannot be paid.',
+    'mshahara.myAccount': 'My Payment Account',
+    'mshahara.noAccount': 'No account yet. Contact the owner to set up your account.',
+    'mshahara.primary': 'Primary',
+    'mshahara.history': 'Salary History',
+    'mshahara.noHistory': 'No salaries yet. Your salary will appear here once added by the owner.',
+    'mshahara.paidOn': 'Paid',
+    'mshahara.awaitingPayment': 'Awaiting payment',
+    'mshahara.detail.base': 'Base Salary',
+    'mshahara.detail.allowance': 'Allowance',
+    'mshahara.detail.overtime': 'Overtime',
+    'mshahara.detail.benefits': 'Benefits',
+    'mshahara.detail.deductions': 'Deductions',
+    'mshahara.detail.total': 'TOTAL',
+    'mshahara.detail.payment': 'Payment',
+    'mshahara.detail.account': 'Account',
+    'mshahara.detail.date': 'Date',
+    'mshahara.detail.payslip': 'Download Payslip',
+    'mshahara.hali.inasubiri': 'Pending',
+    'mshahara.hali.imelipwa': 'Paid',
+    'mshahara.hali.imeshindwa': 'Failed',
+    'mshahara.hali.imekataliwa': 'Rejected',
+
+    // ---------- GRN ----------
+    'grn.title': 'Receive Goods (GRN)',
+    'grn.subtitle': 'Shipments awaiting receipt',
+    'grn.stat.pending': 'Pending',
+    'grn.stat.received': 'Received',
+    'grn.stat.shortage': 'Shortage',
+    'grn.ordered': 'Ordered',
+    'grn.received': 'Received',
+    'grn.totalOrdered': 'Total Ordered',
+    'grn.totalReceived': 'Total Received',
+    'grn.shortage': 'Shortage',
+    'grn.confirm': 'Confirm Receipt',
+    'grn.shortageWarning': 'Shortage of {count} items - make sure to note the reason.',
+    'grn.itemsOrdered': 'Ordered Items',
+    'grn.hali.imepokelewa': 'Received',
+    'grn.hali.upungufu': 'Shortage',
+    'grn.hali.inasubiri': 'Pending',
+
+    // ---------- POS ----------
+    'pos.title': 'POS - Kwembe Shop',
+    'pos.seller': 'Seller: {name}',
+    'pos.searchPlaceholder': 'Scan barcode or search product...',
+    'pos.cart': 'Cart ({count})',
+    'pos.emptyCart': 'No items yet',
+    'pos.remove': 'Remove',
+    'pos.total': 'Total',
+    'pos.cash': 'Cash',
+    'pos.debt': 'Debt',
+    'pos.completeSale': 'Complete Sale',
+    'pos.stock': 'Stock',
+
+    // ---------- Ripoti (Reports) ----------
+    'ripoti.title': 'Shop Reports',
+    'ripoti.subtitle': 'Kwembe Shop - Seller: {name}',
+    'ripoti.tab.mauzo': 'Sales',
+    'ripoti.tab.stoki': 'Stock',
+    'ripoti.tab.wateja': 'Customers',
+    'ripoti.tab.documents': 'Documents',
+
+    // ---------- Hali / Statuses ----------
+    'hali.sawa': 'OK',
+    'hali.inaribia': 'Low',
+    'hali.imeisha': 'Out',
+    'hali.hai': 'Active',
+    'hali.imechelewa': 'Overdue',
+    'hali.imelipwa': 'Paid',
+    'hali.tayari': 'Ready',
+    'hali.inasindika': 'Processing',
+    'hali.imeshindwa': 'Failed',
+
+    // ---------- Landing ----------
+    'landing.brandLine1': 'SUNRISE GLASSES',
+    'landing.brandLine2': '& ALUMINIUM',
+    'landing.brandTagline': 'Construction Supplies Store',
+    'landing.forgotPassword': 'Forgot Password?',
+    'landing.login': 'Login',
+    'landing.badge': 'Modern Shop Management System',
+    'landing.heroWelcome': 'Welcome',
+    'landing.heroDesc': 'A complete system to manage your construction supplies store. Sales, stock, customers, employees, salaries, profit, and tithe — all in one place.',
+    'landing.loginAccount': 'Login to Account',
+    'landing.portalsBadge': 'Sunrise Portals',
+    'landing.portalsTitle': 'Login As',
+    'landing.portalsDesc': 'Choose your role to see the dashboard that suits you. Each portal has specific features for your tasks.',
+    'landing.portal.mteja.title': 'Customer',
+    'landing.portal.mteja.desc': 'Buy products, view quotations, orders, and your debt',
+    'landing.portal.mteja.badge': 'Customer Portal',
+    'landing.portal.muuzaji.title': 'Seller',
+    'landing.portal.muuzaji.desc': 'POS, receipts, receive goods, customers, and shop reports',
+    'landing.portal.muuzaji.badge': 'Seller Shop',
+    'landing.portal.mmiliki.title': 'Owner',
+    'landing.portal.mmiliki.desc': 'Dashboard, shops, profit, salaries, tithe, and all reports',
+    'landing.portal.mmiliki.badge': 'Owner Dashboard',
+    'landing.portal.enter': 'Enter',
+    'landing.featuresLabel': 'Features',
+    'landing.featuresTitle': 'Everything You Need',
+    'landing.featuresDesc': 'One system that includes everything for your construction supplies business',
+    'landing.feature.stoki.title': 'Stock',
+    'landing.feature.stoki.desc': 'Track products in real time',
+    'landing.feature.mauzo.title': 'Sales & Receipts',
+    'landing.feature.mauzo.desc': 'Fast POS and digital receipts',
+    'landing.feature.wateja.title': 'Customers & Debts',
+    'landing.feature.wateja.desc': 'Customer history and debts',
+    'landing.feature.faida.title': 'Profit & Reports',
+    'landing.feature.faida.desc': 'Complete business reports',
+    'landing.feature.mishahara.title': 'Salaries',
+    'landing.feature.mishahara.desc': 'Payment via M-Pesa or bank',
+    'landing.feature.zaka.title': 'Tithe & Charity',
+    'landing.feature.zaka.desc': 'Automatic calculation 10% + 10%',
+    'landing.feature.maduka.title': 'Multiple Shops',
+    'landing.feature.maduka.desc': 'Manage all shops together',
+    'landing.feature.usalaama.title': 'Security',
+    'landing.feature.usalaama.desc': 'Audit trail and daily backup',
+    'landing.authBadge': 'Account Security',
+    'landing.authTitle': 'Ready to Start?',
+    'landing.authDesc': 'Login to your account or create a new one. If you forgot your password, we can help via OTP on your phone. Your account security is our priority.',
+    'landing.authLoginNow': 'Login Now',
+    'landing.authLink.login.title': 'Login',
+    'landing.authLink.login.desc': 'Phone number + password',
+    'landing.authLink.forgot.title': 'Forgot Password?',
+    'landing.authLink.forgot.desc': 'Get OTP on your phone number',
+    'landing.authLink.reset.title': 'Set New Password',
+    'landing.authLink.reset.desc': 'After OTP is verified',
+    'landing.authLink.complete.title': 'Reset Complete',
+    'landing.authLink.complete.desc': 'Return to log into your account',
+
+    // ---------- Topbar ----------
+    'topbar.search': 'Search products, shops, people...',
+    'topbar.noResults': 'No results for "{query}"',
+    'topbar.cartTitle': 'Your Cart',
+    'topbar.removeAll': 'Remove all',
+    'topbar.cartEmpty': 'Your cart is empty',
+    'topbar.cartEmptyDesc': 'Add products to get started',
+    'topbar.continue': 'Continue',
+    'topbar.decrease': 'Decrease',
+    'topbar.increase': 'Increase',
+    'topbar.remove': 'Remove',
+    'topbar.markAllRead': 'Mark all as read',
+    'topbar.viewAllNotifications': 'View all notifications',
+    'topbar.myProfile': 'My Profile',
+    'topbar.settings': 'Settings',
+    'topbar.logout': 'Logout',
+    'topbar.logoutTitle': 'Logout of Account?',
+    'topbar.logoutDesc': 'Are you sure you want to logout? You will need to sign in again.',
+    'topbar.logoutConfirm': 'Yes, Logout',
+    'topbar.openMenu': 'Open menu',
+    'topbar.profile': 'Profile',
+    'topbar.notifications': 'Notifications',
+
+    // ---------- Search types ----------
+    'search.type.bidhaa': 'Product',
+    'search.type.duka': 'Shop',
+    'search.type.mtumiaji': 'User',
+    'search.type.deni': 'Debt',
+    'search.type.gharama': 'Expense',
+  },
+},
+
+
+// ============================================================
+// LANGUAGE CONTEXT
+// Inasimamia lugha ya app (sw/en) na inatoa function ya t()
+// ============================================================
+
+import {
+  createContext,
+  useContext,
+  useState,
+  useCallback,
+  useEffect,
+  useMemo,
+  type ReactNode,
+} from 'react'
+import { translations, LANGUAGES, type Language } from './translations'
+
+const STORAGE_KEY = 'smart-hardware-lang'
+
+// ---------- Aina ya Context ----------
+interface LanguageContextValue {
+  /** Lugha ya sasa (sw au en) */
+  lang: Language
+  /** Badilisha lugha */
+  setLang: (l: Language) => void
+  /**
+   * Tafsiri key → maandishi
+   * @example t('landing.login') → "Ingia" / "Login"
+   * @example t('notif.count', { count: 5, unread: 2 }) → "5 taarifa - 2 hazijasomwa"
+   */
+  t: (key: string, vars?: Record<string, string | number>) => string
+  /** Orodha ya lugha zinazopatikana */
+  languages: typeof LANGUAGES
+}
+
+const LanguageContext = createContext<LanguageContextValue | undefined>(undefined)
+
+// ============================================================
+// PROVIDER
+// ============================================================
+export function LanguageProvider({ children }: { children: ReactNode }) {
+  // ---------- 1. Pakia lugha iliyohifadhiwa ----------
+  const [lang, setLangState] = useState<Language>(() => {
+    try {
+      const saved = localStorage.getItem(STORAGE_KEY) as Language | null
+      if (saved && translations[saved]) return saved
+    } catch {
+      /* localStorage haipatikani (SSR au private mode) */
+    }
+    return 'sw'
+  })
+
+  // ---------- 2. Badilisha lugha ----------
+  const setLang = useCallback((l: Language) => {
+    setLangState(l)
+    try {
+      localStorage.setItem(STORAGE_KEY, l)
+    } catch {
+      /* ignore */
+    }
+    document.documentElement.lang = l
+  }, [])
+
+  // ---------- 3. Sasisha <html lang=""> ----------
+  useEffect(() => {
+    document.documentElement.lang = lang
+  }, [lang])
+
+  // ---------- 4. Function ya tafsiri ----------
+  const t = useCallback(
+    (key: string, vars?: Record<string, string | number>) => {
+      // Tafuta kwenye lugha ya sasa, kisha sw (fallback), kisha key yenyewe
+      let str = translations[lang][key] ?? translations.sw[key] ?? key
+
+      // Badilisha {placeholders} kama zipo
+      if (vars) {
+        for (const [k, v] of Object.entries(vars)) {
+          str = str.replace(new RegExp(`\\{${k}\\}`, 'g'), String(v))
+        }
+      }
+
+      return str
+    },
+    [lang]
+  )
+
+  // ---------- 5. Context value ----------
+  const value = useMemo(
+    () => ({ lang, setLang, t, languages: LANGUAGES }),
+    [lang, setLang, t]
+  )
+
+  return <LanguageContext.Provider value={value}>{children}</LanguageContext.Provider>
+}
+
+// ============================================================
+// HOOK - Tumia kwenye components zote
+// ============================================================
+export function useLanguage() {
+  const ctx = useContext(LanguageContext)
+  if (!ctx) {
+    throw new Error('useLanguage must be used within LanguageProvider')
+  }
+  return ctx
+},
+
+import { useState, useRef, useEffect } from 'react'
+import { Globe, ChevronDown, Check } from 'lucide-react'
+import { useLanguage } from '../i18n/LanguageContext'
+
+export default function LanguageSwitcher() {
+  const { lang, setLang, languages, t } = useLanguage()
+  const [open, setOpen] = useState(false)
+  const ref = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    const handler = (e: MouseEvent) => {
+      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false)
+    }
+    document.addEventListener('mousedown', handler)
+    return () => document.removeEventListener('mousedown', handler)
+  }, [])
+
+  const current = languages.find((l) => l.key === lang)!
+
+  return (
+    <div className="relative" ref={ref}>
+      <button
+        onClick={() => setOpen((v) => !v)}
+        className="inline-flex items-center gap-1.5 px-2.5 py-2 rounded-lg text-sm font-medium text-slate-700 hover:bg-slate-100 transition"
+        title={t('common.language')}
+      >
+        <Globe size={16} />
+        <span className="hidden sm:inline">{current.flag} {current.label}</span>
+        <span className="sm:hidden">{current.flag}</span>
+        <ChevronDown size={14} className={`transition ${open ? 'rotate-180' : ''}`} />
+      </button>
+
+      {open && (
+        <div className="absolute right-0 mt-1 w-44 bg-white rounded-xl border border-slate-200 shadow-lg py-1 z-50">
+          {languages.map((l) => (
+            <button
+              key={l.key}
+              onClick={() => {
+                setLang(l.key)
+                setOpen(false)
+              }}
+              className={`w-full flex items-center gap-2 px-3 py-2 text-sm hover:bg-slate-50 ${
+                lang === l.key ? 'text-brand-700 font-semibold' : 'text-slate-700'
+              }`}
+            >
+              <span>{l.flag}</span>
+              <span className="flex-1 text-left">{l.label}</span>
+              {lang === l.key && <Check size={14} className="text-brand-600" />}
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
+  )
+},
+
+import { Link } from 'react-router-dom'
+import {
+  ArrowRight, LogIn, KeyRound, ShieldCheck, Sparkles,
+  CheckCircle2, Package, Receipt, Users,
+  TrendingUp, Wallet, HandCoins, Building2, Lock,
+  ChevronRight, ShoppingCart, Briefcase, Crown,
+} from 'lucide-react'
+import Footer from '../components/Footer'
+import LanguageSwitcher from '../components/LanguageSwitcher'
+import { useLanguage } from '../i18n/LanguageContext'
+
+export default function Landing() {
+  const { t } = useLanguage()
+
+  return (
+    <div className="min-h-screen bg-white flex flex-col">
+      {/* ============================================================ */}
+      {/* NAVBAR */}
+      {/* ============================================================ */}
+      <header className="border-b border-slate-200 bg-white/80 backdrop-blur-sm sticky top-0 z-40">
+        <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-2">
+          <div className="flex items-center gap-2 sm:gap-3 min-w-0 flex-1">
+            <div className="w-9 h-9 rounded-lg bg-brand-600 text-white grid place-items-center font-bold shrink-0">
+              S
+            </div>
+            <div className="min-w-0">
+              <div className="font-bold text-xs sm:text-sm leading-tight truncate">
+                {t('landing.brandLine1')}
+              </div>
+              <div className="font-bold text-xs sm:text-sm leading-tight truncate">
+                {t('landing.brandLine2')}
+              </div>
+              <div className="text-[10px] text-slate-500 leading-tight truncate">
+                {t('landing.brandTagline')}
+              </div>
+            </div>
+          </div>
+          <div className="flex items-center gap-2 shrink-0">
+            {/* LANGUAGE SWITCHER */}
+            <LanguageSwitcher />
+
+            <Link
+              to="/forgot-password"
+              className="hidden md:inline-flex items-center gap-1.5 px-3 py-2 text-sm text-slate-600 hover:text-brand-600 rounded-lg hover:bg-slate-50 transition"
+            >
+              <KeyRound size={14} />
+              {t('landing.forgotPassword')}
+            </Link>
+            <Link
+              to="/login"
+              className="inline-flex items-center gap-1.5 px-3 sm:px-4 py-2 bg-brand-600 text-white rounded-lg text-xs sm:text-sm font-semibold hover:bg-brand-700 transition"
+            >
+              <LogIn size={14} />
+              {t('landing.login')}
+            </Link>
+          </div>
+        </div>
+      </header>
+
+      {/* ============================================================ */}
+      {/* HERO SECTION */}
+      {/* ============================================================ */}
+      <section className="border-b border-slate-100">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 md:py-24 lg:py-28">
+          <div className="text-center max-w-3xl mx-auto">
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-slate-200 text-slate-600 text-[10px] sm:text-xs font-semibold mb-4 sm:mb-6">
+              <Sparkles size={12} />
+              {t('landing.badge')}
+            </div>
+            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-slate-900 leading-tight tracking-tight">
+              {t('landing.heroWelcome')}{' '}
+              <span className="text-brand-600">
+                SUNRISE GLASSES
+              </span><br/>
+              <span className="text-brand-500">
+                & ALUMINIUM PROFILES
+              </span>
+            </h1>
+            <p className="text-slate-600 mt-4 sm:mt-6 text-sm sm:text-base md:text-lg leading-relaxed px-2">
+              {t('landing.heroDesc')}
+            </p>
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-2 sm:gap-3 mt-6 sm:mt-10 px-2 sm:px-0">
+              <Link
+                to="/login"
+                className="inline-flex items-center justify-center gap-2 px-4 sm:px-6 py-2.5 sm:py-3 bg-brand-600 text-white rounded-xl text-sm sm:text-base font-semibold hover:bg-brand-700 transition"
+              >
+                <LogIn size={16} className="sm:w-[18px] sm:h-[18px]" />
+                {t('landing.loginAccount')}
+                <ArrowRight size={14} className="sm:w-4 sm:h-4" />
+              </Link>
+              <Link
+                to="/forgot-password"
+                className="inline-flex items-center justify-center gap-2 px-4 sm:px-6 py-2.5 sm:py-3 bg-white text-slate-700 rounded-xl text-sm sm:text-base font-semibold border border-slate-200 hover:border-slate-300 hover:bg-slate-50 transition"
+              >
+                <KeyRound size={16} />
+                {t('landing.forgotPassword')}
+              </Link>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ============================================================ */}
+      {/* DEMO PORTALS SECTION */}
+      {/* ============================================================ */}
+      <section className="border-b border-slate-100 bg-slate-50/50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 md:py-20">
+          <div className="text-center mb-8 sm:mb-10">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-slate-200 bg-white text-slate-600 text-[10px] sm:text-xs font-semibold mb-3">
+              <Sparkles size={12} />
+              {t('landing.portalsBadge')}
+            </div>
+            <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-slate-900">
+              {t('landing.portalsTitle')}
+            </h2>
+            <p className="text-slate-500 mt-2 max-w-2xl mx-auto text-xs sm:text-sm px-2">
+              {t('landing.portalsDesc')}
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 md:gap-5">
+            <PortalCard
+              to="/mteja"
+              Icon={ShoppingCart}
+              title={t('landing.portal.mteja.title')}
+              desc={t('landing.portal.mteja.desc')}
+              badge={t('landing.portal.mteja.badge')}
+              enterLabel={t('landing.portal.enter')}
+            />
+            <PortalCard
+              to="/muuzaji"
+              Icon={Briefcase}
+              title={t('landing.portal.muuzaji.title')}
+              desc={t('landing.portal.muuzaji.desc')}
+              badge={t('landing.portal.muuzaji.badge')}
+              enterLabel={t('landing.portal.enter')}
+            />
+            <PortalCard
+              to="/mmiliki"
+              Icon={Crown}
+              title={t('landing.portal.mmiliki.title')}
+              desc={t('landing.portal.mmiliki.desc')}
+              badge={t('landing.portal.mmiliki.badge')}
+              enterLabel={t('landing.portal.enter')}
+            />
+          </div>
+        </div>
+      </section>
+
+      {/* ============================================================ */}
+      {/* FEATURES SECTION */}
+      {/* ============================================================ */}
+      <section className="border-b border-slate-100">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 md:py-20 lg:py-24">
+          <div className="text-center mb-10 sm:mb-14">
+            <div className="text-[10px] sm:text-xs uppercase tracking-wider text-brand-600 font-semibold mb-2">
+              {t('landing.featuresLabel')}
+            </div>
+            <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-slate-900">
+              {t('landing.featuresTitle')}
+            </h2>
+            <p className="text-slate-500 mt-2 max-w-2xl mx-auto text-xs sm:text-sm px-2">
+              {t('landing.featuresDesc')}
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-5">
+            <FeatureCard
+              Icon={Package}
+              title={t('landing.feature.stoki.title')}
+              desc={t('landing.feature.stoki.desc')}
+            />
+            <FeatureCard
+              Icon={Receipt}
+              title={t('landing.feature.mauzo.title')}
+              desc={t('landing.feature.mauzo.desc')}
+            />
+            <FeatureCard
+              Icon={Users}
+              title={t('landing.feature.wateja.title')}
+              desc={t('landing.feature.wateja.desc')}
+            />
+            <FeatureCard
+              Icon={TrendingUp}
+              title={t('landing.feature.faida.title')}
+              desc={t('landing.feature.faida.desc')}
+            />
+            <FeatureCard
+              Icon={Wallet}
+              title={t('landing.feature.mishahara.title')}
+              desc={t('landing.feature.mishahara.desc')}
+            />
+            <FeatureCard
+              Icon={HandCoins}
+              title={t('landing.feature.zaka.title')}
+              desc={t('landing.feature.zaka.desc')}
+            />
+            <FeatureCard
+              Icon={Building2}
+              title={t('landing.feature.maduka.title')}
+              desc={t('landing.feature.maduka.desc')}
+            />
+            <FeatureCard
+              Icon={ShieldCheck}
+              title={t('landing.feature.usalaama.title')}
+              desc={t('landing.feature.usalaama.desc')}
+            />
+          </div>
+        </div>
+      </section>
+
+      {/* ============================================================ */}
+      {/* AUTH LINKS SECTION */}
+      {/* ============================================================ */}
+      <section className="border-b border-slate-100">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 md:py-20 lg:py-24">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-10 lg:gap-16 items-center">
+            {/* Left: Text */}
+            <div>
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-slate-200 text-slate-600 text-[10px] sm:text-xs font-semibold mb-4">
+                <ShieldCheck size={12} />
+                {t('landing.authBadge')}
+              </div>
+              <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-slate-900 leading-tight">
+                {t('landing.authTitle')}
+              </h2>
+              <p className="text-slate-600 mt-3 text-sm md:text-base leading-relaxed">
+                {t('landing.authDesc')}
+              </p>
+
+              <div className="mt-6 sm:mt-8 flex flex-col sm:flex-row flex-wrap gap-2 sm:gap-3">
+                <Link
+                  to="/login"
+                  className="inline-flex items-center justify-center gap-2 px-4 sm:px-5 py-2.5 bg-brand-600 text-white rounded-xl text-sm font-semibold hover:bg-brand-700 transition"
+                >
+                  <LogIn size={16} />
+                  {t('landing.authLoginNow')}
+                  <ArrowRight size={14} />
+                </Link>
+                <Link
+                  to="/forgot-password"
+                  className="inline-flex items-center justify-center gap-2 px-4 sm:px-5 py-2.5 bg-white text-slate-700 rounded-xl text-sm font-semibold border border-slate-200 hover:border-slate-300 hover:bg-slate-50 transition"
+                >
+                  <KeyRound size={16} />
+                  {t('landing.forgotPassword')}
+                </Link>
+              </div>
+            </div>
+
+            {/* Right: Auth links */}
+            <div className="space-y-2 sm:space-y-2.5">
+              <AuthLink
+                to="/login"
+                Icon={LogIn}
+                title={t('landing.authLink.login.title')}
+                desc={t('landing.authLink.login.desc')}
+              />
+              <AuthLink
+                to="/forgot-password"
+                Icon={KeyRound}
+                title={t('landing.authLink.forgot.title')}
+                desc={t('landing.authLink.forgot.desc')}
+              />
+              <AuthLink
+                to="/reset-password"
+                Icon={Lock}
+                title={t('landing.authLink.reset.title')}
+                desc={t('landing.authLink.reset.desc')}
+              />
+              <AuthLink
+                to="/reset-complete"
+                Icon={CheckCircle2}
+                title={t('landing.authLink.complete.title')}
+                desc={t('landing.authLink.complete.desc')}
+              />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ============================================================ */}
+      {/* FOOTER — inatumia component ile ile ya Footer */}
+      {/* ============================================================ */}
+      <Footer />
+    </div>
+  )
+}
+
+// ============================================================
+// Portal Card
+// ============================================================
+function PortalCard({
+  to,
+  Icon,
+  title,
+  desc,
+  badge,
+  enterLabel,
+}: {
+  to: string
+  Icon: React.ElementType
+  title: string
+  desc: string
+  badge: string
+  enterLabel: string
+}) {
+  return (
+    <Link
+      to={to}
+      className="group bg-white rounded-2xl border border-slate-200 p-4 sm:p-5 hover:border-brand-500 hover:shadow-md transition-all"
+    >
+      <div className="flex items-start justify-between gap-2">
+        <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-xl bg-slate-50 text-slate-700 grid place-items-center shrink-0">
+          <Icon size={20} className="sm:w-[22px] sm:h-[22px]" />
+        </div>
+        <span className="text-[10px] uppercase font-semibold px-2 py-0.5 rounded bg-slate-100 text-slate-600 shrink-0">
+          {badge}
+        </span>
+      </div>
+      <div className="font-semibold text-sm sm:text-base mt-3 sm:mt-4 text-slate-900">
+        {title}
+      </div>
+      <div className="text-xs text-slate-500 mt-1 leading-relaxed">
+        {desc}
+      </div>
+      <div className="mt-3 sm:mt-4 flex items-center text-sm text-brand-600 font-semibold">
+        {enterLabel}
+        <ChevronRight
+          size={14}
+          className="ml-1 transition group-hover:translate-x-1"
+        />
+      </div>
+    </Link>
+  )
+}
+
+// ============================================================
+// Feature Card
+// ============================================================
+function FeatureCard({
+  Icon,
+  title,
+  desc,
+}: {
+  Icon: React.ElementType
+  title: string
+  desc: string
+}) {
+  return (
+    <div className="bg-white rounded-xl border border-slate-200 p-4 sm:p-5 hover:border-brand-500 hover:shadow-md transition-all">
+      <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-lg bg-slate-50 text-slate-700 grid place-items-center">
+        <Icon size={18} className="sm:w-5 sm:h-5" />
+      </div>
+      <div className="font-semibold text-sm mt-3 text-slate-900">{title}</div>
+      <div className="text-xs text-slate-500 mt-1 leading-relaxed">{desc}</div>
+    </div>
+  )
+}
+
+// ============================================================
+// Auth Link
+// ============================================================
+function AuthLink({
+  to,
+  Icon,
+  title,
+  desc,
+}: {
+  to: string
+  Icon: React.ElementType
+  title: string
+  desc: string
+}) {
+  return (
+    <Link
+      to={to}
+      className="flex items-center gap-3 p-3 sm:p-3.5 rounded-xl border border-slate-200 bg-white hover:border-brand-500 hover:bg-slate-50 transition group"
+    >
+      <div className="w-10 h-10 rounded-lg bg-slate-50 text-slate-700 grid place-items-center shrink-0">
+        <Icon size={18} />
+      </div>
+      <div className="flex-1 min-w-0">
+        <div className="text-sm font-semibold text-slate-900 truncate">{title}</div>
+        <div className="text-xs text-slate-500 truncate">{desc}</div>
+      </div>
+      <ChevronRight
+        size={16}
+        className="text-slate-400 shrink-0 transition group-hover:translate-x-1 group-hover:text-brand-600"
+      />
+    </Link>
+  )
+}

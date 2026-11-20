@@ -1,21 +1,32 @@
+
 import { useEffect, useState } from 'react'
 import { MessageSquare, X } from 'lucide-react'
 import { useStore } from '../store/StoreContext'
+import { useLanguage } from '../i18n/LanguageContext'
 
 export default function SmsToast() {
   const { smsLog } = useStore()
+  const { language } = useLanguage()
+
+  const isSwahili = language === 'sw'
+
   const [visible, setVisible] = useState<string | null>(null)
 
   useEffect(() => {
     if (smsLog.length === 0) return
+
     const latest = smsLog[0]
     setVisible(latest.id)
+
     const t = setTimeout(() => setVisible(null), 5000)
+
     return () => clearTimeout(t)
   }, [smsLog])
 
   if (!visible) return null
+
   const sms = smsLog.find((s) => s.id === visible)
+
   if (!sms) return null
 
   return (
@@ -24,13 +35,23 @@ export default function SmsToast() {
         <div className="w-8 h-8 rounded-lg bg-emerald-500 grid place-items-center shrink-0">
           <MessageSquare size={16} />
         </div>
+
         <div className="flex-1 min-w-0">
           <div className="text-xs font-semibold text-emerald-400">
-            SMS imetumwa → {sms.to}
+            {isSwahili ? 'SMS imetumwa' : 'SMS Sent'} → {sms.to}
           </div>
-          <div className="text-xs mt-0.5 line-clamp-2">{sms.message}</div>
+
+          <div className="text-xs mt-0.5 line-clamp-2">
+            {sms.message}
+          </div>
         </div>
-        <button onClick={() => setVisible(null)} className="p-1 rounded hover:bg-white/10">
+
+        <button
+          onClick={() => setVisible(null)}
+          aria-label={isSwahili ? 'Funga ujumbe' : 'Close message'}
+          title={isSwahili ? 'Funga' : 'Close'}
+          className="p-1 rounded hover:bg-white/10"
+        >
           <X size={14} />
         </button>
       </div>

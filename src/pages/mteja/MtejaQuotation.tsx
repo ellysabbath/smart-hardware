@@ -1,17 +1,29 @@
+
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import {
-  FileText, Trash2, Plus, Minus, Smartphone, ArrowLeft, CheckCircle2, 
+  FileText,
+  Trash2,
+  Plus,
+  Minus,
+  Smartphone,
+  ArrowLeft,
+  CheckCircle2,
 } from 'lucide-react'
 import { useCart } from '../../context/CartContext'
 import { useStore } from '../../store/StoreContext'
 import { iconForKundi } from '../../utils/icons'
 import { formatTsh } from '../../utils/faida'
+import { useLanguage } from '../../i18n/LanguageContext'
 
 export default function MtejaQuotation() {
   const navigate = useNavigate()
+  const { language } = useLanguage()
+  const isSwahili = language === 'sw'
+
   const { detailed, total, count, inc, dec, remove, clear } = useCart()
   const { wateja, createOrder, ongezaMalipo } = useStore()
+
   const [loading, setLoading] = useState(false)
   const [toast, setToast] = useState<string | null>(null)
 
@@ -19,14 +31,20 @@ export default function MtejaQuotation() {
 
   const lipa = () => {
     if (detailed.length === 0 || !mtejaId) return
+
     setLoading(true)
+
     setTimeout(() => {
       const order = createOrder({
         mtejaId,
         dukaId: 'd1',
         muuzaji: 'Online',
-        items: detailed.map((l) => ({ id: l.id, wingi: l.wingi })),
+        items: detailed.map((l) => ({
+          id: l.id,
+          wingi: l.wingi,
+        })),
       })
+
       ongezaMalipo({
         orderId: order.id,
         njia: 'mpesa',
@@ -35,8 +53,15 @@ export default function MtejaQuotation() {
         kiasi: total,
         hali: 'imethibitishwa',
       })
+
       clear()
-      setToast(`Malipo yamekamilika! Order ${order.id}`)
+
+      setToast(
+        isSwahili
+          ? `Malipo yamekamilika! Order ${order.id}`
+          : `Payment completed! Order ${order.id}`
+      )
+
       setTimeout(() => navigate(`/mteja/order/${order.id}`), 1200)
     }, 1000)
   }
@@ -44,13 +69,29 @@ export default function MtejaQuotation() {
   if (detailed.length === 0) {
     return (
       <div className="max-w-3xl mx-auto space-y-5">
-        <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-slate-900">Quotation</h1>
+        <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-slate-900">
+          Quotation
+        </h1>
+
         <div className="bg-white rounded-2xl border border-slate-200 p-12 text-center">
           <FileText size={40} className="mx-auto text-slate-300 mb-3" />
-          <h3 className="font-semibold">Cart yako ni tupu</h3>
-          <p className="text-sm text-slate-500 mt-1">Ongeza bidhaa kwanza.</p>
-          <button onClick={() => navigate('/mteja/bidhaa')} className="mt-4 inline-flex items-center gap-1.5 px-4 py-2.5 bg-brand-600 text-white rounded-lg text-sm font-semibold hover:bg-brand-700">
-            <ArrowLeft size={16} /> Nenda Bidhaa
+
+          <h3 className="font-semibold">
+            {isSwahili ? 'Cart yako ni tupu' : 'Your cart is empty'}
+          </h3>
+
+          <p className="text-sm text-slate-500 mt-1">
+            {isSwahili
+              ? 'Ongeza bidhaa kwanza.'
+              : 'Add some products first.'}
+          </p>
+
+          <button
+            onClick={() => navigate('/mteja/bidhaa')}
+            className="mt-4 inline-flex items-center gap-1.5 px-4 py-2.5 bg-brand-600 text-white rounded-lg text-sm font-semibold hover:bg-brand-700"
+          >
+            <ArrowLeft size={16} />
+            {isSwahili ? 'Nenda Bidhaa' : 'Browse Products'}
           </button>
         </div>
       </div>
@@ -61,11 +102,22 @@ export default function MtejaQuotation() {
     <div className="max-w-3xl mx-auto space-y-5">
       <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-3">
         <div>
-          <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-slate-900">Quotation</h1>
-          <p className="text-sm text-slate-500 mt-1">{count} bidhaa kwenye cart</p>
+          <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-slate-900">
+            Quotation
+          </h1>
+
+          <p className="text-sm text-slate-500 mt-1">
+            {count}{' '}
+            {isSwahili ? 'bidhaa kwenye cart' : 'items in your cart'}
+          </p>
         </div>
-        <button onClick={clear} className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg bg-red-50 text-red-600 text-sm hover:bg-red-100 self-start sm:self-auto">
-          <Trash2 size={14} /> Futa Cart
+
+        <button
+          onClick={clear}
+          className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg bg-red-50 text-red-600 text-sm hover:bg-red-100 self-start sm:self-auto"
+        >
+          <Trash2 size={14} />
+          {isSwahili ? 'Futa Cart' : 'Clear Cart'}
         </button>
       </div>
 
@@ -74,16 +126,30 @@ export default function MtejaQuotation() {
           <table className="w-full text-sm min-w-[560px]">
             <thead className="text-left text-slate-500 border-b">
               <tr>
-                <th className="py-3 pl-4 md:pl-0 font-medium">Bidhaa</th>
-                <th className="py-3 text-right font-medium">Bei</th>
-                <th className="py-3 text-center font-medium">Wingi</th>
-                <th className="py-3 text-right font-medium">Jumla</th>
+                <th className="py-3 pl-4 md:pl-0 font-medium">
+                  {isSwahili ? 'Bidhaa' : 'Product'}
+                </th>
+
+                <th className="py-3 text-right font-medium">
+                  {isSwahili ? 'Bei' : 'Price'}
+                </th>
+
+                <th className="py-3 text-center font-medium">
+                  {isSwahili ? 'Wingi' : 'Quantity'}
+                </th>
+
+                <th className="py-3 text-right font-medium">
+                  {isSwahili ? 'Jumla' : 'Total'}
+                </th>
+
                 <th className="py-3 pr-4 md:pr-0"></th>
               </tr>
             </thead>
+
             <tbody>
               {detailed.map((l) => {
                 const Icon = iconForKundi(l.iconKey)
+
                 return (
                   <tr key={l.id} className="border-b border-slate-100">
                     <td className="py-3 pl-4 md:pl-0">
@@ -91,27 +157,57 @@ export default function MtejaQuotation() {
                         <div className="w-9 h-9 rounded-lg bg-slate-50 border border-slate-200 text-slate-600 grid place-items-center shrink-0">
                           <Icon size={16} />
                         </div>
+
                         <div className="min-w-0">
-                          <div className="font-medium truncate">{l.jina}</div>
-                          <div className="text-xs text-slate-500">{l.sku}</div>
+                          <div className="font-medium truncate">
+                            {l.jina}
+                          </div>
+
+                          <div className="text-xs text-slate-500">
+                            {l.sku}
+                          </div>
                         </div>
                       </div>
                     </td>
-                    <td className="py-3 text-right whitespace-nowrap">{formatTsh(l.bei)}</td>
+
+                    <td className="py-3 text-right whitespace-nowrap">
+                      {formatTsh(l.bei)}
+                    </td>
+
                     <td className="py-3">
                       <div className="flex items-center justify-center gap-1">
-                        <button onClick={() => dec(l.id)} className="w-6 h-6 rounded-md bg-slate-100 hover:bg-slate-200 grid place-items-center">
+                        <button
+                          onClick={() => dec(l.id)}
+                          className="w-6 h-6 rounded-md bg-slate-100 hover:bg-slate-200 grid place-items-center"
+                          aria-label={isSwahili ? 'Punguza' : 'Decrease'}
+                        >
                           <Minus size={12} />
                         </button>
-                        <span className="w-8 text-center font-semibold">{l.wingi}</span>
-                        <button onClick={() => inc(l.id)} className="w-6 h-6 rounded-md bg-slate-100 hover:bg-slate-200 grid place-items-center">
+
+                        <span className="w-8 text-center font-semibold">
+                          {l.wingi}
+                        </span>
+
+                        <button
+                          onClick={() => inc(l.id)}
+                          className="w-6 h-6 rounded-md bg-slate-100 hover:bg-slate-200 grid place-items-center"
+                          aria-label={isSwahili ? 'Ongeza' : 'Increase'}
+                        >
                           <Plus size={12} />
                         </button>
                       </div>
                     </td>
-                    <td className="py-3 text-right font-semibold whitespace-nowrap">{formatTsh(l.jumla)}</td>
+
+                    <td className="py-3 text-right font-semibold whitespace-nowrap">
+                      {formatTsh(l.jumla)}
+                    </td>
+
                     <td className="py-3 pr-4 md:pr-0 text-right">
-                      <button onClick={() => remove(l.id)} className="p-1.5 rounded-md text-red-500 hover:bg-red-50">
+                      <button
+                        onClick={() => remove(l.id)}
+                        className="p-1.5 rounded-md text-red-500 hover:bg-red-50"
+                        aria-label={isSwahili ? 'Ondoa bidhaa' : 'Remove product'}
+                      >
                         <Trash2 size={14} />
                       </button>
                     </td>
@@ -119,10 +215,17 @@ export default function MtejaQuotation() {
                 )
               })}
             </tbody>
+
             <tfoot>
               <tr>
-                <td colSpan={3} className="py-3 text-right font-semibold">JUMLA</td>
-                <td className="py-3 text-right font-bold text-brand-700 text-lg whitespace-nowrap">{formatTsh(total)}</td>
+                <td colSpan={3} className="py-3 text-right font-semibold">
+                  {isSwahili ? 'JUMLA' : 'TOTAL'}
+                </td>
+
+                <td className="py-3 text-right font-bold text-brand-700 text-lg whitespace-nowrap">
+                  {formatTsh(total)}
+                </td>
+
                 <td></td>
               </tr>
             </tfoot>
@@ -136,17 +239,30 @@ export default function MtejaQuotation() {
             className="inline-flex items-center justify-center gap-1.5 px-4 py-2.5 bg-emerald-600 text-white rounded-lg text-sm font-semibold hover:bg-emerald-700 disabled:opacity-60"
           >
             <Smartphone size={16} />
-            {loading ? 'Inathibitisha...' : `Lipa ${formatTsh(total)}`}
+
+            {loading
+              ? isSwahili
+                ? 'Inathibitisha...'
+                : 'Processing...'
+              : isSwahili
+                ? `Lipa ${formatTsh(total)}`
+                : `Pay ${formatTsh(total)}`}
           </button>
-          <button onClick={() => navigate('/mteja/bidhaa')} className="inline-flex items-center justify-center gap-1.5 px-4 py-2.5 bg-slate-100 rounded-lg text-sm hover:bg-slate-200 sm:ml-auto">
-            <ArrowLeft size={16} /> Endelea Kununua
+
+          <button
+            onClick={() => navigate('/mteja/bidhaa')}
+            className="inline-flex items-center justify-center gap-1.5 px-4 py-2.5 bg-slate-100 rounded-lg text-sm hover:bg-slate-200 sm:ml-auto"
+          >
+            <ArrowLeft size={16} />
+            {isSwahili ? 'Endelea Kununua' : 'Continue Shopping'}
           </button>
         </div>
       </div>
 
       {toast && (
         <div className="fixed bottom-4 left-1/2 -translate-x-1/2 z-50 bg-slate-900 text-white text-sm px-4 py-3 rounded-xl shadow-2xl flex items-center gap-2">
-          <CheckCircle2 size={16} className="text-emerald-400" /> {toast}
+          <CheckCircle2 size={16} className="text-emerald-400" />
+          {toast}
         </div>
       )}
     </div>
